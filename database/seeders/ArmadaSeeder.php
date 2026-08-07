@@ -12,22 +12,28 @@ class ArmadaSeeder extends Seeder
      */
     public function run(): void
     {
-        Armada::create([
-            'merk' => 'Toyota HiAce Premio',
-            'warna' => 'Putih Metaflik',
-            'status' => 'Tersedia',
-        ]);
+        Armada::firstOrCreate(
+            ['merk' => 'Toyota HiAce Premio'],
+            [
+                'warna' => 'Putih Metalik',
+                'status' => 'Tersedia',
+            ]
+        );
 
-        Armada::create([
-            'merk' => 'Isuzu Elf Long',
-            'warna' => 'Hitam',
-            'status' => 'Tersedia',
-        ]);
+        Armada::firstOrCreate(
+            ['merk' => 'Isuzu Elf Long'],
+            [
+                'warna' => 'Hitam',
+                'status' => 'Tersedia',
+            ]
+        );
 
-        Armada::create([
-            'merk' => 'Mercedes-Benz Sprinter',
-            'warna' => 'Silver',
-            'status' => 'Beroperasi',
-        ]);
+        Armada::firstOrCreate(
+            ['merk' => 'Mercedes-Benz Sprinter'],
+            [
+                'warna' => 'Silver',
+                'status' => 'Beroperasi',
+            ]
+        );
     }
 }

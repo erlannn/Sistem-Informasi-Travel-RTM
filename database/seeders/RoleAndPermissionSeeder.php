@@ -78,14 +78,6 @@ class RoleAndPermissionSeeder extends Seeder
         );
         $userAdmin->assignRole($roleAdmin);
 
-        Admin::firstOrCreate(
-            ['email' => 'admin@rtmtravel.com'],
-            [
-                'nama' => 'Administrator CV RTM',
-                'password' => Hash::make('password123'),
-            ]
-        );
-
         // 4. Create Default Penumpang Users
         $userPenumpang1 = User::firstOrCreate(
             ['email' => 'budi@gmail.com'],
