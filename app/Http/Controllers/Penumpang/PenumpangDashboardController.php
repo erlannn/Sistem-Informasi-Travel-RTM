@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class PenumpangDashboardController extends Controller
 {
@@ -28,7 +29,7 @@ class PenumpangDashboardController extends Controller
     public function beranda()
     {
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', $user->email)->first();
+        $penumpang = Penumpang::where('email', '=', $user->email)->first();
 
         $jadwals = Jadwal::with(['armada', 'sopir'])
             ->where('tanggal', '>=', now()->toDateString())
@@ -85,7 +86,7 @@ class PenumpangDashboardController extends Controller
             return redirect()->route('penumpang.jadwal')->with('error', 'Jadwal tidak ditemukan.');
         }
 
-        $kursis = Kursi::where('id_jadwal', $jadwal->id_jadwal)->get();
+        $kursis = Kursi::where('id_jadwal', '=', $jadwal->id_jadwal)->get();
 
         return view('penumpang.pilih_kursi', compact('jadwal', 'kursis'));
     }
@@ -99,15 +100,15 @@ class PenumpangDashboardController extends Controller
         $id_kursi = $request->input('id_kursi');
 
         $jadwal = Jadwal::with(['armada', 'sopir'])->findOrFail($id_jadwal);
-        $kursi = Kursi::where('id_jadwal', $id_jadwal)->where('id_kursi', $id_kursi)->first();
+        $kursi = Kursi::where('id_jadwal', '=', $id_jadwal)->where('id_kursi', '=', $id_kursi)->first();
         if (!$kursi) {
             // fallback lookup by nomor_kursi or first available
-            $kursi = Kursi::where('id_jadwal', $id_jadwal)->where('nomor_kursi', $request->input('kursi'))->first()
-                ?? Kursi::where('id_jadwal', $id_jadwal)->first();
+            $kursi = Kursi::where('id_jadwal', '=', $id_jadwal)->where('nomor_kursi', '=', $request->input('kursi'))->first()
+                ?? Kursi::where('id_jadwal', '=', $id_jadwal)->first();
         }
 
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', $user->email)->first();
+        $penumpang = Penumpang::where('email', '=', $user->email)->first();
 
         return view('penumpang.konfirmasi', compact('jadwal', 'kursi', 'penumpang'));
     }
@@ -123,7 +124,7 @@ class PenumpangDashboardController extends Controller
         ]);
 
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', $user->email)->firstOrFail();
+        $penumpang = Penumpang::where('email', '=', $user->email)->firstOrFail();
 
         // Update kursi status to Terisi
         $kursi = Kursi::findOrFail($request->id_kursi);
@@ -148,7 +149,7 @@ class PenumpangDashboardController extends Controller
     public function status(Request $request)
     {
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', $user->email)->first();
+        $penumpang = Penumpang::where('email', '=', $user->email)->first();
 
         $search = $request->input('search');
 
@@ -170,7 +171,7 @@ class PenumpangDashboardController extends Controller
     /**
      * Detail Status Pemesanan
      */
-    public function statusDetail($id_pemesanan)
+    public function statusDetail(int|string $id_pemesanan)
     {
         $pemesanan = Pemesanan::with(['jadwal.armada', 'jadwal.sopir', 'kursi', 'penumpang'])
             ->findOrFail($id_pemesanan);
@@ -179,12 +180,25 @@ class PenumpangDashboardController extends Controller
     }
 
     /**
+     * Cetak Status Pembayaran PDF (Spatie PDF)
+     */
+    public function cetakPdf(int|string $id_pemesanan)
+    {
+        $pemesanan = Pemesanan::with(['jadwal.armada', 'jadwal.sopir', 'kursi', 'penumpang'])
+            ->findOrFail($id_pemesanan);
+
+        return Pdf::view('penumpang.pdf_status', compact('pemesanan'))
+            ->format('a4')
+            ->name('Bukti-Pembayaran-RTM' . sprintf('%04d', $pemesanan->id_pemesanan) . '.pdf');
+    }
+
+    /**
      * Profil View
      */
     public function profil()
     {
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', $user->email)->first();
+        $penumpang = Penumpang::where('email', '=', $user->email)->first();
 
         return view('penumpang.profil', compact('user', 'penumpang'));
     }
@@ -195,7 +209,7 @@ class PenumpangDashboardController extends Controller
     public function profilUpdate(Request $request)
     {
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', $user->email)->first();
+        $penumpang = Penumpang::where('email', '=', $user->email)->first();
 
         $request->validate([
             'nama' => 'required|string|max:255',

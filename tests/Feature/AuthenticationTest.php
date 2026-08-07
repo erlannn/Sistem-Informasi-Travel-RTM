@@ -60,6 +60,6 @@ test('penumpang user can login and access penumpang dashboard', function () {
         'password' => 'password123',
     ]);
 
-    $response->assertRedirect('/penumpang/dashboard');
+    $response->assertRedirect('/penumpang/beranda');
     $this->assertAuthenticatedAs($penumpang);
 });

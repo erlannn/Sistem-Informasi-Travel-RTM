@@ -196,11 +196,11 @@
                 Kembali
             </a>
             
-            <!-- Cetak Tiket Trigger -->
-            <button onclick="window.print();" class="w-full sm:w-auto px-8 py-3 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-950 border border-gold-500/20 hover:border-gold-500/45 rounded-xl shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5">
+            <!-- Cetak Status Pembayaran (Spatie PDF) -->
+            <a href="{{ route('penumpang.status.pdf', $pemesanan->id_pemesanan) }}" target="_blank" class="w-full sm:w-auto px-8 py-3 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-950 border border-gold-500/20 hover:border-gold-500/45 rounded-xl shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5">
                 <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.434a2.25 2.25 0 002.25-2.25v-3a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v3a2.25 2.25 0 002.25 2.25h1.434M9 9h6v3.75H9V9z" /></svg>
-                Cetak Tiket (Print)
-            </button>
+                Cetak Status Pembayaran (PDF)
+            </a>
         </div>
 
     </div>
