@@ -12,13 +12,17 @@ class PemesananSeeder extends Seeder
      */
     public function run(): void
     {
-        Pemesanan::create([
-            'id_penumpang' => 1,
-            'id_jadwal' => 1,
-            'id_kursi' => 1, // Kursi 1A yang statusnya 'Terisi'
-            'tanggal_pesan' => '2026-08-06',
-            'jumlah_penumpang' => 1,
-            'status' => 'Lunas',
-        ]);
+        Pemesanan::firstOrCreate(
+            [
+                'id_penumpang' => 1,
+                'id_jadwal' => 1,
+                'id_kursi' => 1,
+            ],
+            [
+                'tanggal_pesan' => '2026-08-06',
+                'jumlah_penumpang' => 1,
+                'status' => 'Lunas',
+            ]
+        );
     }
 }
