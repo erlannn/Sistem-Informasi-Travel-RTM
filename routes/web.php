@@ -2,6 +2,11 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminArmadaController;
+use App\Http\Controllers\Admin\AdminSopirController;
+use App\Http\Controllers\Admin\AdminPenumpangController;
+use App\Http\Controllers\Admin\AdminJadwalController;
+use App\Http\Controllers\Admin\AdminPemesananController;
 use App\Http\Controllers\Penumpang\PenumpangDashboardController;
 use App\Http\Controllers\Sopir\SopirDashboardController;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +42,12 @@ Route::middleware('auth')->group(function () {
     // Admin Routes (Role: Admin)
     Route::middleware('role:Admin')->prefix('admin')->as('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::resource('/armada', AdminArmadaController::class);
+        Route::resource('/sopir', AdminSopirController::class);
+        Route::resource('/penumpang', AdminPenumpangController::class);
+        Route::resource('/jadwal', AdminJadwalController::class);
+        Route::resource('/pemesanan', AdminPemesananController::class);
+        Route::patch('/pemesanan/{id}/status', [AdminPemesananController::class, 'updateStatus'])->name('pemesanan.update_status');
     });
 
     // Penumpang Routes (Role: Penumpang)
@@ -49,6 +60,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/konfirmasi', [PenumpangDashboardController::class, 'konfirmasiStore'])->name('konfirmasi.store');
         Route::get('/status', [PenumpangDashboardController::class, 'status'])->name('status');
         Route::get('/status/{id_pemesanan}', [PenumpangDashboardController::class, 'statusDetail'])->name('status.detail');
+        Route::get('/status/{id_pemesanan}/pdf', [PenumpangDashboardController::class, 'cetakPdf'])->name('status.pdf');
         Route::get('/profil', [PenumpangDashboardController::class, 'profil'])->name('profil');
         Route::put('/profil', [PenumpangDashboardController::class, 'profilUpdate'])->name('profil.update');
     });
