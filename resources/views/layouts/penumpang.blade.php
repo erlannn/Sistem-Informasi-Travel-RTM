@@ -30,12 +30,12 @@
         <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-500 via-gold-400 to-brand-500 opacity-80"></div>
 
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-24">
                 
                 <!-- Left: Logo & Title (Brand Identity in Dark Circle) -->
                 <div class="flex items-center">
                     <a href="{{ url('/') }}" class="group focus:outline-none flex">
-                        <div class="w-12 h-12 rounded-full bg-slate-950 hover:bg-slate-900 border border-slate-800 shadow-md group-hover:border-slate-700 flex items-center justify-center p-2.5 transition-all duration-200">
+                        <div class="w-20 h-20 rounded-full bg-slate-950 hover:bg-slate-900 border border-slate-800 shadow-md group-hover:border-slate-700 flex items-center justify-center p-1.5 transition-all duration-200">
                             <!-- Logo PNG Image -->
                             <img src="{{ asset('images/logo.png') }}" alt="Logo RTM Family" class="w-full h-auto object-contain select-none pointer-events-none">
                         </div>

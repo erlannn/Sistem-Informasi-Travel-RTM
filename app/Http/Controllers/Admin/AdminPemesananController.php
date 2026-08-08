@@ -39,7 +39,7 @@ class AdminPemesananController extends Controller
             'id_penumpang' => 'required|exists:penumpangs,id_penumpang',
             'id_jadwal' => 'required|exists:jadwals,id_jadwal',
             'id_kursi' => 'required|exists:kursis,id_kursi',
-            'status' => 'required|in:Pending,Lunas,Batal',
+            'status' => 'required|in:Pending,Lunas,Batal,Selesai',
         ]);
 
         $kursi = Kursi::findOrFail($validated['id_kursi']);
@@ -85,7 +85,7 @@ class AdminPemesananController extends Controller
             'id_penumpang' => 'required|exists:penumpangs,id_penumpang',
             'id_jadwal' => 'required|exists:jadwals,id_jadwal',
             'id_kursi' => 'required|exists:kursis,id_kursi',
-            'status' => 'required|in:Pending,Lunas,Batal',
+            'status' => 'required|in:Pending,Lunas,Batal,Selesai',
         ]);
 
         // If seat changed, release old seat
@@ -122,7 +122,7 @@ class AdminPemesananController extends Controller
         $pemesanan = Pemesanan::findOrFail($id);
 
         $request->validate([
-            'status' => 'required|in:Pending,Lunas,Batal',
+            'status' => 'required|in:Pending,Lunas,Batal,Selesai',
         ]);
 
         $pemesanan->status = $request->status;

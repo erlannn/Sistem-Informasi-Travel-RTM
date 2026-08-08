@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full bg-slate-50">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>@yield('title', 'CV. Travel RTM - Driver Portal')</title>
 
+  <!-- Favicon (Logo RTM Family) -->
+  <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+
   <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Vite Build Assets (Tailwind CSS v4 & JS) & Alpine.js -->
@@ -14,11 +19,6 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <style>
-    /* Mobile Shell Constraints */
-    .mobile-container {
-      max-width: 480px;
-      margin: 0 auto;
-    }
     @media print {
       body * {
         visibility: hidden;
@@ -35,95 +35,178 @@
     }
   </style>
   @yield('styles')
+  @stack('styles')
 </head>
-<body class="bg-slate-900 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-slate-900">
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex antialiased" x-data="{ mobileSidebarOpen: false }">
 
-  <!-- Outer Shell Wrapper for Mobile Viewport Emulation (Centered & Premium) -->
-  <div class="w-full flex-grow flex flex-col bg-slate-50 min-h-screen shadow-2xl relative border-x border-slate-200 mobile-container pb-24">
-    
-    <!-- Top Greeting Header -->
-    <header class="bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 text-white p-6 rounded-b-3xl shadow-lg relative overflow-hidden shrink-0">
-      <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:12px_12px]"></div>
-      
-      <div class="relative flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-lg shadow-md">
-            <i class="fa-solid fa-id-badge"></i>
-          </div>
-          <div>
-            <p class="text-xs text-amber-400 font-extrabold uppercase tracking-wider">Driver Portal</p>
-            <h2 class="text-base font-extrabold text-white">
-              @auth
-                Selamat Datang, {{ Auth::user()->name }}
-              @else
-                Selamat Datang, Sopir
-              @endauth
-            </h2>
-          </div>
+  <!-- Sidebar Component (Deep Slate #0F172A with Brand Accent) -->
+  <aside class="w-64 bg-slate-900 text-slate-300 hidden md:flex flex-col border-r border-slate-800 shrink-0 min-h-screen sticky top-0 h-screen z-40">
+    <!-- Brand Info Header with Logo PNG -->
+    <div class="h-20 border-b border-slate-800 flex items-center px-6 gap-3">
+      <a href="{{ route('sopir.dashboard') }}" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-slate-950 border border-slate-800 flex items-center justify-center p-2 shadow-md shrink-0">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo CV. Travel RTM" class="w-full h-auto object-contain select-none pointer-events-none">
         </div>
-        
-        <!-- Action items / Logout -->
-        <div class="flex items-center gap-2">
-          <a href="{{ url('/') }}" class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-xl border border-white/10 font-bold transition-all flex items-center gap-1.5">
-            <i class="fa-solid fa-house"></i> Home
-          </a>
-          @auth
-            <form action="{{ route('logout') }}" method="POST">
-              @csrf
-              <button type="submit" title="Keluar" class="text-xs bg-red-500/20 hover:bg-red-500/30 text-red-300 px-3 py-1.5 rounded-xl border border-red-500/30 font-bold transition-all">
-                <i class="fa-solid fa-right-from-bracket"></i>
-              </button>
-            </form>
-          @endauth
+        <div>
+          <span class="font-extrabold text-white text-sm tracking-tight block">CV. Travel RTM</span>
+          <span class="text-[10px] text-brand-500 font-bold uppercase tracking-wider">Driver Portal</span>
         </div>
+      </a>
+    </div>
+
+    <!-- Sidebar Navigation Menus -->
+    <nav class="flex-grow py-6 px-4 space-y-1.5 overflow-y-auto">
+      <a href="{{ route('sopir.dashboard') }}"
+        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('sopir.dashboard') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-gauge-high mr-2 text-sm text-center w-5"></i> Dashboard
+      </a>
+
+      <a href="{{ route('sopir.jadwal') }}"
+        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('sopir.jadwal') || request()->routeIs('sopir.jadwal.detail') || request()->routeIs('sopir.jadwal.penumpang') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-calendar-check mr-2 text-sm text-center w-5"></i> Jadwal
+      </a>
+
+      <a href="{{ route('sopir.penumpang') }}"
+        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('sopir.penumpang') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-users mr-2 text-sm text-center w-5"></i> Data Penumpang
+      </a>
+
+      <a href="{{ route('sopir.gaji') }}"
+        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('sopir.gaji') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-wallet mr-2 text-sm text-center w-5"></i> Gaji
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Mobile Drawer Sidebar Backdrop -->
+  <div x-show="mobileSidebarOpen" @click="mobileSidebarOpen = false" x-transition:enter="transition-opacity ease-linear duration-200"
+    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+    x-transition:leave="transition-opacity ease-linear duration-200" x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0" class="fixed inset-0 bg-slate-900/80 z-40 md:hidden"></div>
+
+  <!-- Mobile Sidebar Drawer Panel -->
+  <div x-show="mobileSidebarOpen" x-transition:enter="transition ease-in-out duration-300 transform"
+    x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+    x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0"
+    x-transition:leave-end="-translate-x-full"
+    class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-slate-300 z-50 flex flex-col md:hidden border-r border-slate-800">
+    <div class="h-20 border-b border-slate-800 flex items-center justify-between px-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-slate-950 border border-slate-800 flex items-center justify-center p-1.5">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo Portal" class="w-full h-auto object-contain">
+        </div>
+        <span class="font-extrabold text-white text-sm">Driver Portal</span>
+      </div>
+      <button @click="mobileSidebarOpen = false" class="text-slate-400 hover:text-white text-lg">
+        &times;
+      </button>
+    </div>
+    <nav class="flex-grow py-6 px-4 space-y-1.5 overflow-y-auto">
+      <a href="{{ route('sopir.dashboard') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ request()->routeIs('sopir.dashboard') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        Dashboard
+      </a>
+      <a href="{{ route('sopir.jadwal') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ request()->routeIs('sopir.jadwal') || request()->routeIs('sopir.jadwal.detail') || request()->routeIs('sopir.jadwal.penumpang') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        Jadwal
+      </a>
+      <a href="{{ route('sopir.penumpang') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ request()->routeIs('sopir.penumpang') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        Data Penumpang
+      </a>
+      <a href="{{ route('sopir.gaji') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ request()->routeIs('sopir.gaji') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        Gaji
+      </a>
+    </nav>
+  </div>
+
+  <!-- Main Content & Topbar Container -->
+  <div class="flex flex-col flex-grow min-w-0">
+    <header class="h-20 bg-white/90 backdrop-blur-md border-b border-slate-200/60 flex items-center justify-between px-6 md:px-8 sticky top-0 z-30 shadow-xs relative no-print">
+      <!-- Accent Gradient Line -->
+      <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-500 via-gold-400 to-brand-500 opacity-80"></div>
+
+      <!-- Mobile Sidebar Toggle -->
+      <div class="flex items-center gap-3 md:hidden">
+        <button @click="mobileSidebarOpen = true" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors text-xs font-bold cursor-pointer">
+          <i class="fa-solid fa-bars text-sm"></i>
+        </button>
+        <span class="font-extrabold text-slate-800 text-sm">CV. Travel RTM</span>
+      </div>
+
+      <!-- Desktop Page Title -->
+      <div class="hidden md:block">
+        <h1 class="text-lg font-extrabold text-slate-800 tracking-tight">
+          @yield('page_title', 'Driver Control Center')
+        </h1>
+        <p class="text-xs text-slate-500 font-medium">Portal Pengemudi CV. Travel RTM</p>
+      </div>
+
+      <!-- Profile & Logout Dropdown -->
+      <div class="flex items-center gap-4">
+        @auth
+          <div class="text-right hidden sm:block">
+            <span class="block text-xs font-bold text-slate-800">{{ Auth::user()->name }}</span>
+            <span class="inline-block px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200 font-extrabold text-[10px] uppercase tracking-wider">Sopir</span>
+          </div>
+          <div class="relative" x-data="{ userMenuOpen: false }">
+            <button @click="userMenuOpen = !userMenuOpen" class="w-9 h-9 rounded-full bg-slate-900 border border-slate-800 text-brand-500 font-extrabold flex items-center justify-center shadow-xs transition-all cursor-pointer">
+              {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+            </button>
+            <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition:enter="transition ease-out duration-100"
+              x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100"
+              x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100"
+              x-transition:leave-end="transform opacity-0 scale-95"
+              class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
+              <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 font-bold cursor-pointer">
+                  Keluar
+                </button>
+              </form>
+            </div>
+          </div>
+        @else
+          <a href="{{ route('login') }}" class="text-xs font-semibold text-brand-600">Masuk</a>
+        @endauth
       </div>
     </header>
 
     <!-- Flash Alerts -->
-    <div class="px-4 mt-4">
+    <div class="px-6 md:px-8 mt-4 no-print">
       @if(session('success'))
-        <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 flex items-center gap-2.5 shadow-sm text-xs font-semibold">
-          <i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>
+        <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-xs flex items-center gap-2">
+          <i class="fa-solid fa-circle-check text-emerald-500"></i>
           <span>{{ session('success') }}</span>
         </div>
       @endif
 
       @if(session('error'))
-        <div class="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-700 flex items-center gap-2.5 shadow-sm text-xs font-semibold">
-          <i class="fa-solid fa-circle-exclamation text-red-500 text-base"></i>
+        <div class="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold shadow-xs flex items-center gap-2">
+          <i class="fa-solid fa-circle-exclamation text-red-500"></i>
           <span>{{ session('error') }}</span>
+        </div>
+      @endif
+
+      @if($errors->any())
+        <div class="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold shadow-xs space-y-1">
+          <p class="font-extrabold flex items-center gap-2"><i class="fa-solid fa-circle-exclamation text-red-500"></i> Terjadi kesalahan input:</p>
+          <ul class="list-disc list-inside text-[11px] font-medium pl-1">
+            @foreach($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
         </div>
       @endif
     </div>
 
-    <!-- Workspace Content -->
-    <main class="flex-grow p-4 space-y-6 overflow-y-auto">
+    <!-- Main Content Viewport -->
+    <main class="flex-grow p-6 md:p-8 overflow-y-auto w-full">
       @yield('content')
     </main>
 
-    <!-- Bottom Sticky Thumb-Friendly Navigation Bar -->
-    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white/95 backdrop-blur-md border-t border-slate-200 z-50 px-3 py-2 flex justify-around items-center shadow-2xl">
-      <a href="{{ url('/sopir/dashboard') }}" class="flex flex-col items-center gap-1 text-slate-600 hover:text-brand-600 transition-colors py-1 px-3">
-        <i class="fa-solid fa-gauge-high text-lg"></i>
-        <span class="text-[10px] font-bold">Dashboard</span>
-      </a>
-
-      <a href="#" class="flex flex-col items-center gap-1 text-slate-600 hover:text-brand-600 transition-colors py-1 px-3">
-        <i class="fa-solid fa-users text-lg"></i>
-        <span class="text-[10px] font-bold">Manifes</span>
-      </a>
-
-      <a href="#" class="flex flex-col items-center gap-1 text-slate-600 hover:text-brand-600 transition-colors py-1 px-3">
-        <i class="fa-solid fa-calendar-check text-lg"></i>
-        <span class="text-[10px] font-bold">Jadwal Saya</span>
-      </a>
-
-      <a href="#" class="flex flex-col items-center gap-1 text-slate-600 hover:text-brand-600 transition-colors py-1 px-3">
-        <i class="fa-solid fa-wallet text-lg"></i>
-        <span class="text-[10px] font-bold">Slip Gaji</span>
-      </a>
-    </nav>
-
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-6 md:px-8 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-2 no-print">
+      <p>&copy; {{ date('Y') }} <strong>CV. Travel RTM</strong>. Hak Cipta Dilindungi.</p>
+      <span class="text-[11px] font-semibold text-slate-500">Driver Portal Panel</span>
+    </footer>
   </div>
 
   @yield('scripts')

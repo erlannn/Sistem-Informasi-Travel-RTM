@@ -68,5 +68,11 @@ Route::middleware('auth')->group(function () {
     // Sopir Routes (Role: Sopir)
     Route::middleware('role:Sopir')->prefix('sopir')->as('sopir.')->group(function () {
         Route::get('/dashboard', [SopirDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/jadwal', [SopirDashboardController::class, 'jadwal'])->name('jadwal');
+        Route::get('/jadwal/{id}', [SopirDashboardController::class, 'jadwalDetail'])->name('jadwal.detail');
+        Route::post('/jadwal/{id}/selesaikan', [SopirDashboardController::class, 'selesaikanPerjalanan'])->name('jadwal.selesaikan');
+        Route::get('/jadwal/{id}/penumpang', [SopirDashboardController::class, 'penumpang'])->name('jadwal.penumpang');
+        Route::get('/penumpang', [SopirDashboardController::class, 'penumpangGlobal'])->name('penumpang');
+        Route::get('/gaji', [SopirDashboardController::class, 'gaji'])->name('gaji');
     });
 });
