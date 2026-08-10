@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Root Landing & Smart Redirect
-Route::get('/', function () {
+Route::get('/', function (Illuminate\Http\Request $request) {
     if (Auth::check()) {
         $user = Auth::user();
         if ($user->hasRole('Admin')) {
@@ -24,7 +24,41 @@ Route::get('/', function () {
             return redirect()->route('penumpang.beranda');
         }
     }
-    return redirect()->route('login');
+
+    $asal = $request->input('asal');
+    $tujuan = $request->input('tujuan');
+    $tanggal = $request->input('tanggal');
+
+    $query = App\Models\Jadwal::with(['armada', 'sopir']);
+
+    if ($asal) {
+        $query->where('asal', 'LIKE', "%{$asal}%");
+    }
+    if ($tujuan) {
+        $query->where('tujuan', 'LIKE', "%{$tujuan}%");
+    }
+    if ($tanggal) {
+        $query->whereDate('tanggal', $tanggal);
+    } else {
+        $query->where('tanggal', '>=', now()->toDateString());
+    }
+
+    $jadwals = $query->orderBy('tanggal', 'asc')->orderBy('jam', 'asc')->take(6)->get();
+
+    // Fetch unique locations for search dropdowns with fallbacks
+    $lokasiAsal = App\Models\Jadwal::distinct()->pluck('asal')->toArray();
+    $lokasiAsal = array_filter(array_map('trim', $lokasiAsal));
+    if (empty($lokasiAsal)) {
+        $lokasiAsal = ['Padang', 'Sijunjung', 'Solok', 'Bukittinggi'];
+    }
+
+    $lokasiTujuan = App\Models\Jadwal::distinct()->pluck('tujuan')->toArray();
+    $lokasiTujuan = array_filter(array_map('trim', $lokasiTujuan));
+    if (empty($lokasiTujuan)) {
+        $lokasiTujuan = ['Padang', 'Sijunjung', 'Solok', 'Bukittinggi'];
+    }
+
+    return view('welcome', compact('jadwals', 'asal', 'tujuan', 'tanggal', 'lokasiAsal', 'lokasiTujuan'));
 });
 
 // Guest Auth Routes
