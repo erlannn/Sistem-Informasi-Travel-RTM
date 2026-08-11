@@ -9,13 +9,9 @@
     <!-- Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
         <div>
-            <span class="px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] font-extrabold uppercase tracking-wider">
-                Database Penumpang
-            </span>
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
-                Data Seluruh Penumpang
+                Data Penumpang
             </h1>
-            <p class="text-xs text-slate-500 font-medium">Daftar pelanggan terdaftar yang pernah melakukan registrasi atau pemesanan tiket.</p>
         </div>
 
         <div class="flex flex-col sm:flex-row items-center gap-3">
@@ -49,7 +45,7 @@
                         <th class="p-3.5 rounded-l-xl">ID</th>
                         <th class="p-3.5">Nama Penumpang</th>
                         <th class="p-3.5">Email</th>
-                        <th class="p-3.5">No. Telepon / HP</th>
+                        <th class="p-3.5">No. Telepon / WA</th>
                         <th class="p-3.5">Alamat</th>
                         <th class="p-3.5 text-center">Total Pesanan</th>
                         <th class="p-3.5 rounded-r-xl text-center">Aksi</th>

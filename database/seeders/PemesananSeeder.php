@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Pemesanan;
+use App\Models\Jadwal;
+use App\Models\Penumpang;
+use App\Models\Kursi;
 use Illuminate\Database\Seeder;
 
 class PemesananSeeder extends Seeder
@@ -12,17 +15,6 @@ class PemesananSeeder extends Seeder
      */
     public function run(): void
     {
-        Pemesanan::firstOrCreate(
-            [
-                'id_penumpang' => 1,
-                'id_jadwal' => 1,
-                'id_kursi' => 1,
-            ],
-            [
-                'tanggal_pesan' => '2026-08-06',
-                'jumlah_penumpang' => 1,
-                'status' => 'Lunas',
-            ]
-        );
+        //
     }
 }

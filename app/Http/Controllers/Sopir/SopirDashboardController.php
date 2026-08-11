@@ -28,7 +28,6 @@ class SopirDashboardController extends Controller
                 'assignedJadwals' => collect(), 
                 'nextJadwal' => null, 
                 'completedBookingsCount' => 0, 
-                'tarifPerPenumpang' => 50000, 
                 'totalGaji' => 0,
                 'jumlahJadwal' => 0,
                 'jumlahPenumpangAkanDilayani' => 0
@@ -42,15 +41,14 @@ class SopirDashboardController extends Controller
             ->orderBy('jam', 'desc')
             ->get();
 
-        // Calculate specific requested dashboard stats:
         // 1. Jumlah jadwal perjalanan yang menjadi tanggung jawab sopir
         $jumlahJadwal = $assignedJadwals->count();
 
-        // 2. Jumlah penumpang yang akan dilayani (status Pending atau Lunas)
+        // 2. Jumlah penumpang yang akan dilayani (status_perjalanan Pending atau Naik)
         $jumlahPenumpangAkanDilayani = Pemesanan::whereHas('jadwal', function($q) use ($sopir) {
                 $q->where('id_sopir', '=', $sopir->id_sopir);
             })
-            ->whereIn('status', ['Pending', 'Lunas'])
+            ->whereIn('status_perjalanan', ['Pending', 'Naik'])
             ->sum('jumlah_penumpang');
 
         // Next upcoming schedule
@@ -61,27 +59,32 @@ class SopirDashboardController extends Controller
             ->orderBy('jam', 'asc')
             ->first();
 
-        // Calculate completed bookings and salary for current month
+        // Calculate completed bookings and total driver earnings for current month
         $currentMonthStart = Carbon::now()->startOfMonth()->toDateString();
         $currentMonthEnd = Carbon::now()->endOfMonth()->toDateString();
 
-        $completedBookingsCount = Pemesanan::whereHas('jadwal', function($q) use ($sopir) {
+        $completedBookings = Pemesanan::with(['jadwal'])
+            ->whereHas('jadwal', function($q) use ($sopir) {
                 $q->where('id_sopir', '=', $sopir->id_sopir);
             })
-            ->where('status', '=', 'Selesai')
+            ->where('status_perjalanan', '=', 'Selesai')
+            ->where('status_pembayaran', '=', 'Lunas')
             ->whereBetween('tanggal_pesan', [$currentMonthStart, $currentMonthEnd])
-            ->sum('jumlah_penumpang');
+            ->get();
 
-        $tarifPerPenumpang = 50000;
-        $totalKomisi = $completedBookingsCount * $tarifPerPenumpang;
-        $totalGaji = $sopir->gaji + $totalKomisi;
+        $completedBookingsCount = $completedBookings->sum('jumlah_penumpang');
+
+        $totalGaji = 0;
+        foreach ($completedBookings as $cb) {
+            $bagiHasil = $cb->jadwal->bagi_hasil_sopir ?? 0;
+            $totalGaji += ($cb->jumlah_penumpang * $bagiHasil);
+        }
 
         return view('sopir.dashboard', compact(
             'sopir', 
             'assignedJadwals', 
             'nextJadwal', 
             'completedBookingsCount', 
-            'tarifPerPenumpang', 
             'totalGaji',
             'jumlahJadwal',
             'jumlahPenumpangAkanDilayani'
@@ -135,9 +138,62 @@ class SopirDashboardController extends Controller
             ->where('id_jadwal', '=', $id)
             ->firstOrFail();
 
-        $jumlahPenumpang = $jadwal->pemesanans->where('status', '!=', 'Batal')->sum('jumlah_penumpang');
+        $jumlahPenumpang = $jadwal->pemesanans->where('status_perjalanan', '!=', 'Batal')->sum('jumlah_penumpang');
 
         return view('sopir.jadwal_detail', compact('sopir', 'jadwal', 'jumlahPenumpang'));
+    }
+
+    // Aksi 1: Penumpang naik mobil (Boarding)
+    public function penumpangNaik($id_pemesanan)
+    {
+        $pemesanan = Pemesanan::findOrFail($id_pemesanan);
+        $pemesanan->update([
+            'status_perjalanan' => 'Naik',
+        ]);
+
+        return back()->with('success', 'Status penumpang diperbarui: Naik ke armada.');
+    }
+
+    // Aksi 2: Sampai tujuan dan terima pembayaran cash
+    public function terimaBayarCash($id_pemesanan)
+    {
+        $pemesanan = Pemesanan::findOrFail($id_pemesanan);
+        
+        $pemesanan->update([
+            'status_perjalanan' => 'Selesai',
+            'status_pembayaran' => 'Lunas',
+            'waktu_bayar' => now(),
+        ]);
+
+        if ($pemesanan->id_kursi) {
+            $kursi = Kursi::find($pemesanan->id_kursi);
+            if ($kursi) {
+                $kursi->status = 'Kosong';
+                $kursi->save();
+            }
+        }
+
+        return back()->with('success', 'Pembayaran cash diterima dan perjalanan selesai.');
+    }
+
+    // Aksi 3: Penumpang Batal / No-Show
+    public function batalkanPesanan($id_pemesanan)
+    {
+        $pemesanan = Pemesanan::findOrFail($id_pemesanan);
+        
+        if ($pemesanan->id_kursi) {
+            $kursi = Kursi::find($pemesanan->id_kursi);
+            if ($kursi) {
+                $kursi->status = 'Kosong';
+                $kursi->save();
+            }
+        }
+
+        $pemesanan->update([
+            'status_perjalanan' => 'Batal',
+        ]);
+
+        return back()->with('success', 'Pesanan berhasil dibatalkan dan kursi dilepaskan.');
     }
 
     public function selesaikanPerjalanan(Request $request, $id)
@@ -151,24 +207,27 @@ class SopirDashboardController extends Controller
             ->where('id_jadwal', '=', $id)
             ->firstOrFail();
 
-        // Get all active bookings for this schedule (status Lunas / Pending)
+        // Get all active bookings for this schedule (status_perjalanan Pending / Naik)
         $pemesanans = Pemesanan::where('id_jadwal', '=', $jadwal->id_jadwal)
-            ->whereIn('status', ['Lunas', 'Pending'])
+            ->whereIn('status_perjalanan', ['Pending', 'Naik'])
             ->get();
 
         if ($pemesanans->isEmpty()) {
-            return redirect()->back()->with('error', 'Tidak ada pemesanan aktif (Pending/Lunas) untuk diselesaikan pada jadwal ini.');
+            return redirect()->back()->with('error', 'Tidak ada pemesanan aktif (Pending/Naik) untuk diselesaikan pada jadwal ini.');
         }
 
         foreach ($pemesanans as $pemesanan) {
-            $pemesanan->status = 'Selesai';
-            $pemesanan->save();
+            $pemesanan->update([
+                'status_perjalanan' => 'Selesai',
+                'status_pembayaran' => 'Lunas',
+                'waktu_bayar' => $pemesanan->waktu_bayar ?? now(),
+            ]);
 
             // Release seat
             if ($pemesanan->id_kursi) {
                 $kursi = Kursi::find($pemesanan->id_kursi);
                 if ($kursi) {
-                    $kursi->status = 'Tersedia';
+                    $kursi->status = 'Kosong';
                     $kursi->save();
                 }
             }
@@ -249,23 +308,46 @@ class SopirDashboardController extends Controller
             ->whereHas('jadwal', function($q) use ($sopir) {
                 $q->where('id_sopir', '=', $sopir->id_sopir);
             })
-            ->where('status', '=', 'Selesai')
+            ->where('status_perjalanan', '=', 'Selesai')
+            ->where('status_pembayaran', '=', 'Lunas')
             ->whereBetween('tanggal_pesan', [$monthStart, $monthEnd])
             ->get();
 
         $totalPenumpang = $completedBookings->sum('jumlah_penumpang');
-        $tarifPerPenumpang = 50000; // Flat Rp 50.000 commission
-        $totalKomisi = $totalPenumpang * $tarifPerPenumpang;
-        
-        // Accumulate salary: Gaji Pokok + Komisi
-        $baseSalary = $sopir->gaji;
-        $totalGaji = $baseSalary + $totalKomisi;
 
-        // Cash payments collected by driver from passenger directly
+        // Group by route for detailed slip breakdown
+        $ruteBreakdown = [];
+        $totalGaji = 0;
         $totalTunaiDiterima = 0;
+
         foreach ($completedBookings as $cb) {
-            $totalTunaiDiterima += $cb->jumlah_penumpang * ($cb->jadwal->harga ?? 0);
+            $j = $cb->jadwal;
+            $ruteKey = ($j ? "{$j->asal} → {$j->tujuan}" : 'Perjalanan Travel');
+            $hargaTiket = $j ? $j->harga : 0;
+            $bagiHasilUnit = $j ? $j->bagi_hasil_sopir : 0;
+
+            $pax = $cb->jumlah_penumpang;
+            $subtotalBagiHasil = $pax * $bagiHasilUnit;
+            $subtotalCash = $cb->total_bayar > 0 ? $cb->total_bayar : ($pax * $hargaTiket);
+
+            if (!isset($ruteBreakdown[$ruteKey])) {
+                $ruteBreakdown[$ruteKey] = [
+                    'rute' => $ruteKey,
+                    'total_penumpang' => 0,
+                    'harga_tiket' => $hargaTiket,
+                    'bagi_hasil_per_pax' => $bagiHasilUnit,
+                    'total_bagi_hasil' => 0,
+                ];
+            }
+
+            $ruteBreakdown[$ruteKey]['total_penumpang'] += $pax;
+            $ruteBreakdown[$ruteKey]['total_bagi_hasil'] += $subtotalBagiHasil;
+
+            $totalGaji += $subtotalBagiHasil;
+            $totalTunaiDiterima += $subtotalCash;
         }
+
+        $totalSetoranPerusahaan = max(0, $totalTunaiDiterima - $totalGaji);
 
         // Generate list of available periods based on driver schedules
         $periods = [];
@@ -290,11 +372,10 @@ class SopirDashboardController extends Controller
             'selectedPeriod',
             'periods',
             'totalPenumpang',
-            'tarifPerPenumpang',
-            'totalKomisi',
-            'baseSalary',
+            'ruteBreakdown',
             'totalGaji',
-            'totalTunaiDiterima'
+            'totalTunaiDiterima',
+            'totalSetoranPerusahaan'
         ));
     }
 }

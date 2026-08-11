@@ -22,7 +22,13 @@ class Jadwal extends Model
         'tanggal',
         'jam',
         'harga',
+        'bagi_hasil_sopir',
     ];
+
+    public function getSetoranPerusahaanAttribute(): float
+    {
+        return max(0, (float) $this->harga - (float) ($this->bagi_hasil_sopir ?? 0));
+    }
 
     public function armada(): BelongsTo
     {

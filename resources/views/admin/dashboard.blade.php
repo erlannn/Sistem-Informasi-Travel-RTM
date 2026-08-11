@@ -9,17 +9,9 @@
     <div class="bg-white rounded-3xl shadow-xs border border-slate-200/80 p-6 md:p-8 relative overflow-hidden">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
             <div>
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] font-extrabold uppercase tracking-wider">
-                        Control Center
-                    </span>
-                </div>
                 <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
                     Selamat Datang, Admin RTM Travel
                 </h1>
-                <p class="text-xs md:text-sm text-slate-500 font-medium mt-1">
-                    Kelola data armada, sopir, penumpang, jadwal perjalanan, dan seluruh transaksi pemesanan dalam satu sistem.
-                </p>
             </div>
         </div>
     </div>
@@ -48,14 +40,14 @@
             </a>
 
             <!-- Stat: Armada -->
-            <a href="{{ route('admin.armada.index') }}" class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition border-l-4 border-l-slate-700 block">
+            <a href="{{ route('admin.armada.index') }}" class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition border-l-4 border-l-brand-500 block">
                 <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">Total Armada</span>
                 <div class="text-2xl font-extrabold text-slate-900">{{ $stats['total_armada'] }}</div>
                 <span class="text-[11px] text-brand-600 font-bold block mt-2">Lihat Selengkapnya &rarr;</span>
             </a>
 
             <!-- Stat: Sopir -->
-            <a href="{{ route('admin.sopir.index') }}" class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition border-l-4 border-l-slate-700 block">
+            <a href="{{ route('admin.sopir.index') }}" class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition border-l-4 border-l-brand-500 block">
                 <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">Total Sopir</span>
                 <div class="text-2xl font-extrabold text-slate-900">{{ $stats['total_sopir'] }}</div>
                 <span class="text-[11px] text-brand-600 font-bold block mt-2">Lihat Selengkapnya &rarr;</span>
@@ -64,7 +56,7 @@
     </div>
 
     <!-- Recent Tables Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    {{-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Recent Pemesanan -->
         <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
             <div class="flex items-center justify-between mb-4">
@@ -169,6 +161,6 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 @endsection

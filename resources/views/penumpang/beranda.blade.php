@@ -8,13 +8,6 @@
         
         <!-- Welcome Hero Section (Minimalist & Clean) -->
         <div class="relative mb-8 text-center md:text-left pt-4">
-            <!-- Brand Badge -->
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold text-brand-600 bg-brand-50 border border-brand-100 rounded-full mb-4 uppercase tracking-wider select-none">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                </svg>
-                Layanan Travel Premium
-            </span>
             
             <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight uppercase">
                 Selamat Datang di Travel RTM
@@ -57,9 +50,9 @@
                                 <select id="asal" name="asal" class="block w-full pl-10 pr-10 py-3 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all appearance-none cursor-pointer">
                                     <option value="" disabled selected>Pilih Kota Asal...</option>
                                     <option value="Sijunjung">Sijunjung</option>
-                                    <option value="Padang">Padang</option>
                                     <option value="Solok">Solok</option>
-                                    <option value="Bukittinggi">Bukittinggi</option>
+                                    <option value="Padang">Padang</option>
+                                    <option value="BIM">Bandara Internasional Minangkabau (BIM)</option>
                                 </select>
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
@@ -77,9 +70,9 @@
                                 <select id="tujuan" name="tujuan" class="block w-full pl-10 pr-10 py-3 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all appearance-none cursor-pointer">
                                     <option value="" disabled selected>Pilih Kota Tujuan...</option>
                                     <option value="Padang">Padang</option>
-                                    <option value="Sijunjung">Sijunjung</option>
                                     <option value="Solok">Solok</option>
-                                    <option value="Bukittinggi">Bukittinggi</option>
+                                    <option value="BIM">Bandara Internasional Minangkabau (BIM)</option>
+                                    <option value="Sijunjung">Sijunjung</option>
                                 </select>
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>

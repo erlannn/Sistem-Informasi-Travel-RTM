@@ -37,7 +37,6 @@ class AdminSopirController extends Controller
             'nama' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
             'alamat' => 'nullable|string',
-            'gaji' => 'required|numeric|min:0',
         ]);
 
         Sopir::create($validated);
@@ -66,7 +65,6 @@ class AdminSopirController extends Controller
             'nama' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
             'alamat' => 'nullable|string',
-            'gaji' => 'required|numeric|min:0',
         ]);
 
         $sopir->update($validated);

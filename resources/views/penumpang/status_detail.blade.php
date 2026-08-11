@@ -32,6 +32,29 @@
 
 @php
     $kode = 'RTM' . sprintf('%04d', $pemesanan->id_pemesanan);
+
+    $relatedPemesanans = \App\Models\Pemesanan::where('id_penumpang', $pemesanan->id_penumpang)
+        ->where('id_jadwal', $pemesanan->id_jadwal)
+        ->where('tanggal_pesan', $pemesanan->tanggal_pesan)
+        ->whereBetween('created_at', [
+            \Carbon\Carbon::parse($pemesanan->created_at)->subSeconds(15),
+            \Carbon\Carbon::parse($pemesanan->created_at)->addSeconds(15)
+        ])
+        ->with('kursi')
+        ->get();
+
+    if ($relatedPemesanans->isEmpty()) {
+        $relatedPemesanans = collect([$pemesanan]);
+    }
+
+    $nomorKursiList = $relatedPemesanans->map(fn($p) => $p->kursi->nomor_kursi ?? null)->filter()->values();
+    $totalKursiCount = $nomorKursiList->count() > 0 ? $nomorKursiList->count() : 1;
+    $seatsText = $nomorKursiList->count() > 0 ? 'Kursi ' . $nomorKursiList->join(', ') : ('Kursi ' . ($pemesanan->kursi->nomor_kursi ?? '1'));
+
+    $totalBayar = $relatedPemesanans->sum('total_bayar');
+    if ($totalBayar <= 0) {
+        $totalBayar = ($pemesanan->jadwal->harga ?? 70000) * $totalKursiCount;
+    }
 @endphp
 
 <div class="py-8 bg-slate-50 md:py-12 print-container">
@@ -62,11 +85,12 @@
                     </div>
                 </div>
                 
-                <div class="flex items-center gap-2.5">
-                    <span class="text-xs text-slate-400 font-semibold">Status:</span>
+                <div class="flex flex-wrap items-center gap-2.5">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-gold-400 bg-slate-900 border border-gold-500/30">
-                        <span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse"></span>
-                        {{ $pemesanan->status }}
+                        Perjalanan: {{ $pemesanan->status_perjalanan ?? 'Pending' }}
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold {{ $pemesanan->status_pembayaran === 'Lunas' ? 'text-emerald-400 border-emerald-500/30 bg-slate-900' : 'text-amber-400 border-amber-500/30 bg-slate-900' }} border">
+                        Bayar: {{ $pemesanan->status_pembayaran ?? 'Belum Bayar' }}
                     </span>
                 </div>
             </div>
@@ -91,8 +115,8 @@
                         </div>
                         <div class="grid grid-cols-2 gap-4 pt-2">
                             <div>
-                                <span class="text-xs text-slate-400 block">Tanggal</span>
-                                <span class="text-sm font-bold text-slate-800">{{ $pemesanan->jadwal->tanggal ?? date('Y-m-d') }}</span>
+                                <span class="text-xs text-slate-400 block">Tanggal Perjalanan</span>
+                                <span class="text-sm font-bold text-slate-800">{{ $pemesanan->jadwal->tanggal ? \Carbon\Carbon::parse($pemesanan->jadwal->tanggal)->format('d-m-Y') : date('d-m-Y') }}</span>
                             </div>
                             <div>
                                 <span class="text-xs text-slate-400 block">Jam Berangkat</span>
@@ -105,8 +129,8 @@
                                 <span class="text-sm font-bold text-slate-800">{{ $pemesanan->jadwal->armada->merk ?? 'Toyota Avanza' }}</span>
                             </div>
                             <div>
-                                <span class="text-xs text-slate-400 block">No. Kursi</span>
-                                <span class="text-sm font-bold text-gold-600">Kursi {{ $pemesanan->kursi->nomor_kursi ?? '1' }}</span>
+                                <span class="text-xs text-slate-400 block">Kursi Dipesan</span>
+                                <span class="text-sm font-extrabold text-gold-600 bg-gold-50 px-2 py-0.5 rounded border border-gold-200/60 inline-block mt-0.5">{{ $seatsText }}</span>
                             </div>
                         </div>
                     </div>
@@ -128,6 +152,10 @@
                             <span class="text-xs text-slate-400 block">Nomor Telepon</span>
                             <span class="text-sm font-semibold text-slate-600">{{ $pemesanan->penumpang->no_hp ?? '-' }}</span>
                         </div>
+                        <div>
+                            <span class="text-xs text-slate-400 block">Tanggal Pemesanan</span>
+                            <span class="text-sm font-semibold text-slate-600">{{ $pemesanan->tanggal_pesan ? \Carbon\Carbon::parse($pemesanan->tanggal_pesan)->format('d-m-Y') : date('d-m-Y') }}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -141,16 +169,26 @@
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Detail Harga & Pembayaran</h3>
                     <div class="space-y-1.5">
                         <div class="flex justify-between items-center text-xs text-slate-500">
-                            <span>Harga Tiket (1 Penumpang)</span>
-                            <span>Rp {{ number_format($pemesanan->jadwal->harga ?? 70000, 0, ',', '.') }}</span>
+                            <span>Metode Pembayaran</span>
+                            <span class="font-bold text-slate-800">{{ $pemesanan->metode_pembayaran ?? 'Cash' }} Saat Sampai</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs text-slate-500">
+                            <span>Jumlah Tiket / Kursi</span>
+                            <span class="font-bold text-slate-800">{{ $totalKursiCount }} Kursi</span>
                         </div>
                         <div class="flex justify-between items-center text-sm font-bold text-slate-900 border-t border-dashed border-slate-200 pt-2">
                             <span>Total Pembayaran</span>
-                            <span class="text-base text-gold-600">Rp {{ number_format($pemesanan->jadwal->harga ?? 70000, 0, ',', '.') }}</span>
+                            <span class="text-base text-gold-600 font-extrabold">Rp {{ number_format($totalBayar, 0, ',', '.') }}</span>
                         </div>
                     </div>
                     <!-- Small note -->
-                    <p class="text-[10px] text-slate-400 italic">Pembayaran dilakukan secara tunai di lokasi keberangkatan saat menaiki armada travel RTM.</p>
+                    <p class="text-[10px] text-slate-500 italic">
+                        @if($pemesanan->status_pembayaran === 'Lunas')
+                            Pembayaran cash telah diterima oleh supir pada {{ $pemesanan->waktu_bayar ? \Carbon\Carbon::parse($pemesanan->waktu_bayar)->format('d-m-Y, H.i') : 'saat tiba di tujuan' }}.
+                        @else
+                            Pembayaran dilakukan secara cash (tunai) langsung kepada supir saat telah sampai di tujuan.
+                        @endif
+                    </p>
                 </div>
 
                 <!-- Digital Ticket Barcode concept -->
@@ -199,7 +237,7 @@
             <!-- Cetak Status Pembayaran (Spatie PDF) -->
             <a href="{{ route('penumpang.status.pdf', $pemesanan->id_pemesanan) }}" target="_blank" class="w-full sm:w-auto px-8 py-3 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-950 border border-gold-500/20 hover:border-gold-500/45 rounded-xl shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5">
                 <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.434a2.25 2.25 0 002.25-2.25v-3a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v3a2.25 2.25 0 002.25 2.25h1.434M9 9h6v3.75H9V9z" /></svg>
-                Cetak Status Pembayaran (PDF)
+                Cetak Bukti Pemesanan (PDF)
             </a>
         </div>
 

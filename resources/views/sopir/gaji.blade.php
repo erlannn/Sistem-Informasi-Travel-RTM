@@ -1,154 +1,205 @@
 @extends('layouts.sopir')
 
-@section('title', 'Informasi Gaji Sopir - CV RTM Travel')
-@section('page_title', 'Rincian Slip Gaji')
+@section('title', 'Informasi Gaji & Bagi Hasil - CV RTM Travel')
+@section('page_title', 'Informasi Gaji & Setoran')
 
 @section('content')
-<div class="space-y-4 no-print">
-    <!-- Header -->
-    <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-md">
-        <h1 class="text-lg font-black text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-wallet text-amber-500"></i> Informasi Gaji
-        </h1>
-        <p class="text-[11px] text-slate-500 mt-0.5 font-semibold">Pantau rincian gaji bulanan, komisi manifest, dan total pendapatan Anda.</p>
-    </div>
+<div class="space-y-5 no-print">
+    <!-- Header Card -->
+    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <span class="px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold uppercase tracking-wider">
+                    Informasi Pendapatan
+                </span>
+                <h1 class="text-xl md:text-2xl font-black text-slate-900 mt-1">
+                    Gaji & Pembagian Hasil
+                </h1>
+                <p class="text-xs text-slate-500 font-medium">Rincian gaji Anda dan uang yang harus disetorkan ke kantor per bulan.</p>
+            </div>
 
-    <!-- Period Selection Form -->
-    <div class="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-md">
-        <form action="{{ route('sopir.gaji') }}" method="GET" class="space-y-2">
-            <label for="period" class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider block">PILIH PERIODE GAJI</label>
-            <div class="flex gap-2">
+            <!-- Periode Form & Cetak -->
+            <form action="{{ route('sopir.gaji') }}" method="GET" class="flex items-center gap-2">
                 <select name="period" id="period" onchange="this.form.submit()" 
-                    class="flex-grow bg-slate-50 border border-slate-200 text-xs rounded-xl p-2.5 outline-none font-bold text-slate-800 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors">
+                    class="bg-slate-100 border border-slate-200 text-xs font-extrabold text-slate-800 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer">
                     @foreach($periods as $val => $label)
                         <option value="{{ $val }}" {{ $selectedPeriod == $val ? 'selected' : '' }}>
                             {{ $label }}
                         </option>
                     @endforeach
                 </select>
-                
-                <button type="button" onclick="window.print()" class="bg-slate-900 hover:bg-slate-950 text-white font-extrabold text-xs px-4 rounded-xl transition-colors shrink-0 flex items-center gap-1.5 shadow-sm cursor-pointer">
+
+                <button type="button" onclick="window.print()" class="bg-slate-900 hover:bg-slate-950 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer">
                     <i class="fa-solid fa-print"></i> Cetak
                 </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
-<!-- Pay Slip Content Container (Wrapped in printable-slip for custom print layout) -->
-<div id="printable-slip" class="bg-white rounded-3xl border border-slate-200/80 shadow-md overflow-hidden relative mt-4">
-    <!-- Watermark / Background Texture -->
-    <div class="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#000000_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none"></div>
-
-    <!-- Header Slip -->
-    <div class="bg-slate-950 text-white p-5 border-b border-slate-900 relative">
-        <div class="flex justify-between items-center">
+<!-- 3 Ringkasan Utama (Tampilan Besar & Sederhana untuk Usia 30+) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+    <!-- Kartu 1: Total Uang Diterima dari Penumpang -->
+    <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl font-bold shrink-0">
+                <i class="fa-solid fa-money-bill-wave"></i>
+            </div>
             <div>
-                <span class="text-[9px] text-amber-500 font-extrabold uppercase tracking-widest leading-none block">SLIP GAJI RESMI</span>
-                <h2 class="text-base font-black mt-1 leading-none">CV RTM Travel Family</h2>
+                <span class="text-xs text-slate-500 font-bold block">Uang Diterima dari Penumpang</span>
+                <span class="text-xl font-black text-slate-900 mt-0.5 block">Rp {{ number_format($totalTunaiDiterima, 0, ',', '.') }}</span>
             </div>
-            <div class="text-right shrink-0">
-                <span class="text-[10px] text-slate-400 font-bold block">Periode</span>
-                <span class="text-xs font-extrabold text-white block">{{ $periods[$selectedPeriod] ?? $selectedPeriod }}</span>
+        </div>
+        <p class="text-[11px] text-slate-400 font-medium mt-3 border-t border-slate-100 pt-2">
+            Total uang tunai yang terkumpul dari seluruh penumpang.
+        </p>
+    </div>
+
+    <!-- Kartu 2: Gaji / Bagian Anda -->
+    <div class="bg-white p-5 rounded-3xl border-2 border-emerald-500/30 shadow-sm bg-emerald-50/20">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold shrink-0">
+                <i class="fa-solid fa-wallet"></i>
             </div>
+            <div>
+                <span class="text-xs text-emerald-800 font-extrabold block">Gaji / Hak Anda (Sopir)</span>
+                <span class="text-2xl font-black text-emerald-600 mt-0.5 block">Rp {{ number_format($totalGaji, 0, ',', '.') }}</span>
+            </div>
+        </div>
+        <p class="text-[11px] text-emerald-700 font-semibold mt-3 border-t border-emerald-100 pt-2">
+            ✅ Uang bersih hak Anda dari {{ $totalPenumpang }} penumpang selesai.
+        </p>
+    </div>
+
+    <!-- Kartu 3: Wajib Disetor ke Perusahaan -->
+    <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl font-bold shrink-0">
+                <i class="fa-solid fa-building"></i>
+            </div>
+            <div>
+                <span class="text-xs text-slate-500 font-bold block">Wajib Disetor ke Admin Kantor</span>
+                <span class="text-xl font-black text-blue-700 mt-0.5 block">Rp {{ number_format($totalSetoranPerusahaan, 0, ',', '.') }}</span>
+            </div>
+        </div>
+        <p class="text-[11px] text-slate-400 font-medium mt-3 border-t border-slate-100 pt-2">
+            Sisa uang fisik yang diserahkan ke kasir kantor.
+        </p>
+    </div>
+</div>
+
+<!-- Printable Container for Slip -->
+<div id="printable-slip" class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden mt-5">
+    <!-- Header Slip Print -->
+    <div class="bg-slate-900 text-white p-5 flex justify-between items-center">
+        <div>
+            <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-wider block">SLIP GAJI & BAGI HASIL SOPIR</span>
+            <h2 class="text-base font-black text-white mt-0.5">CV. TRAVEL RTM</h2>
+        </div>
+        <div class="text-right">
+            <span class="text-xs text-slate-400 font-bold block">Periode Perjalanan</span>
+            <span class="text-xs font-black text-amber-400 block">{{ $periods[$selectedPeriod] ?? $selectedPeriod }}</span>
         </div>
     </div>
 
-    <!-- Slip Details Body -->
-    <div class="p-5 space-y-5">
-        
-        <!-- Driver Profile Info -->
-        <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-2xl space-y-2.5">
-            <div class="flex justify-between text-xs font-semibold">
-                <span class="text-slate-400">Nama Sopir</span>
-                <span class="text-slate-800 font-black">{{ $sopir->nama }}</span>
+    <div class="p-6 space-y-6">
+        <!-- Informasi Sopir -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/70 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+                <span class="text-slate-400 font-medium block">Nama Sopir:</span>
+                <span class="font-extrabold text-slate-900 text-sm">{{ $sopir->nama }}</span>
             </div>
-            <div class="flex justify-between text-xs font-semibold">
-                <span class="text-slate-400">No. HP / WA</span>
-                <span class="text-slate-800 font-bold">{{ $sopir->no_hp }}</span>
-            </div>
-            <div class="flex justify-between text-xs font-semibold">
-                <span class="text-slate-400">Status Portal</span>
-                <span class="text-emerald-600 font-extrabold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Terverifikasi</span>
+            <div>
+                <span class="text-slate-400 font-medium block">No. HP / WA:</span>
+                <span class="font-bold text-slate-800 text-sm">{{ $sopir->no_hp }}</span>
             </div>
         </div>
 
-        <!-- Salary Breakdown -->
+        <!-- Tabel Rincian Per Rute -->
         <div class="space-y-3">
-            <h3 class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">RINCIAN PENDAPATAN & GAJI</h3>
-            
-            <div class="space-y-2.5 text-xs">
-                <!-- Gaji Pokok -->
-                <div class="flex justify-between items-center py-1 border-b border-slate-100 font-semibold">
-                    <span class="text-slate-500">Gaji Pokok Bulanan</span>
-                    <span class="text-slate-800">Rp {{ number_format($baseSalary, 0, ',', '.') }}</span>
-                </div>
+            <h3 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+                Rincian Gaji Per Rute Perjalanan
+            </h3>
 
-                <!-- Total Penumpang -->
-                <div class="flex justify-between items-center py-1 border-b border-slate-100 font-semibold">
-                    <span class="text-slate-500">Total Penumpang Selesai</span>
-                    <span class="text-slate-800">{{ $totalPenumpang }} Orang</span>
-                </div>
+            <div class="overflow-x-auto border border-slate-200 rounded-2xl">
+                <table class="w-full text-left text-xs text-slate-700">
+                    <thead class="bg-slate-100 text-slate-700 uppercase text-[11px] font-extrabold border-b border-slate-200">
+                        <tr>
+                            <th class="p-3.5">Rute Perjalanan</th>
+                            <th class="p-3.5 text-center">Jumlah Penumpang</th>
+                            <th class="p-3.5 text-right">Gaji Per Penumpang</th>
+                            <th class="p-3.5 text-right">Total Gaji Anda</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium">
+                        @forelse($ruteBreakdown as $rb)
+                            <tr class="hover:bg-slate-50/80 transition">
+                                <td class="p-3.5 font-bold text-slate-900 text-xs sm:text-sm">{{ $rb['rute'] }}</td>
+                                <td class="p-3.5 text-center font-bold text-slate-800 text-xs sm:text-sm">{{ $rb['total_penumpang'] }} Orang</td>
+                                <td class="p-3.5 text-right font-semibold text-slate-600 text-xs sm:text-sm">Rp {{ number_format($rb['bagi_hasil_per_pax'], 0, ',', '.') }}</td>
+                                <td class="p-3.5 text-right font-black text-emerald-600 text-xs sm:text-sm">Rp {{ number_format($rb['total_bagi_hasil'], 0, ',', '.') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="p-8 text-center text-slate-400 font-medium">
+                                    Belum ada data perjalanan yang selesai pada bulan ini.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                    @if(count($ruteBreakdown) > 0)
+                    <tfoot class="bg-slate-50 font-bold border-t border-slate-200">
+                        <tr>
+                            <td colspan="2" class="p-3.5 text-slate-800 text-xs sm:text-sm font-extrabold">TOTAL KESELURUHAN:</td>
+                            <td class="p-3.5 text-center text-slate-600 text-xs font-bold">{{ $totalPenumpang }} Penumpang</td>
+                            <td class="p-3.5 text-right text-emerald-600 text-sm sm:text-base font-black">Rp {{ number_format($totalGaji, 0, ',', '.') }}</td>
+                        </tr>
+                    </tfoot>
+                    @endif
+                </table>
+            </div>
+        </div>
 
-                <!-- Tarif per penumpang / Komisi -->
-                <div class="flex justify-between items-center py-1 border-b border-slate-100 font-semibold">
-                    <span class="text-slate-500">Tarif per penumpang (Komisi)</span>
-                    <span class="text-slate-800">Rp {{ number_format($tarifPerPenumpang, 0, ',', '.') }}</span>
+        <!-- Perhitungan Setoran Sederhana -->
+        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+                Ringkasan Penyetoran Uang ke Admin Kantor
+            </h4>
+            <div class="space-y-2 text-xs font-semibold">
+                <div class="flex justify-between items-center py-1 border-b border-slate-200/60">
+                    <span class="text-slate-600">Total Uang Diterima dari Penumpang:</span>
+                    <span class="text-slate-900 font-bold">Rp {{ number_format($totalTunaiDiterima, 0, ',', '.') }}</span>
                 </div>
-
-                <!-- Total Komisi -->
-                <div class="flex justify-between items-center py-1 border-b border-slate-100 font-semibold">
-                    <span class="text-slate-500">Akumulasi Komisi</span>
-                    <span class="text-slate-800">Rp {{ number_format($totalKomisi, 0, ',', '.') }}</span>
+                <div class="flex justify-between items-center py-1 border-b border-slate-200/60">
+                    <span class="text-slate-600">Diambil untuk Gaji Anda (Sopir):</span>
+                    <span class="text-emerald-600 font-bold">- Rp {{ number_format($totalGaji, 0, ',', '.') }}</span>
+                </div>
+                <div class="flex justify-between items-center pt-1 text-sm font-black">
+                    <span class="text-slate-900">Uang yang Diserahkan ke Admin:</span>
+                    <span class="text-blue-700 font-black">Rp {{ number_format($totalSetoranPerusahaan, 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- Total Gaji Netto -->
-        <div class="bg-amber-500/10 border border-amber-500/20 p-4 rounded-2xl flex justify-between items-center">
+        <!-- Tanda Tangan Cetak -->
+        <div class="hidden print:grid grid-cols-2 text-center text-xs pt-10 mt-8 border-t border-slate-200">
             <div>
-                <span class="text-[9px] text-amber-700 font-extrabold uppercase tracking-wider block">Total Gaji Dibukukan</span>
-                <span class="text-[10px] text-slate-500 font-medium block mt-0.5">(Gaji Pokok + Komisi)</span>
-            </div>
-            <div class="text-right">
-                <span class="text-lg font-black text-amber-700">Rp {{ number_format($totalGaji, 0, ',', '.') }}</span>
-            </div>
-        </div>
-
-        <!-- Cash Collected from Passenger (COD) Info -->
-        <div class="border-t border-dashed border-slate-200 pt-4 space-y-3">
-            <h3 class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">PEMBAYARAN LANGSUNG DARI PENUMPANG (COD)</h3>
-            
-            <div class="bg-emerald-50 border border-emerald-200/80 p-4 rounded-2xl space-y-2 text-xs">
-                <div class="flex justify-between items-center font-semibold">
-                    <span class="text-slate-600">Total Pembayaran Tiket Diterima</span>
-                    <span class="text-emerald-700 font-black">Rp {{ number_format($totalTunaiDiterima, 0, ',', '.') }}</span>
-                </div>
-                <p class="text-[10px] text-slate-500 leading-relaxed font-medium mt-1">
-                    *Uang ini dibayarkan tunai oleh penumpang langsung kepada Anda setelah perjalanan selesai dan tidak termasuk dalam potongan gaji bulanan dari perusahaan.
-                </p>
-            </div>
-        </div>
-
-        <!-- Footer Signatures (Aesthetic for printing) -->
-        <div class="hidden print:block pt-8 mt-12 grid grid-cols-2 text-center text-xs">
-            <div>
-                <p class="font-medium text-slate-400">Driver Penerima</p>
+                <p class="font-medium text-slate-500">Sopir / Pengemudi</p>
                 <div class="h-16"></div>
-                <p class="font-bold text-slate-800 border-t border-slate-200 pt-1 w-36 mx-auto">{{ $sopir->nama }}</p>
+                <p class="font-bold text-slate-900 border-t border-slate-300 pt-1 w-40 mx-auto">{{ $sopir->nama }}</p>
             </div>
             <div>
-                <p class="font-medium text-slate-400">Keuangan CV RTM</p>
+                <p class="font-medium text-slate-500">Kasir / Admin CV. Travel RTM</p>
                 <div class="h-16"></div>
-                <p class="font-bold text-slate-800 border-t border-slate-200 pt-1 w-36 mx-auto">Admin RTM Travel</p>
+                <p class="font-bold text-slate-900 border-t border-slate-300 pt-1 w-40 mx-auto">Admin RTM</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="pt-2 no-print">
+<div class="pt-4 no-print">
     <a href="{{ route('sopir.dashboard') }}" class="w-full inline-block text-center bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-bold py-3 rounded-2xl text-xs transition-colors">
-        Kembali ke Dashboard
+        &larr; Kembali ke Dashboard Sopir
     </a>
 </div>
 @endsection

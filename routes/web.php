@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminSopirController;
 use App\Http\Controllers\Admin\AdminPenumpangController;
 use App\Http\Controllers\Admin\AdminJadwalController;
 use App\Http\Controllers\Admin\AdminPemesananController;
+use App\Http\Controllers\Admin\AdminSetoranController;
 use App\Http\Controllers\Penumpang\PenumpangDashboardController;
 use App\Http\Controllers\Sopir\SopirDashboardController;
 use Illuminate\Support\Facades\Auth;
@@ -46,8 +47,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('/sopir', AdminSopirController::class);
         Route::resource('/penumpang', AdminPenumpangController::class);
         Route::resource('/jadwal', AdminJadwalController::class);
-        Route::resource('/pemesanan', AdminPemesananController::class);
+        Route::resource('/pemesanan', AdminPemesananController::class)->only(['index', 'show', 'destroy']);
         Route::patch('/pemesanan/{id}/status', [AdminPemesananController::class, 'updateStatus'])->name('pemesanan.update_status');
+        
+        // Rekap Setoran Kas
+        Route::get('/setoran', [AdminSetoranController::class, 'index'])->name('setoran.index');
+        Route::post('/setoran/{id_jadwal}/verifikasi', [AdminSetoranController::class, 'verifikasiSetoran'])->name('setoran.verifikasi');
     });
 
     // Penumpang Routes (Role: Penumpang)
@@ -74,5 +79,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/jadwal/{id}/penumpang', [SopirDashboardController::class, 'penumpang'])->name('jadwal.penumpang');
         Route::get('/penumpang', [SopirDashboardController::class, 'penumpangGlobal'])->name('penumpang');
         Route::get('/gaji', [SopirDashboardController::class, 'gaji'])->name('gaji');
+        
+        // Action routes per passenger / booking
+        Route::post('/pemesanan/{id}/naik', [SopirDashboardController::class, 'penumpangNaik'])->name('pemesanan.naik');
+        Route::post('/pemesanan/{id}/terima-cash', [SopirDashboardController::class, 'terimaBayarCash'])->name('pemesanan.terima_cash');
+        Route::post('/pemesanan/{id}/batal', [SopirDashboardController::class, 'batalkanPesanan'])->name('pemesanan.batal');
     });
 });

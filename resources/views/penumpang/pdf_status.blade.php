@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bukti Pembayaran Tiket - RTM Family</title>
+    <title>Bukti Pemesanan Tiket - RTM Family</title>
     <style>
         * {
             box-sizing: border-box;
@@ -199,6 +199,29 @@
 <body>
     @php
         $kode = 'RTM' . sprintf('%04d', $pemesanan->id_pemesanan);
+
+        $relatedPemesanans = \App\Models\Pemesanan::where('id_penumpang', $pemesanan->id_penumpang)
+            ->where('id_jadwal', $pemesanan->id_jadwal)
+            ->where('tanggal_pesan', $pemesanan->tanggal_pesan)
+            ->whereBetween('created_at', [
+                \Carbon\Carbon::parse($pemesanan->created_at)->subSeconds(15),
+                \Carbon\Carbon::parse($pemesanan->created_at)->addSeconds(15)
+            ])
+            ->with('kursi')
+            ->get();
+
+        if ($relatedPemesanans->isEmpty()) {
+            $relatedPemesanans = collect([$pemesanan]);
+        }
+
+        $nomorKursiList = $relatedPemesanans->map(fn($p) => $p->kursi->nomor_kursi ?? null)->filter()->values();
+        $totalKursiCount = $nomorKursiList->count() > 0 ? $nomorKursiList->count() : 1;
+        $seatsText = $nomorKursiList->count() > 0 ? 'Kursi ' . $nomorKursiList->join(', ') : ('Kursi ' . ($pemesanan->kursi->nomor_kursi ?? '1'));
+
+        $totalBayar = $relatedPemesanans->sum('total_bayar');
+        if ($totalBayar <= 0) {
+            $totalBayar = ($pemesanan->jadwal->harga ?? 70000) * $totalKursiCount;
+        }
     @endphp
 
     <div class="container">
@@ -209,7 +232,7 @@
                 <span class="brand-sub">Sistem Informasi Travel RTM</span>
             </div>
             <div>
-                <span class="status-badge">Status: {{ $pemesanan->status }}</span>
+                <span class="status-badge">Status: {{ $pemesanan->status_perjalanan ?? 'Pending' }} / {{ $pemesanan->status_pembayaran ?? 'Belum Bayar' }}</span>
             </div>
         </div>
 
@@ -234,7 +257,7 @@
 
                     <div class="info-row">
                         <span class="label">Tanggal Keberangkatan</span>
-                        <span class="value">{{ $pemesanan->jadwal->tanggal ?? date('Y-m-d') }}</span>
+                        <span class="value">{{ $pemesanan->jadwal->tanggal ? \Carbon\Carbon::parse($pemesanan->jadwal->tanggal)->format('d-m-Y') : date('d-m-Y') }}</span>
                     </div>
 
                     <div class="info-row">
@@ -248,8 +271,8 @@
                     </div>
 
                     <div class="info-row">
-                        <span class="label">Nomor Kursi</span>
-                        <span class="value value-gold">Kursi {{ $pemesanan->kursi->nomor_kursi ?? '1' }}</span>
+                        <span class="label">Nomor Kursi Dipesan</span>
+                        <span class="value value-gold">{{ $seatsText }}</span>
                     </div>
                 </div>
 
@@ -279,7 +302,7 @@
 
                     <div class="info-row">
                         <span class="label">Tanggal Pesan</span>
-                        <span class="value">{{ $pemesanan->tanggal_pesan ?? date('Y-m-d') }}</span>
+                        <span class="value">{{ $pemesanan->tanggal_pesan ? \Carbon\Carbon::parse($pemesanan->tanggal_pesan)->format('d-m-Y') : date('d-m-Y') }}</span>
                     </div>
                 </div>
             </div>
@@ -290,18 +313,26 @@
             <div class="section-title">Detail Harga & Pembayaran</div>
             <table class="price-table">
                 <tr>
-                    <td style="color: #64748b;">Harga Tiket (1 Penumpang)</td>
-                    <td style="text-align: right; font-weight: bold;">Rp {{ number_format($pemesanan->jadwal->harga ?? 70000, 0, ',', '.') }}</td>
+                    <td style="color: #64748b;">Metode Pembayaran</td>
+                    <td style="text-align: right; font-weight: bold;">{{ $pemesanan->metode_pembayaran ?? 'Cash' }} Saat Sampai</td>
+                </tr>
+                <tr>
+                    <td style="color: #64748b;">Jumlah Tiket / Kursi</td>
+                    <td style="text-align: right; font-weight: bold;">{{ $totalKursiCount }} Kursi</td>
+                </tr>
+                <tr>
+                    <td style="color: #64748b;">Status Pembayaran</td>
+                    <td style="text-align: right; font-weight: bold; color: {{ $pemesanan->status_pembayaran === 'Lunas' ? '#15803d' : '#b45309' }};">{{ $pemesanan->status_pembayaran ?? 'Belum Bayar' }}</td>
                 </tr>
                 <tr class="total-row">
                     <td>Total Pembayaran</td>
-                    <td style="text-align: right; color: #ca8a04;">Rp {{ number_format($pemesanan->jadwal->harga ?? 70000, 0, ',', '.') }}</td>
+                    <td style="text-align: right; color: #ca8a04;">Rp {{ number_format($totalBayar, 0, ',', '.') }}</td>
                 </tr>
             </table>
 
             <div class="barcode-box">
                 <div class="barcode-lines">*{{ $kode }}*</div>
-                <div style="font-size: 10px; color: #64748b; margin-top: 6px;">Tunjukkan bukti pembayaran / tiket ini kepada sopir saat keberangkatan</div>
+                <div style="font-size: 10px; color: #64748b; margin-top: 6px;">Tunjukkan bukti pemesanan tiket ini kepada supir saat penjemputan. Pembayaran cash diserahkan saat tiba di lokasi tujuan.</div>
             </div>
         </div>
     </div>

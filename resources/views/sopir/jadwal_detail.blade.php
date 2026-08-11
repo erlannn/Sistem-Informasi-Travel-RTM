@@ -83,8 +83,8 @@
 
                 @php
                     // Check if there are active bookings that can be finished
-                    $hasActiveBookings = $jadwal->pemesanans->whereIn('status', ['Pending', 'Lunas'])->isNotEmpty();
-                    $isAllCompleted = $jadwal->pemesanans->isNotEmpty() && $jadwal->pemesanans->whereIn('status', ['Pending', 'Lunas'])->isEmpty() && $jadwal->pemesanans->where('status', 'Selesai')->isNotEmpty();
+                    $hasActiveBookings = $jadwal->pemesanans->whereIn('status_perjalanan', ['Pending', 'Naik'])->isNotEmpty();
+                    $isAllCompleted = $jadwal->pemesanans->isNotEmpty() && $jadwal->pemesanans->whereIn('status_perjalanan', ['Pending', 'Naik'])->isEmpty() && $jadwal->pemesanans->where('status_perjalanan', 'Selesai')->isNotEmpty();
                 @endphp
 
                 @if($hasActiveBookings)

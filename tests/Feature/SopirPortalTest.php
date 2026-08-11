@@ -29,7 +29,6 @@ beforeEach(function () {
         'nama' => 'Agus Setiawan',
         'no_hp' => '082111222333',
         'alamat' => 'Jl. Pemuda No. 8, Jakarta',
-        'gaji' => 4500000.00,
     ]);
 
     // Create Armada
@@ -39,7 +38,7 @@ beforeEach(function () {
         'status' => 'Aktif',
     ]);
 
-    // Create Schedule
+    // Create Schedule with bagi_hasil_sopir
     $this->jadwal = Jadwal::create([
         'id_armada' => $this->armada->id_armada,
         'id_sopir' => $this->sopir->id_sopir,
@@ -48,6 +47,7 @@ beforeEach(function () {
         'tanggal' => now()->toDateString(),
         'jam' => '08:00:00',
         'harga' => 75000.00,
+        'bagi_hasil_sopir' => 25000.00,
     ]);
 
     // Create Seat
@@ -73,7 +73,10 @@ beforeEach(function () {
         'id_kursi' => $this->kursi->id_kursi,
         'tanggal_pesan' => now()->toDateString(),
         'jumlah_penumpang' => 1,
-        'status' => 'Lunas',
+        'total_bayar' => 75000.00,
+        'metode_pembayaran' => 'Cash',
+        'status_pembayaran' => 'Belum Bayar',
+        'status_perjalanan' => 'Pending',
     ]);
 });
 
@@ -81,7 +84,6 @@ test('driver can access dashboard and view statistics', function () {
     $response = $this->actingAs($this->driverUser)->get(route('sopir.dashboard'));
     $response->assertStatus(200);
     $response->assertSee('Agus Setiawan');
-    $response->assertSee('Rp 4.500.000');
 });
 
 test('driver can view their assigned schedules', function () {
@@ -122,19 +124,20 @@ test('driver can complete trip and check updated status and salary', function ()
     // 2. Assert booking is completed and seat is freed
     $this->assertDatabaseHas('pemesanans', [
         'id_pemesanan' => $this->pemesanan->id_pemesanan,
-        'status' => 'Selesai',
+        'status_perjalanan' => 'Selesai',
+        'status_pembayaran' => 'Lunas',
     ]);
     
     $this->assertDatabaseHas('kursis', [
         'id_kursi' => $this->kursi->id_kursi,
-        'status' => 'Tersedia',
+        'status' => 'Kosong',
     ]);
 
     // 3. Check Gaji slip reflects updated statistics
     $gajiResponse = $this->actingAs($this->driverUser)->get(route('sopir.gaji'));
     $gajiResponse->assertStatus(200);
-    // Total Penumpang = 1, komisi = Rp 50.000, Gaji Pokok = Rp 4.500.000, Total Gaji = Rp 4.550.000
-    $gajiResponse->assertSee('Rp 4.550.000');
+    // Bagi hasil = Rp 25.000
+    $gajiResponse->assertSee('Rp 25.000');
     // Cash collected directly: 1 Passenger * Rp 75.000 ticket price = Rp 75.000
     $gajiResponse->assertSee('Rp 75.000');
 });

@@ -31,10 +31,11 @@ test('admin can perform full CRUD on armada', function () {
     $response = $this->actingAs($this->admin)->post(route('admin.armada.store'), [
         'merk' => 'Toyota HiAce Premio Test',
         'warna' => 'Hitam',
+        'kursi' => 6,
         'status' => 'Aktif',
     ]);
     $response->assertRedirect(route('admin.armada.index'));
-    $this->assertDatabaseHas('armadas', ['merk' => 'Toyota HiAce Premio Test']);
+    $this->assertDatabaseHas('armadas', ['merk' => 'Toyota HiAce Premio Test', 'kursi' => 6]);
 
     $armada = Armada::where('merk', 'Toyota HiAce Premio Test')->first();
 
@@ -42,10 +43,11 @@ test('admin can perform full CRUD on armada', function () {
     $response = $this->actingAs($this->admin)->put(route('admin.armada.update', $armada->id_armada), [
         'merk' => 'Toyota HiAce Premio Updated',
         'warna' => 'Putih',
+        'kursi' => 8,
         'status' => 'Perbaikan',
     ]);
     $response->assertRedirect(route('admin.armada.index'));
-    $this->assertDatabaseHas('armadas', ['id_armada' => $armada->id_armada, 'merk' => 'Toyota HiAce Premio Updated']);
+    $this->assertDatabaseHas('armadas', ['id_armada' => $armada->id_armada, 'merk' => 'Toyota HiAce Premio Updated', 'kursi' => 8]);
 
     // 3. Delete (Destroy)
     $response = $this->actingAs($this->admin)->delete(route('admin.armada.destroy', $armada->id_armada));
@@ -59,7 +61,6 @@ test('admin can perform full CRUD on sopir', function () {
         'nama' => 'Pak Joko Driver Test',
         'no_hp' => '081234567890',
         'alamat' => 'Sijunjung',
-        'gaji' => 3000000,
     ]);
     $response->assertRedirect(route('admin.sopir.index'));
     $this->assertDatabaseHas('sopirs', ['nama' => 'Pak Joko Driver Test']);
@@ -71,7 +72,6 @@ test('admin can perform full CRUD on sopir', function () {
         'nama' => 'Pak Joko Driver Updated',
         'no_hp' => '081299998888',
         'alamat' => 'Padang',
-        'gaji' => 3500000,
     ]);
     $response->assertRedirect(route('admin.sopir.index'));
     $this->assertDatabaseHas('sopirs', ['id_sopir' => $sopir->id_sopir, 'nama' => 'Pak Joko Driver Updated']);
@@ -115,9 +115,9 @@ test('admin can perform full CRUD on penumpang', function () {
     $this->assertDatabaseMissing('users', ['email' => 'budi_test@gmail.com']);
 });
 
-test('admin can perform full CRUD on jadwal and pemesanan', function () {
-    $armada = Armada::create(['merk' => 'Toyota HiAce', 'warna' => 'Silver', 'status' => 'Aktif']);
-    $sopir = Sopir::create(['nama' => 'Pak Budi', 'no_hp' => '081234567890', 'alamat' => 'Padang', 'gaji' => 2500000]);
+test('admin can management jadwal and status/deletion of pemesanan', function () {
+    $armada = Armada::create(['merk' => 'Toyota HiAce', 'warna' => 'Silver', 'kursi' => 6, 'status' => 'Aktif']);
+    $sopir = Sopir::create(['nama' => 'Pak Budi', 'no_hp' => '081234567890', 'alamat' => 'Padang']);
     $penumpang = Penumpang::create(['nama' => 'Siti', 'email' => 'siti@test.com', 'password' => Hash::make('secret'), 'no_hp' => '0812999', 'alamat' => 'Padang']);
 
     // 1. Store Jadwal
@@ -129,6 +129,7 @@ test('admin can perform full CRUD on jadwal and pemesanan', function () {
         'tanggal' => now()->addDays(2)->toDateString(),
         'jam' => '08:00',
         'harga' => 120000,
+        'bagi_hasil_sopir' => 30000,
     ]);
     $response->assertRedirect(route('admin.jadwal.index'));
     $this->assertDatabaseHas('jadwals', ['asal' => 'Sijunjung', 'tujuan' => 'Padang']);
@@ -138,31 +139,27 @@ test('admin can perform full CRUD on jadwal and pemesanan', function () {
 
     $kursi = Kursi::where('id_jadwal', $jadwal->id_jadwal)->first();
 
-    // 2. Store Pemesanan
-    $response = $this->actingAs($this->admin)->post(route('admin.pemesanan.store'), [
+    // 2. Create Pemesanan (simulating booking created by Penumpang)
+    $pemesanan = Pemesanan::create([
         'id_penumpang' => $penumpang->id_penumpang,
         'id_jadwal' => $jadwal->id_jadwal,
         'id_kursi' => $kursi->id_kursi,
-        'status' => 'Lunas',
+        'tanggal_pesan' => now()->toDateString(),
+        'jumlah_penumpang' => 1,
+        'total_bayar' => 120000,
+        'status_pembayaran' => 'Belum Bayar',
+        'status_perjalanan' => 'Pending',
+    ]);
+    $kursi->update(['status' => 'Terisi']);
+
+    // 3. Update Status Pemesanan by Admin
+    $response = $this->actingAs($this->admin)->patch(route('admin.pemesanan.update_status', $pemesanan->id_pemesanan), [
+        'status_perjalanan' => 'Selesai',
     ]);
     $response->assertRedirect(route('admin.pemesanan.index'));
-    $this->assertDatabaseHas('pemesanans', ['id_penumpang' => $penumpang->id_penumpang, 'id_kursi' => $kursi->id_kursi]);
-    $this->assertEquals('Terisi', $kursi->fresh()->status);
+    $this->assertDatabaseHas('pemesanans', ['id_pemesanan' => $pemesanan->id_pemesanan, 'status_perjalanan' => 'Selesai', 'status_pembayaran' => 'Lunas']);
 
-    $pemesanan = Pemesanan::where('id_penumpang', $penumpang->id_penumpang)->first();
-
-    // 3. Update Pemesanan
-    $response = $this->actingAs($this->admin)->put(route('admin.pemesanan.update', $pemesanan->id_pemesanan), [
-        'id_penumpang' => $penumpang->id_penumpang,
-        'id_jadwal' => $jadwal->id_jadwal,
-        'id_kursi' => $kursi->id_kursi,
-        'status' => 'Batal',
-    ]);
-    $response->assertRedirect(route('admin.pemesanan.index'));
-    $this->assertDatabaseHas('pemesanans', ['id_pemesanan' => $pemesanan->id_pemesanan, 'status' => 'Batal']);
-    $this->assertEquals('Tersedia', $kursi->fresh()->status);
-
-    // 4. Delete Pemesanan
+    // 4. Delete Pemesanan by Admin
     $response = $this->actingAs($this->admin)->delete(route('admin.pemesanan.destroy', $pemesanan->id_pemesanan));
     $response->assertRedirect(route('admin.pemesanan.index'));
     $this->assertDatabaseMissing('pemesanans', ['id_pemesanan' => $pemesanan->id_pemesanan]);
@@ -172,13 +169,12 @@ test('admin can perform full CRUD on jadwal and pemesanan', function () {
         'id_armada' => $armada->id_armada,
         'id_sopir' => $sopir->id_sopir,
         'asal' => 'Sijunjung',
-        'tujuan' => 'Bukittinggi',
+        'tujuan' => 'Solok',
         'tanggal' => now()->addDays(3)->toDateString(),
         'jam' => '10:00',
-        'harga' => 130000,
     ]);
     $response->assertRedirect(route('admin.jadwal.index'));
-    $this->assertDatabaseHas('jadwals', ['id_jadwal' => $jadwal->id_jadwal, 'tujuan' => 'Bukittinggi']);
+    $this->assertDatabaseHas('jadwals', ['id_jadwal' => $jadwal->id_jadwal, 'tujuan' => 'Solok']);
 
     // 6. Delete Jadwal
     $response = $this->actingAs($this->admin)->delete(route('admin.jadwal.destroy', $jadwal->id_jadwal));

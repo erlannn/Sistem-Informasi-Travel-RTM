@@ -30,7 +30,7 @@
                     <span class="text-lg font-black text-emerald-600 mt-0.5 block">{{ $completedBookingsCount }} <span class="text-xs text-slate-500 font-medium">Orang</span></span>
                 </div>
                 <div class="bg-slate-50 border border-slate-200/60 p-3.5 rounded-2xl col-span-2 lg:col-span-1">
-                    <span class="text-[9px] text-slate-500 font-bold block uppercase tracking-wider">Akumulasi Gaji</span>
+                    <span class="text-[9px] text-slate-500 font-bold block uppercase tracking-wider">Akumulasi Bagi Hasil</span>
                     <span class="text-lg font-black text-emerald-600 mt-0.5 block">Rp {{ number_format($totalGaji, 0, ',', '.') }}</span>
                 </div>
             </div>
@@ -118,8 +118,8 @@
                 <span class="font-bold text-slate-800 text-right max-w-[200px] truncate" title="{{ $sopir->alamat }}">{{ $sopir->alamat }}</span>
             </div>
             <div class="flex justify-between py-1.5 font-medium">
-                <span class="text-slate-400">Gaji Pokok Bulanan</span>
-                <span class="font-bold text-emerald-600 text-right">Rp {{ number_format($sopir->gaji, 0, ',', '.') }}</span>
+                <span class="text-slate-400">Sistem Pendapatan</span>
+                <span class="font-bold text-emerald-600 text-right">Bagi Hasil Per-Perjalanan</span>
             </div>
         </div>
     </div>

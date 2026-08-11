@@ -27,7 +27,7 @@
                         #SOPIR-{{ $sopir->id_sopir }}
                     </span>
                     <h2 class="text-lg font-extrabold text-slate-900 mt-1">{{ $sopir->nama }}</h2>
-                    <p class="text-xs text-slate-500 font-medium">Gaji: Rp {{ number_format($sopir->gaji, 0, ',', '.') }}</p>
+                    <p class="text-xs text-emerald-600 font-bold">Sistem Bagi Hasil Per-Perjalanan</p>
                 </div>
             </div>
 

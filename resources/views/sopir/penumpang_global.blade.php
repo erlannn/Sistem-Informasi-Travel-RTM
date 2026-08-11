@@ -33,14 +33,17 @@
     <!-- Passenger List (Card-based Layout) -->
     <div class="space-y-3.5">
         @forelse($pemesanans as $index => $p)
+            @php
+                $totalTagihan = $p->total_bayar > 0 ? $p->total_bayar : (($p->jadwal->harga ?? 70000) * $p->jumlah_penumpang);
+            @endphp
             <div class="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-md relative overflow-hidden group">
                 <!-- Status Tag Badge -->
                 <div class="absolute top-0 right-0">
-                    @if($p->status === 'Selesai')
+                    @if($p->status_perjalanan === 'Selesai')
                         <span class="px-3 py-1 bg-emerald-500 text-white text-[9px] font-extrabold rounded-bl-2xl uppercase tracking-wider block">Selesai</span>
-                    @elseif($p->status === 'Lunas')
-                        <span class="px-3 py-1 bg-blue-600 text-white text-[9px] font-extrabold rounded-bl-2xl uppercase tracking-wider block">Lunas</span>
-                    @elseif($p->status === 'Batal')
+                    @elseif($p->status_perjalanan === 'Naik')
+                        <span class="px-3 py-1 bg-blue-600 text-white text-[9px] font-extrabold rounded-bl-2xl uppercase tracking-wider block">Naik Armada</span>
+                    @elseif($p->status_perjalanan === 'Batal')
                         <span class="px-3 py-1 bg-red-500 text-white text-[9px] font-extrabold rounded-bl-2xl uppercase tracking-wider block">Batal</span>
                     @else
                         <span class="px-3 py-1 bg-amber-500 text-white text-[9px] font-extrabold rounded-bl-2xl uppercase tracking-wider block">Pending</span>
@@ -61,10 +64,10 @@
                         
                         <div class="text-[9px] text-slate-500 font-bold flex flex-col gap-0.5 mt-1">
                             <div class="text-slate-800">
-                                <i class="fa-solid fa-route text-amber-500 mr-1"></i>{{ $p->jadwal->asal }} &rarr; {{ $p->jadwal->tujuan }}
+                                <i class="fa-solid fa-route text-amber-500 mr-1"></i>{{ $p->jadwal->asal ?? '-' }} &rarr; {{ $p->jadwal->tujuan ?? '-' }}
                             </div>
                             <div>
-                                <i class="fa-regular fa-calendar text-slate-400 mr-1"></i>{{ \Carbon\Carbon::parse($p->jadwal->tanggal)->translatedFormat('d M Y') }} &bull; {{ \Carbon\Carbon::parse($p->jadwal->jam)->format('H:i') }} WIB
+                                <i class="fa-regular fa-calendar text-slate-400 mr-1"></i>{{ $p->jadwal->tanggal ? \Carbon\Carbon::parse($p->jadwal->tanggal)->translatedFormat('d M Y') : '-' }} &bull; {{ $p->jadwal->jam ? \Carbon\Carbon::parse($p->jadwal->jam)->format('H:i') : '' }} WIB
                             </div>
                         </div>
                     </div>
@@ -86,24 +89,48 @@
 
                     <!-- Direct Payment State -->
                     <div class="flex items-center gap-2">
-                        <span class="text-slate-400 font-medium">Bayar Langsung:</span>
-                        @if($p->status === 'Selesai')
+                        <span class="text-slate-400 font-medium">Bayar Cash:</span>
+                        @if($p->status_pembayaran === 'Lunas')
                             <span class="font-extrabold text-emerald-600 flex items-center gap-1">
-                                <i class="fa-solid fa-circle-check"></i> Rp {{ number_format(($p->jadwal->harga * $p->jumlah_penumpang), 0, ',', '.') }}
+                                <i class="fa-solid fa-circle-check"></i> Rp {{ number_format($totalTagihan, 0, ',', '.') }} (Lunas)
                             </span>
-                        @elseif($p->status === 'Lunas')
-                            <span class="font-extrabold text-blue-600 flex items-center gap-1">
-                                <i class="fa-solid fa-credit-card"></i> Rp {{ number_format(($p->jadwal->harga * $p->jumlah_penumpang), 0, ',', '.') }}
-                            </span>
-                        @elseif($p->status === 'Pending')
-                            <span class="font-extrabold text-amber-600 flex items-center gap-1 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg text-[10px]">
-                                <i class="fa-solid fa-money-bill-wave text-amber-500"></i> Tagih Rp {{ number_format(($p->jadwal->harga * $p->jumlah_penumpang), 0, ',', '.') }}
-                            </span>
-                        @else
+                        @elseif($p->status_perjalanan === 'Batal')
                             <span class="font-bold text-slate-400 line-through">Batal</span>
+                        @else
+                            <span class="font-extrabold text-amber-600 flex items-center gap-1 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg text-[10px]">
+                                <i class="fa-solid fa-money-bill-wave text-amber-500"></i> Tagih Rp {{ number_format($totalTagihan, 0, ',', '.') }}
+                            </span>
                         @endif
                     </div>
                 </div>
+
+                <!-- Driver Action Buttons per Passenger -->
+                @if($p->status_perjalanan !== 'Batal' && $p->status_perjalanan !== 'Selesai')
+                    <div class="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
+                        @if($p->status_perjalanan === 'Pending')
+                            <form action="{{ route('sopir.pemesanan.naik', $p->id_pemesanan) }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" class="px-3 py-1.5 text-[11px] font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors shadow-xs flex items-center gap-1 cursor-pointer">
+                                    <i class="fa-solid fa-user-check"></i> Naikkan Penumpang
+                                </button>
+                            </form>
+                        @endif
+
+                        <form action="{{ route('sopir.pemesanan.terima_cash', $p->id_pemesanan) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="px-3 py-1.5 text-[11px] font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-colors shadow-xs flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-hand-holding-dollar"></i> Selesai & Terima Cash
+                            </button>
+                        </form>
+
+                        <form action="{{ route('sopir.pemesanan.batal', $p->id_pemesanan) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
+                            @csrf
+                            <button type="submit" class="px-3 py-1.5 text-[11px] font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-xl transition-colors flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-user-xmark"></i> Batal / No-Show
+                            </button>
+                        </form>
+                    </div>
+                @endif
             </div>
         @empty
             <div class="text-center py-10 bg-white border border-slate-200/80 rounded-3xl shadow-sm space-y-2">

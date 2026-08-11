@@ -64,9 +64,16 @@ class PenumpangDashboardController extends Controller
             $query->where('tanggal', '>=', now()->toDateString());
         }
 
-        $jadwals = $query->orderBy('tanggal', 'asc')->orderBy('jam', 'asc')->get();
+        $jadwals = $query->orderBy('tanggal', 'asc')->orderBy('jam', 'asc')->paginate(10)->withQueryString();
 
-        return view('penumpang.jadwal', compact('jadwals', 'asal', 'tujuan', 'tanggal'));
+        $defaultCities = ['Sijunjung', 'Solok', 'Padang', 'BIM'];
+        $dbAsal = Jadwal::distinct()->pluck('asal')->filter()->toArray();
+        $dbTujuan = Jadwal::distinct()->pluck('tujuan')->filter()->toArray();
+
+        $optAsal = array_unique(array_merge($defaultCities, $dbAsal));
+        $optTujuan = array_unique(array_merge($defaultCities, $dbTujuan));
+
+        return view('penumpang.jadwal', compact('jadwals', 'asal', 'tujuan', 'tanggal', 'optAsal', 'optTujuan'));
     }
 
     /**
@@ -97,20 +104,34 @@ class PenumpangDashboardController extends Controller
     public function konfirmasi(Request $request)
     {
         $id_jadwal = $request->input('id_jadwal');
-        $id_kursi = $request->input('id_kursi');
+        $id_kursi_raw = $request->input('id_kursi');
 
         $jadwal = Jadwal::with(['armada', 'sopir'])->findOrFail($id_jadwal);
-        $kursi = Kursi::where('id_jadwal', '=', $id_jadwal)->where('id_kursi', '=', $id_kursi)->first();
-        if (!$kursi) {
-            // fallback lookup by nomor_kursi or first available
-            $kursi = Kursi::where('id_jadwal', '=', $id_jadwal)->where('nomor_kursi', '=', $request->input('kursi'))->first()
-                ?? Kursi::where('id_jadwal', '=', $id_jadwal)->first();
+
+        if (is_array($id_kursi_raw)) {
+            $idKursiArray = $id_kursi_raw;
+        } elseif (is_string($id_kursi_raw) && str_contains($id_kursi_raw, ',')) {
+            $idKursiArray = explode(',', $id_kursi_raw);
+        } else {
+            $idKursiArray = (array) $id_kursi_raw;
+        }
+        $idKursiArray = array_filter(array_map('trim', $idKursiArray));
+
+        $kursis = Kursi::where('id_jadwal', '=', $id_jadwal)
+            ->whereIn('id_kursi', $idKursiArray)
+            ->get();
+
+        if ($kursis->isEmpty()) {
+            $kursis = Kursi::where('id_jadwal', '=', $id_jadwal)->where('status', '=', 'Tersedia')->take(1)->get();
         }
 
         $user = Auth::user();
         $penumpang = Penumpang::where('email', '=', $user->email)->first();
 
-        return view('penumpang.konfirmasi', compact('jadwal', 'kursi', 'penumpang'));
+        $jumlahPenumpang = $kursis->count() > 0 ? $kursis->count() : 1;
+        $totalBayar = $jadwal->harga * $jumlahPenumpang;
+
+        return view('penumpang.konfirmasi', compact('jadwal', 'kursis', 'penumpang', 'jumlahPenumpang', 'totalBayar'));
     }
 
     /**
@@ -118,29 +139,51 @@ class PenumpangDashboardController extends Controller
      */
     public function konfirmasiStore(Request $request)
     {
+        $id_kursi_raw = $request->input('id_kursi');
+        if (is_array($id_kursi_raw)) {
+            $idKursiArray = $id_kursi_raw;
+        } elseif (is_string($id_kursi_raw) && str_contains($id_kursi_raw, ',')) {
+            $idKursiArray = explode(',', $id_kursi_raw);
+        } else {
+            $idKursiArray = (array) $id_kursi_raw;
+        }
+        $idKursiArray = array_filter(array_map('trim', $idKursiArray));
+
+        $request->merge(['id_kursi_list' => $idKursiArray]);
         $request->validate([
             'id_jadwal' => 'required|exists:jadwals,id_jadwal',
-            'id_kursi' => 'required|exists:kursis,id_kursi',
+            'id_kursi_list' => 'required|array|min:1',
+            'id_kursi_list.*' => 'exists:kursis,id_kursi',
         ]);
 
         $user = Auth::user();
         $penumpang = Penumpang::where('email', '=', $user->email)->firstOrFail();
 
-        // Update kursi status to Terisi
-        $kursi = Kursi::findOrFail($request->id_kursi);
-        $kursi->update(['status' => 'Terisi']);
+        $jadwal = Jadwal::findOrFail($request->id_jadwal);
 
-        $pemesanan = Pemesanan::create([
-            'id_penumpang' => $penumpang->id_penumpang,
-            'id_jadwal' => $request->id_jadwal,
-            'id_kursi' => $kursi->id_kursi,
-            'tanggal_pesan' => now()->toDateString(),
-            'jumlah_penumpang' => 1,
-            'status' => 'Lunas',
-        ]);
+        $createdPemesanans = [];
+        foreach ($idKursiArray as $kId) {
+            $kursi = Kursi::findOrFail($kId);
+            $kursi->update(['status' => 'Terisi']);
 
-        return redirect()->route('penumpang.status.detail', $pemesanan->id_pemesanan)
-            ->with('success', 'Pemesanan tiket berhasil dibuat!');
+            $pemesanan = Pemesanan::create([
+                'id_penumpang' => $penumpang->id_penumpang,
+                'id_jadwal' => $request->id_jadwal,
+                'id_kursi' => $kursi->id_kursi,
+                'tanggal_pesan' => now()->toDateString(),
+                'jumlah_penumpang' => 1,
+                'total_bayar' => $jadwal->harga,
+                'metode_pembayaran' => 'Cash',
+                'status_pembayaran' => 'Belum Bayar',
+                'status_perjalanan' => 'Pending',
+            ]);
+            $createdPemesanans[] = $pemesanan;
+        }
+
+        $lastPemesanan = end($createdPemesanans);
+
+        return redirect()->route('penumpang.status.detail', $lastPemesanan->id_pemesanan)
+            ->with('success', count($createdPemesanans) . ' kursi tiket berhasil dipesan! Pembayaran dilakukan secara cash saat sampai di tujuan.');
     }
 
     /**

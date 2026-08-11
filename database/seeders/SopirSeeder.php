@@ -18,9 +18,9 @@ class SopirSeeder extends Seeder
         $roleSopir = Role::firstOrCreate(['name' => 'Sopir']);
 
         $u1 = User::firstOrCreate(
-            ['email' => 'agus@rtmtravel.com'],
+            ['email' => 'Ongki@rtmtravel.com'],
             [
-                'name' => 'Agus Setiawan',
+                'name' => 'Ongki',
                 'password' => Hash::make('password123'),
             ]
         );
@@ -29,18 +29,17 @@ class SopirSeeder extends Seeder
         }
 
         Sopir::firstOrCreate(
-            ['nama' => 'Agus Setiawan'],
+            ['nama' => 'Ongki'],
             [
-                'no_hp' => '082111222333',
-                'alamat' => 'Jl. Pemuda No. 8, Jakarta',
-                'gaji' => 4500000.00,
+                'no_hp' => '085191083409',
+                'alamat' => 'Nagari Pematang Panjang',
             ]
         );
 
         $u2 = User::firstOrCreate(
-            ['email' => 'joko@rtmtravel.com'],
+            ['email' => 'Raffi@rtmtravel.com'],
             [
-                'name' => 'Joko Widodo',
+                'name' => 'Raffi',
                 'password' => Hash::make('password123'),
             ]
         );
@@ -49,12 +48,22 @@ class SopirSeeder extends Seeder
         }
 
         Sopir::firstOrCreate(
-            ['nama' => 'Joko Widodo'],
+            ['nama' => 'Raffi'],
             [
-                'no_hp' => '082333444555',
-                'alamat' => 'Jl. Ahmad Yani No. 20, Semarang',
-                'gaji' => 4800000.00,
+                'no_hp' => '081224165509',
+                'alamat' => 'Nagari Pematang Panjang',
             ]
         );
+
+        $u3 = User::firstOrCreate(
+            ['email' => 'joko@rtmtravel.com'],
+            [
+                'name' => 'Joko Widodo',
+                'password' => Hash::make('password123'),
+            ]
+        );
+        if (!$u3->hasRole('Sopir')) {
+            $u3->assignRole($roleSopir);
+        }
     }
 }
