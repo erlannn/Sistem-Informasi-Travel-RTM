@@ -9,13 +9,9 @@
     <!-- Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
         <div>
-            <span class="px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] font-extrabold uppercase tracking-wider">
-                Jadwal Perjalanan
-            </span>
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
-                Kelola Jadwal Keberangkatan
+                Kelola Jadwal 
             </h1>
-            <p class="text-xs text-slate-500 font-medium">Pengaturan rute, tanggal, waktu keberangkatan, armada, sopir, dan harga tiket travel.</p>
         </div>
 
         <div class="flex flex-col sm:flex-row items-center gap-3">
@@ -35,7 +31,7 @@
 
             <a href="{{ route('admin.jadwal.create') }}"
                 class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold text-xs rounded-xl shadow-xs transition flex items-center justify-center cursor-pointer shrink-0 w-full sm:w-auto">
-                + Buat Jadwal Baru
+                Tambah Jadwal
             </a>
         </div>
     </div>
@@ -46,13 +42,13 @@
             <table class="w-full text-left text-xs text-slate-700">
                 <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-extrabold border-b border-slate-200">
                     <tr>
-                        <th class="p-3.5 rounded-l-xl">ID</th>
+                        <th class="p-3.5 rounded-l-xl">NO</th>
                         <th class="p-3.5">Rute (Asal &rarr; Tujuan)</th>
                         <th class="p-3.5">Tanggal & Jam</th>
-                        <th class="p-3.5">Armada / Mobil</th>
-                        <th class="p-3.5">Sopir / Driver</th>
-                        <th class="p-3.5">Harga Tiket</th>
-                        <th class="p-3.5 text-center">Pemesanan</th>
+                        <th class="p-3.5">Armada</th>
+                        <th class="p-3.5">Sopir</th>
+                        {{-- <th class="p-3.5">Harga Tiket</th>
+                        <th class="p-3.5 text-center">Pemesanan</th> --}}
                         <th class="p-3.5 rounded-r-xl text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -75,14 +71,14 @@
                             <td class="p-3.5 font-semibold text-slate-800">
                                 {{ $j->sopir->nama ?? 'N/A' }}
                             </td>
-                            <td class="p-3.5 font-extrabold text-slate-900">
+                            {{-- <td class="p-3.5 font-extrabold text-slate-900">
                                 Rp {{ number_format($j->harga, 0, ',', '.') }}
                             </td>
                             <td class="p-3.5 text-center font-bold text-slate-800">
                                 <span class="px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
                                     {{ $j->pemesanans_count }} Pesanan
                                 </span>
-                            </td>
+                            </td> --}}
                             <td class="p-3.5 text-center">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <a href="{{ route('admin.jadwal.show', $j->id_jadwal) }}"

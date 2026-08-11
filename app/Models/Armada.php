@@ -16,6 +16,7 @@ class Armada extends Model
     protected $fillable = [
         'merk',
         'warna',
+        'kursi',
         'status',
     ];
 

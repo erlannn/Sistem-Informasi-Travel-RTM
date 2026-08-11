@@ -36,8 +36,11 @@ class AdminArmadaController extends Controller
         $validated = $request->validate([
             'merk' => 'required|string|max:255',
             'warna' => 'required|string|max:100',
-            'status' => 'required|in:Aktif,Nonaktif,Perbaikan',
+            'kursi' => 'required|integer|min:1|max:50',
+            'status' => 'nullable|in:Aktif,Nonaktif,Perbaikan',
         ]);
+
+        $validated['status'] = $validated['status'] ?? 'Aktif';
 
         Armada::create($validated);
 
@@ -64,6 +67,7 @@ class AdminArmadaController extends Controller
         $validated = $request->validate([
             'merk' => 'required|string|max:255',
             'warna' => 'required|string|max:100',
+            'kursi' => 'required|integer|min:1|max:50',
             'status' => 'required|in:Aktif,Nonaktif,Perbaikan',
         ]);
 

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Jadwal;
 use App\Models\Kursi;
 use Illuminate\Database\Seeder;
 
@@ -12,32 +13,39 @@ class KursiSeeder extends Seeder
      */
     public function run(): void
     {
-        // Kursi untuk Jadwal 1
-        $kursiJadwal1 = ['1A', '1B', '2A', '2B', '3A', '3B'];
-        foreach ($kursiJadwal1 as $nomor) {
-            Kursi::firstOrCreate(
-                [
-                    'id_jadwal' => 1,
-                    'nomor_kursi' => $nomor,
-                ],
-                [
-                    'status' => $nomor === '1A' ? 'Terisi' : 'Kosong',
-                ]
-            );
+        $jadwal1 = Jadwal::first();
+        $jadwal2 = Jadwal::skip(1)->first() ?? $jadwal1;
+
+        if ($jadwal1) {
+            $armada1Seats = $jadwal1->armada->kursi ?? 5;
+            for ($i = 1; $i <= $armada1Seats; $i++) {
+                $nomor = (string) $i;
+                Kursi::firstOrCreate(
+                    [
+                        'id_jadwal' => $jadwal1->id_jadwal,
+                        'nomor_kursi' => $nomor,
+                    ],
+                    [
+                        'status' => $i === 1 ? 'Terisi' : 'Kosong',
+                    ]
+                );
+            }
         }
 
-        // Kursi untuk Jadwal 2
-        $kursiJadwal2 = ['1A', '1B', '2A', '2B', '3A', '3B'];
-        foreach ($kursiJadwal2 as $nomor) {
-            Kursi::firstOrCreate(
-                [
-                    'id_jadwal' => 2,
-                    'nomor_kursi' => $nomor,
-                ],
-                [
-                    'status' => 'Kosong',
-                ]
-            );
+        if ($jadwal2 && $jadwal2->id_jadwal !== $jadwal1?->id_jadwal) {
+            $armada2Seats = $jadwal2->armada->kursi ?? 3;
+            for ($i = 1; $i <= $armada2Seats; $i++) {
+                $nomor = (string) $i;
+                Kursi::firstOrCreate(
+                    [
+                        'id_jadwal' => $jadwal2->id_jadwal,
+                        'nomor_kursi' => $nomor,
+                    ],
+                    [
+                        'status' => 'Kosong',
+                    ]
+                );
+            }
         }
     }
 }

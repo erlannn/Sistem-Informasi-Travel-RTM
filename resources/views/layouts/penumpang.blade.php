@@ -30,12 +30,12 @@
         <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-500 via-gold-400 to-brand-500 opacity-80"></div>
 
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-24">
                 
                 <!-- Left: Logo & Title (Brand Identity in Dark Circle) -->
                 <div class="flex items-center">
                     <a href="{{ url('/') }}" class="group focus:outline-none flex">
-                        <div class="w-12 h-12 rounded-full bg-slate-950 hover:bg-slate-900 border border-slate-800 shadow-md group-hover:border-slate-700 flex items-center justify-center p-2.5 transition-all duration-200">
+                        <div class="w-20 h-20 rounded-full bg-slate-950 hover:bg-slate-900 border border-slate-800 shadow-md group-hover:border-slate-700 flex items-center justify-center p-1.5 transition-all duration-200">
                             <!-- Logo PNG Image -->
                             <img src="{{ asset('images/logo.png') }}" alt="Logo RTM Family" class="w-full h-auto object-contain select-none pointer-events-none">
                         </div>
@@ -63,13 +63,6 @@
 
                 <!-- Right Side: Notifications, Avatar and Logout (Desktop) -->
                 <div class="hidden md:flex items-center space-x-4">
-                    
-                    <!-- Notification Bell Button -->
-                    <button class="p-2.5 text-slate-500 hover:text-brand-600 hover:bg-slate-50 rounded-xl transition-colors relative cursor-pointer focus:ring-2 focus:ring-slate-100 focus:outline-none">
-                        <!-- Pulse Indicator -->
-                        <span class="absolute top-2 right-2 w-2 h-2 bg-status-danger rounded-full ring-2 ring-white animate-pulse"></span>
-                        <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
-                    </button>
 
                     <!-- Divider -->
                     <div class="h-6 w-px bg-slate-200"></div>
@@ -81,11 +74,9 @@
                                 <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-brand-50 to-brand-100/50 border border-brand-200 hover:border-brand-400 flex items-center justify-center text-brand-600 font-extrabold text-xs shadow-sm group-hover:shadow-[0_2px_8px_rgba(37,99,235,0.12)] transition-all">
                                     {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                                 </div>
-                                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-status-success rounded-full border border-white"></span>
                             </div>
                             <div class="hidden xl:flex flex-col text-left">
                                 <span class="text-xs font-bold text-slate-800 leading-tight">{{ Auth::user()->name }}</span>
-                                <span class="text-[9px] text-slate-400 font-medium">Penumpang Gold</span>
                             </div>
                         </div>
 
@@ -95,7 +86,7 @@
                         <!-- Logout Button -->
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="text-sm font-semibold text-slate-500 hover:text-status-danger transition-colors focus:outline-none cursor-pointer">
+                            <button type="submit" class="px-3 py-2 rounded-xl text-sm font-semibold border border-slate-200 bg-slate-200 hover:bg-red-500 hover:text-white transition-colors focus:outline-none cursor-pointer">
                                 Keluar
                             </button>
                         </form>

@@ -13,26 +13,74 @@ class ArmadaSeeder extends Seeder
     public function run(): void
     {
         Armada::firstOrCreate(
-            ['merk' => 'Toyota HiAce Premio'],
+            ['merk' => 'Toyota Avanza'],
             [
-                'warna' => 'Putih Metalik',
-                'status' => 'Tersedia',
+                'warna' => 'Pink',
+                'kursi' => 7,
+                'status' => 'Aktif',
             ]
         );
 
         Armada::firstOrCreate(
-            ['merk' => 'Isuzu Elf Long'],
+            ['merk' => 'Daihatsu Xenia'],
+            [
+                'warna' => 'Khaki',
+                'kursi' => 7,
+                'status' => 'Aktif',
+            ]
+        );
+
+        Armada::firstOrCreate(
+            ['merk' => 'Toyota Calya'],
+            [
+                'warna' => 'Putih',
+                'kursi' => 7,
+                'status' => 'Aktif',
+            ]
+        );
+
+        Armada::firstOrCreate(
+            ['merk' => 'Toyota Calya'],
             [
                 'warna' => 'Hitam',
-                'status' => 'Tersedia',
+                'kursi' => 7,
+                'status' => 'Aktif',
             ]
         );
 
         Armada::firstOrCreate(
-            ['merk' => 'Mercedes-Benz Sprinter'],
+            ['merk' => 'Toyota Calya'],
             [
-                'warna' => 'Silver',
-                'status' => 'Beroperasi',
+                'warna' => 'Grey',
+                'kursi' => 7,
+                'status' => 'Aktif',
+            ]
+        );
+
+        Armada::firstOrCreate(
+            ['merk' => 'Toyota Avanza'],
+            [
+                'warna' => 'Hitam',
+                'kursi' => 7,
+                'status' => 'Aktif',
+            ]
+        );
+
+        Armada::firstOrCreate(
+            ['merk' => 'Toyota Calya'],
+            [
+                'warna' => 'Merah Maroon',
+                'kursi' => 7,
+                'status' => 'Aktif',
+            ]
+        );
+
+        Armada::firstOrCreate(
+            ['merk' => 'Kijang Inova Reborn'],
+            [
+                'warna' => 'Putih',
+                'kursi' => 7,
+                'status' => 'Aktif',
             ]
         );
     }

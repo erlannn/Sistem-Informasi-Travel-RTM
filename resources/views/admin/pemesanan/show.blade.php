@@ -35,14 +35,16 @@
         <!-- Body Details -->
         <div class="p-6 sm:p-8 space-y-8">
             <!-- Status Alert Bar -->
-            <div class="flex items-center justify-between p-4 rounded-2xl border {{ $pemesanan->status == 'Lunas' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : ($pemesanan->status == 'Pending' ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-red-50 border-red-200 text-red-900') }}">
+            <div class="flex items-center justify-between p-4 rounded-2xl border {{ $pemesanan->status_perjalanan == 'Selesai' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : ($pemesanan->status_perjalanan == 'Batal' ? 'bg-red-50 border-red-200 text-red-900' : 'bg-amber-50 border-amber-200 text-amber-900') }}">
                 <div>
-                    <span class="text-[10px] font-extrabold uppercase tracking-wider block">Status Transaksi</span>
-                    <span class="text-base font-extrabold">{{ strtoupper($pemesanan->status) }}</span>
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider block">Status Perjalanan</span>
+                    <span class="text-base font-extrabold">
+                        {{ strtoupper($pemesanan->status_perjalanan ?? 'Pending') }}
+                    </span>
                 </div>
                 <div class="text-right">
                     <span class="text-[10px] font-extrabold uppercase tracking-wider block">Tanggal Transaksi</span>
-                    <span class="text-xs font-bold">{{ $pemesanan->tanggal_pesan }}</span>
+                    <span class="text-xs font-bold">{{ $pemesanan->tanggal_pesan ? \Carbon\Carbon::parse($pemesanan->tanggal_pesan)->translatedFormat('d M Y') : '-' }}</span>
                 </div>
             </div>
 

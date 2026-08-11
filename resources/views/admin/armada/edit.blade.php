@@ -51,6 +51,17 @@
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    Jumlah / Kapasitas Kursi <span class="text-red-500">*</span>
+                </label>
+                <input type="number" name="kursi" value="{{ old('kursi', $armada->kursi ?? 5) }}" min="1" max="50" required placeholder="Contoh: 5"
+                    class="w-full px-4 py-3 text-xs text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition">
+                @error('kursi')
+                    <p class="text-xs text-red-500 font-bold mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Status Operasional <span class="text-red-500">*</span>
                 </label>
                 <select name="status" required

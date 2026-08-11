@@ -24,12 +24,12 @@
   @stack('styles')
 </head>
 
-<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex antialiased" x-data="{ mobileSidebarOpen: false }">
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex antialiased" x-data="{ mobileSidebarOpen: false, desktopSidebarOpen: localStorage.getItem('admin_sidebar_open') !== 'false', toggleDesktopSidebar() { this.desktopSidebarOpen = !this.desktopSidebarOpen; localStorage.setItem('admin_sidebar_open', this.desktopSidebarOpen); } }">
 
   <!-- Sidebar Component (Deep Slate #0F172A with Brand Accent) -->
-  <aside class="w-64 bg-slate-900 text-slate-300 hidden md:flex flex-col border-r border-slate-800 shrink-0 min-h-screen sticky top-0 h-screen z-40">
-    <!-- Brand Info Header with Logo PNG -->
-    <div class="h-20 border-b border-slate-800 flex items-center px-6 gap-3">
+  <aside x-show="desktopSidebarOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="-translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="-translate-x-full opacity-0" class="w-64 bg-slate-900 text-slate-300 hidden md:flex flex-col border-r border-slate-800 shrink-0 min-h-screen sticky top-0 h-screen z-40">
+    <!-- Brand Info Header with Logo PNG & Toggle Button -->
+    <div class="h-20 border-b border-slate-800 flex items-center justify-between px-5">
       <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-slate-950 border border-slate-800 flex items-center justify-center p-2 shadow-md shrink-0">
           <img src="{{ asset('images/logo.png') }}" alt="Logo CV. Travel RTM" class="w-full h-auto object-contain select-none pointer-events-none">
@@ -39,38 +39,53 @@
           <span class="text-[10px] text-brand-500 font-bold uppercase tracking-wider">Admin Dashboard</span>
         </div>
       </a>
+      {{-- <button @click="toggleDesktopSidebar()" class="hidden md:flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0" title="Tutup Sidebar">
+        <i class="fa-solid fa-chevron-left text-xs"></i>
+      </button> --}}
     </div>
 
     <!-- Sidebar Navigation Menus -->
     <nav class="flex-grow py-6 px-4 space-y-1.5 overflow-y-auto">
       <a href="{{ route('admin.dashboard') }}"
-        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.dashboard') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        Dashboard
-      </a>
-
-      <a href="{{ route('admin.armada.index') }}"
-        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.armada.*') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        Kelola Armada
-      </a>
-
-      <a href="{{ route('admin.sopir.index') }}"
-        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.sopir.*') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        Kelola Sopir
-      </a>
-
-      <a href="{{ route('admin.penumpang.index') }}"
-        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.penumpang.*') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        Data Penumpang
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.dashboard') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-gauge-high text-sm text-center w-5"></i>
+        <span>Dashboard</span>
       </a>
 
       <a href="{{ route('admin.jadwal.index') }}"
-        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.jadwal.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        Jadwal Perjalanan
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.jadwal.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-calendar-days text-sm text-center w-5"></i>
+        <span>Jadwal Perjalanan</span>
+      </a>
+
+      <a href="{{ route('admin.armada.index') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.armada.*') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-van-shuttle text-sm text-center w-5"></i>
+        <span>Kelola Armada</span>
+      </a>
+
+      <a href="{{ route('admin.sopir.index') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.sopir.*') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-id-card text-sm text-center w-5"></i>
+        <span>Kelola Sopir</span>
+      </a>
+
+      <a href="{{ route('admin.penumpang.index') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.penumpang.*') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-users text-sm text-center w-5"></i>
+        <span>Data Penumpang</span>
       </a>
 
       <a href="{{ route('admin.pemesanan.index') }}"
-        class="block px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.pemesanan.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        Transaksi Pemesanan
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.pemesanan.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-ticket text-sm text-center w-5"></i>
+        <span>Transaksi Pemesanan</span>
+      </a>
+
+      <a href="{{ route('admin.setoran.index') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.setoran.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
+        <i class="fa-solid fa-file-invoice-dollar text-sm text-center w-5"></i>
+        <span>Laporan</span>
       </a>
     </nav>
   </aside>
@@ -99,23 +114,33 @@
       </button>
     </div>
     <nav class="flex-grow py-6 px-4 space-y-1.5 overflow-y-auto">
-      <a href="{{ route('admin.dashboard') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.dashboard') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        Dashboard
+      <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.dashboard') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        <i class="fa-solid fa-gauge-high text-sm text-center w-5"></i>
+        <span>Dashboard</span>
       </a>
-      <a href="{{ route('admin.armada.index') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.armada.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        Kelola Armada
+      <a href="{{ route('admin.jadwal.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.jadwal.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        <i class="fa-solid fa-calendar-days text-sm text-center w-5"></i>
+        <span>Jadwal Perjalanan</span>
       </a>
-      <a href="{{ route('admin.sopir.index') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.sopir.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        Kelola Sopir
+      <a href="{{ route('admin.armada.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.armada.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        <i class="fa-solid fa-van-shuttle text-sm text-center w-5"></i>
+        <span>Kelola Armada</span>
       </a>
-      <a href="{{ route('admin.penumpang.index') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.penumpang.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        Data Penumpang
+      <a href="{{ route('admin.sopir.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.sopir.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        <i class="fa-solid fa-id-card text-sm text-center w-5"></i>
+        <span>Kelola Sopir</span>
       </a>
-      <a href="{{ route('admin.jadwal.index') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.jadwal.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        Jadwal Perjalanan
+      <a href="{{ route('admin.penumpang.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.penumpang.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        <i class="fa-solid fa-users text-sm text-center w-5"></i>
+        <span>Data Penumpang</span>
       </a>
-      <a href="{{ route('admin.pemesanan.index') }}" class="block px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.pemesanan.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        Transaksi Pemesanan
+      <a href="{{ route('admin.pemesanan.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.pemesanan.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        <i class="fa-solid fa-ticket text-sm text-center w-5"></i>
+        <span>Transaksi Pemesanan</span>
+      </a>
+      <a href="{{ route('admin.setoran.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.setoran.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+        <i class="fa-solid fa-file-invoice-dollar text-sm text-center w-5"></i>
+        <span>Laporan</span>
       </a>
     </nav>
   </div>
@@ -128,18 +153,25 @@
 
       <!-- Mobile Sidebar Toggle -->
       <div class="flex items-center gap-3 md:hidden">
-        <button @click="mobileSidebarOpen = true" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors text-xs font-bold">
-          Menu
+        <button @click="mobileSidebarOpen = true" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors text-xs font-bold cursor-pointer">
+          <i class="fa-solid fa-bars text-sm"></i>
         </button>
         <span class="font-extrabold text-slate-800 text-sm">CV. Travel RTM</span>
       </div>
 
-      <!-- Desktop Breadcrumb / Title -->
-      <div class="hidden md:block">
-        <h1 class="text-lg font-extrabold text-slate-800 tracking-tight">
-          @yield('page_title', 'Admin Control Center')
-        </h1>
-        <p class="text-xs text-slate-500 font-medium">Pengelolaan Sistem Informasi CV. Travel RTM</p>
+      <!-- Desktop Sidebar Toggle & Title -->
+      <div class="hidden md:flex items-center gap-4">
+        <button @click="toggleDesktopSidebar()" 
+          class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition-colors flex items-center justify-center cursor-pointer shadow-xs" 
+          title="Buka/Tutup Sidebar">
+          <i class="fa-solid fa-bars text-sm"></i>
+        </button>
+        <div>
+          <h1 class="text-lg font-extrabold text-slate-800 tracking-tight">
+            @yield('page_title', 'Admin Control Center')
+          </h1>
+          <p class="text-xs text-slate-500 font-medium">Pengelolaan Sistem Informasi CV. Travel RTM</p>
+        </div>
       </div>
 
       <!-- Admin Profile & Actions Header -->

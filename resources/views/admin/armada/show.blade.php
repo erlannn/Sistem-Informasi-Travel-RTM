@@ -49,6 +49,10 @@
                     @endif
                 </div>
                 <div>
+                    <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px] mb-0.5">Kapasitas Kursi</span>
+                    <span class="font-extrabold text-brand-700 text-sm">{{ $armada->kursi ?? 5 }} Kursi Penumpang</span>
+                </div>
+                <div>
                     <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px] mb-0.5">Total Jadwal Ditugaskan</span>
                     <span class="font-bold text-slate-900 text-sm">{{ $armada->jadwals_count }} Perjalanan</span>
                 </div>

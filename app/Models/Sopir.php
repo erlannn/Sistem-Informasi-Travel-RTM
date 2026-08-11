@@ -17,7 +17,6 @@ class Sopir extends Model
         'nama',
         'no_hp',
         'alamat',
-        'gaji',
     ];
 
     public function jadwals(): HasMany

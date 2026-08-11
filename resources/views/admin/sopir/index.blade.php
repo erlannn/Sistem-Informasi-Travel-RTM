@@ -9,13 +9,9 @@
     <!-- Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
         <div>
-            <span class="px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] font-extrabold uppercase tracking-wider">
-                Data Sopir
-            </span>
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
-                Kelola Driver / Sopir Travel
+                Kelola Sopir Travel
             </h1>
-            <p class="text-xs text-slate-500 font-medium">Daftar pengemudi resmi CV Travel RTM beserta rincian kontak dan gaji.</p>
         </div>
 
         <div class="flex flex-col sm:flex-row items-center gap-3">
@@ -35,7 +31,7 @@
 
             <a href="{{ route('admin.sopir.create') }}"
                 class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold text-xs rounded-xl shadow-xs transition flex items-center justify-center cursor-pointer shrink-0 w-full sm:w-auto">
-                + Tambah Sopir Baru
+                Tambah Sopir
             </a>
         </div>
     </div>
@@ -46,11 +42,11 @@
             <table class="w-full text-left text-xs text-slate-700">
                 <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-extrabold border-b border-slate-200">
                     <tr>
-                        <th class="p-3.5 rounded-l-xl">ID</th>
+                        <th class="p-3.5 rounded-l-xl">NO</th>
                         <th class="p-3.5">Nama Sopir</th>
                         <th class="p-3.5">No. Telepon / WA</th>
                         <th class="p-3.5">Alamat</th>
-                        <th class="p-3.5">Gaji (Rp)</th>
+                        {{-- <th class="p-3.5">Gaji (Rp)</th> --}}
                         <th class="p-3.5 text-center">Jadwal Tugas</th>
                         <th class="p-3.5 rounded-r-xl text-center">Aksi</th>
                     </tr>
@@ -70,9 +66,9 @@
                             <td class="p-3.5 font-medium text-slate-500 max-w-xs truncate">
                                 {{ $s->alamat ?? '-' }}
                             </td>
-                            <td class="p-3.5 font-extrabold text-slate-900">
+                            {{-- <td class="p-3.5 font-extrabold text-slate-900">
                                 Rp {{ number_format($s->gaji, 0, ',', '.') }}
-                            </td>
+                            </td> --}}
                             <td class="p-3.5 text-center font-bold text-slate-700">
                                 <span class="px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200">
                                     {{ $s->jadwals_count }} Tugas

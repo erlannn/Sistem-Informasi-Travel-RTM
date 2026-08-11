@@ -11,6 +11,26 @@ use Illuminate\Http\Request;
 
 class AdminJadwalController extends Controller
 {
+    /**
+     * Helper to get harga & bagi_hasil_sopir based on route
+     */
+    private function getRoutePricing(string $asal, string $tujuan): ?array
+    {
+        $matrix = [
+            'Sijunjung-Solok' => ['harga' => 50000.00, 'bagi_hasil_sopir' => 20000.00],
+            'Solok-Sijunjung' => ['harga' => 50000.00, 'bagi_hasil_sopir' => 20000.00],
+
+            'Sijunjung-Padang' => ['harga' => 80000.00, 'bagi_hasil_sopir' => 30000.00],
+            'Padang-Sijunjung' => ['harga' => 80000.00, 'bagi_hasil_sopir' => 30000.00],
+
+            'Sijunjung-BIM'   => ['harga' => 150000.00, 'bagi_hasil_sopir' => 50000.00],
+            'BIM-Sijunjung'   => ['harga' => 150000.00, 'bagi_hasil_sopir' => 50000.00],
+        ];
+
+        $key = "{$asal}-{$tujuan}";
+        return $matrix[$key] ?? null;
+    }
+
     public function index(Request $request)
     {
         $query = Jadwal::with(['armada', 'sopir', 'kursis'])->withCount('pemesanans')->latest('id_jadwal');
@@ -43,26 +63,36 @@ class AdminJadwalController extends Controller
         $validated = $request->validate([
             'id_armada' => 'required|exists:armadas,id_armada',
             'id_sopir' => 'required|exists:sopirs,id_sopir',
-            'asal' => 'required|string|max:255',
-            'tujuan' => 'required|string|max:255',
+            'asal' => 'required|in:Sijunjung,Solok,Padang,BIM',
+            'tujuan' => 'required|in:Sijunjung,Solok,Padang,BIM',
             'tanggal' => 'required|date',
             'jam' => 'required|string',
-            'harga' => 'required|numeric|min:0',
         ]);
+
+        $pricing = $this->getRoutePricing($validated['asal'], $validated['tujuan']);
+        if (!$pricing) {
+            return back()->withInput()->withErrors(['tujuan' => 'Rute perjalanan tidak valid. Hanya tersedia 6 rute antara Sijunjung, Solok, Padang, dan BIM.']);
+        }
+
+        $validated['harga'] = $pricing['harga'];
+        $validated['bagi_hasil_sopir'] = $pricing['bagi_hasil_sopir'];
 
         /** @var Jadwal $jadwal */
         $jadwal = Jadwal::create($validated);
 
-        // Generate 6 seats automatically for this schedule
-        for ($i = 1; $i <= 6; $i++) {
+        $armada = Armada::find($validated['id_armada']);
+        $totalKursi = $armada ? ($armada->kursi ?? 6) : 6;
+
+        // Generate seats automatically matching the armada seat count
+        for ($i = 1; $i <= $totalKursi; $i++) {
             Kursi::create([
                 'id_jadwal' => $jadwal->id_jadwal,
-                'nomor_kursi' => 'K' . $i,
+                'nomor_kursi' => (string) $i,
                 'status' => 'Tersedia',
             ]);
         }
 
-        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal perjalanan baru & 6 kursi berhasil dibuat!');
+        return redirect()->route('admin.jadwal.index')->with('success', "Jadwal perjalanan baru & {$totalKursi} kursi berhasil dibuat!");
     }
 
     public function show(int|string $id)
@@ -87,12 +117,19 @@ class AdminJadwalController extends Controller
         $validated = $request->validate([
             'id_armada' => 'required|exists:armadas,id_armada',
             'id_sopir' => 'required|exists:sopirs,id_sopir',
-            'asal' => 'required|string|max:255',
-            'tujuan' => 'required|string|max:255',
+            'asal' => 'required|in:Sijunjung,Solok,Padang,BIM',
+            'tujuan' => 'required|in:Sijunjung,Solok,Padang,BIM',
             'tanggal' => 'required|date',
             'jam' => 'required|string',
-            'harga' => 'required|numeric|min:0',
         ]);
+
+        $pricing = $this->getRoutePricing($validated['asal'], $validated['tujuan']);
+        if (!$pricing) {
+            return back()->withInput()->withErrors(['tujuan' => 'Rute perjalanan tidak valid. Hanya tersedia 6 rute antara Sijunjung, Solok, Padang, dan BIM.']);
+        }
+
+        $validated['harga'] = $pricing['harga'];
+        $validated['bagi_hasil_sopir'] = $pricing['bagi_hasil_sopir'];
 
         $jadwal->update($validated);
 

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Transaksi Pemesanan - CV Travel RTM')
-@section('page_title', 'Transaksi Pemesanan Tiket')
+@section('title', 'Pemesanan Tiket - CV Travel RTM')
+@section('page_title', 'Pemesanan Tiket')
 
 @section('content')
 <div class="space-y-6">
@@ -9,36 +9,28 @@
     <!-- Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
         <div>
-            <span class="px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] font-extrabold uppercase tracking-wider">
-                Data Transaksi
-            </span>
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
-                Kelola Transaksi Pemesanan
+                Kelola Pemesanan
             </h1>
-            <p class="text-xs text-slate-500 font-medium">Verifikasi, update status pembayaran, atau buat pemesanan tiket manual oleh admin.</p>
+            <p class="text-xs text-slate-500 font-medium">Daftar transaksi pemesanan tiket dari penumpang.</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
             <!-- Filter Status Buttons -->
-            <div class="flex items-center gap-1.5 bg-slate-50 p-1 rounded-2xl border border-slate-200">
-                <a href="{{ route('admin.pemesanan.index') }}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition {{ !request()->filled('status') ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200' }}">
+            <div class="flex items-center gap-1.5 bg-slate-50 p-1 rounded-2xl border border-slate-200 overflow-x-auto">
+                <a href="{{ route('admin.pemesanan.index') }}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition {{ !request()->filled('status_perjalanan') && !request()->filled('status') ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200' }}">
                     Semua
                 </a>
-                <a href="{{ route('admin.pemesanan.index', ['status' => 'Pending']) }}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition {{ request('status') == 'Pending' ? 'bg-amber-500 text-white shadow-xs' : 'text-amber-700 hover:bg-amber-100' }}">
+                <a href="{{ route('admin.pemesanan.index', ['status_perjalanan' => 'Pending']) }}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition {{ request('status_perjalanan') == 'Pending' || request('status') == 'Pending' ? 'bg-amber-500 text-white shadow-xs' : 'text-amber-700 hover:bg-amber-100' }}">
                     Pending
                 </a>
-                <a href="{{ route('admin.pemesanan.index', ['status' => 'Lunas']) }}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition {{ request('status') == 'Lunas' ? 'bg-emerald-600 text-white shadow-xs' : 'text-emerald-700 hover:bg-emerald-100' }}">
-                    Lunas
+                <a href="{{ route('admin.pemesanan.index', ['status_perjalanan' => 'Selesai']) }}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition {{ request('status_perjalanan') == 'Selesai' || request('status') == 'Selesai' ? 'bg-emerald-600 text-white shadow-xs' : 'text-emerald-700 hover:bg-emerald-100' }}">
+                    Selesai
                 </a>
-                <a href="{{ route('admin.pemesanan.index', ['status' => 'Batal']) }}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition {{ request('status') == 'Batal' ? 'bg-red-600 text-white shadow-xs' : 'text-red-700 hover:bg-red-100' }}">
+                <a href="{{ route('admin.pemesanan.index', ['status_perjalanan' => 'Batal']) }}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition {{ request('status_perjalanan') == 'Batal' || request('status') == 'Batal' ? 'bg-red-600 text-white shadow-xs' : 'text-red-700 hover:bg-red-100' }}">
                     Batal
                 </a>
             </div>
-
-            <a href="{{ route('admin.pemesanan.create') }}"
-                class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold text-xs rounded-xl shadow-xs transition flex items-center justify-center cursor-pointer shrink-0">
-                + Tambah Pemesanan Manual
-            </a>
         </div>
     </div>
 
@@ -49,22 +41,21 @@
                 <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-extrabold border-b border-slate-200">
                     <tr>
                         <th class="p-3.5 rounded-l-xl">ID Pesanan</th>
-                        <th class="p-3.5">Tanggal Pesan</th>
                         <th class="p-3.5">Penumpang</th>
                         <th class="p-3.5">Rute Perjalanan</th>
                         <th class="p-3.5">Kursi</th>
                         <th class="p-3.5">Armada & Sopir</th>
-                        <th class="p-3.5 text-center">Status</th>
-                        <th class="p-3.5 rounded-r-xl text-center">Aksi & Status</th>
+                        <th class="p-3.5 text-center">Status Perjalanan</th>
+                        <th class="p-3.5 rounded-r-xl text-center">Aksi & Update Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($pemesanans as $p)
+                        @php
+                            $currStatus = $p->status_perjalanan ?? 'Pending';
+                        @endphp
                         <tr class="hover:bg-slate-50/80 transition">
                             <td class="p-3.5 font-extrabold text-slate-900">#{{ $p->id_pemesanan }}</td>
-                            <td class="p-3.5 font-medium text-slate-600">
-                                {{ $p->tanggal_pesan }}
-                            </td>
                             <td class="p-3.5 font-bold text-slate-900">
                                 <div>{{ $p->penumpang->nama ?? 'N/A' }}</div>
                                 <div class="text-[10px] text-slate-400 font-normal">{{ $p->penumpang->no_hp ?? '-' }}</div>
@@ -74,26 +65,26 @@
                                 <div class="text-[10px] text-slate-400 font-normal">{{ $p->jadwal->tanggal ?? '' }} &bull; Jam {{ $p->jadwal->jam ?? '' }}</div>
                             </td>
                             <td class="p-3.5 font-extrabold text-slate-900">
-                                <span class="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200">
-                                    {{ $p->kursi->nomor_kursi ?? '-' }}
+                                <span class="px-2.5 py-1 rounded-lg bg-gold-50 border border-gold-200/60 text-gold-700 font-black">
+                                    Kursi {{ $p->kursi->nomor_kursi ?? '-' }}
                                 </span>
                             </td>
                             <td class="p-3.5 font-medium text-slate-600">
-                                <div>{{ $p->jadwal->armada->merk ?? '-' }}</div>
+                                <div class="font-bold text-slate-800">{{ $p->jadwal->armada->merk ?? '-' }}</div>
                                 <div class="text-[10px] text-slate-400">Sopir: {{ $p->jadwal->sopir->nama ?? '-' }}</div>
                             </td>
                             <td class="p-3.5 text-center">
-                                @if($p->status == 'Lunas')
+                                @if($p->status_perjalanan == 'Selesai')
                                     <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                        Lunas
+                                        Selesai
                                     </span>
-                                @elseif($p->status == 'Pending')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                                        Pending
-                                    </span>
-                                @else
+                                @elseif($p->status_perjalanan == 'Batal')
                                     <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200">
                                         Batal
+                                    </span>
+                                @else
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                        Pending
                                     </span>
                                 @endif
                             </td>
@@ -103,21 +94,16 @@
                                     <form action="{{ route('admin.pemesanan.update_status', $p->id_pemesanan) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
-                                        <select name="status" onchange="this.form.submit()" class="px-2.5 py-1 text-[11px] font-bold bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:ring-1 focus:ring-brand-500 cursor-pointer">
-                                            <option value="Pending" {{ $p->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="Lunas" {{ $p->status == 'Lunas' ? 'selected' : '' }}>Lunas</option>
-                                            <option value="Batal" {{ $p->status == 'Batal' ? 'selected' : '' }}>Batal</option>
+                                        <select name="status_perjalanan" onchange="this.form.submit()" class="px-2.5 py-1 text-[11px] font-bold bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:ring-1 focus:ring-brand-500 cursor-pointer">
+                                            <option value="Pending" {{ $currStatus == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="Selesai" {{ $currStatus == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                                            <option value="Batal" {{ $currStatus == 'Batal' ? 'selected' : '' }}>Batal</option>
                                         </select>
                                     </form>
 
                                     <!-- Detail Action -->
                                     <a href="{{ route('admin.pemesanan.show', $p->id_pemesanan) }}" class="px-2.5 py-1 text-[11px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition">
-                                        Struk
-                                    </a>
-
-                                    <!-- Edit Action -->
-                                    <a href="{{ route('admin.pemesanan.edit', $p->id_pemesanan) }}" class="px-2.5 py-1 text-[11px] font-bold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-lg transition">
-                                        Edit
+                                        Detail
                                     </a>
 
                                     <!-- Delete Action -->
@@ -133,8 +119,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="p-8 text-center text-slate-400 font-medium">
-                                Belum ada transaksi pemesanan tiket. Klik "+ Tambah Pemesanan Manual" untuk membuat pesanan baru.
+                            <td colspan="7" class="p-8 text-center text-slate-400 font-medium">
+                                Belum ada transaksi pemesanan tiket.
                             </td>
                         </tr>
                     @endforelse

@@ -23,7 +23,7 @@
             
             <div class="relative z-10 text-center max-w-sm">
                 <!-- Brand Logo with clean dark circle -->
-                <div class="w-28 h-28 mx-auto mb-6 bg-slate-950 rounded-full p-5 border border-slate-900 shadow-md flex items-center justify-center">
+                <div class="w-36 h-36 mx-auto mb-6 bg-slate-950 rounded-full p-5 border border-slate-900 shadow-md flex items-center justify-center">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo RTM" class="w-full h-auto object-contain select-none pointer-events-none">
                 </div>
                 
@@ -50,7 +50,7 @@
                 
                 <!-- On mobile, show logo at top of the form -->
                 <div class="text-center md:hidden mb-8">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-950 p-3.5 border border-slate-800 shadow-md mb-3">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-slate-950 p-5 border border-slate-800 shadow-md mb-3">
                         <img src="{{ asset('images/logo.png') }}" alt="Logo RTM" class="w-full h-auto object-contain select-none pointer-events-none">
                     </div>
                     <h2 class="text-sm font-bold tracking-wider text-slate-900 uppercase leading-none">Travel RTM</h2>
