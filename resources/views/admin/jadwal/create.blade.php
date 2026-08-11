@@ -8,24 +8,12 @@
     <!-- Header Card -->
     <div class="flex items-center justify-between bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
         <div>
-<<<<<<< HEAD
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
                 Tambah Jadwal
             </h1>
             <p class="text-xs text-slate-500 font-medium">Pilih 1 dari 6 rute resmi dan jam keberangkatan baku.</p>
         </div>
         <a href="{{ route('admin.jadwal.index') }}" class="px-4 py-2.5 bg-red-500 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition flex items-center gap-2">
-=======
-            <span class="px-3.5 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black uppercase tracking-wider">
-                Form Jadwal Perjalanan
-            </span>
-            <h1 class="text-xl sm:text-2xl font-black text-black tracking-tight mt-2">
-                Buat Jadwal Perjalanan Baru
-            </h1>
-            <p class="text-xs sm:text-sm text-black font-medium mt-1 leading-relaxed">Atur rute, tanggal, jam keberangkatan, armada, sopir, dan harga tiket travel.</p>
-        </div>
-        <a href="{{ route('admin.jadwal.index') }}" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 active:scale-95 text-black font-bold text-xs sm:text-sm rounded-xl transition flex items-center gap-2 cursor-pointer shrink-0">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
             &larr; Kembali
         </a>
     </div>
@@ -40,7 +28,6 @@
                     <label class="block text-xs sm:text-sm font-black uppercase tracking-wider text-black mb-2">
                         Kota Asal <span class="text-red-500">*</span>
                     </label>
-<<<<<<< HEAD
                     <select id="select-asal" name="asal" required
                         class="w-full px-4 py-3 text-xs text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition font-bold">
                         <option value="Sijunjung" {{ old('asal', 'Sijunjung') == 'Sijunjung' ? 'selected' : '' }}>Sijunjung</option>
@@ -48,10 +35,6 @@
                         <option value="Padang" {{ old('asal') == 'Padang' ? 'selected' : '' }}>Padang</option>
                         <option value="BIM" {{ old('asal') == 'BIM' ? 'selected' : '' }}>Bandara Internasional Minangkabau (BIM)</option>
                     </select>
-=======
-                    <input type="text" name="asal" value="{{ old('asal', 'Sijunjung') }}" required placeholder="Contoh: Sijunjung"
-                        class="w-full px-4 py-3.5 text-sm font-semibold text-black bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition outline-none">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                     @error('asal')
                         <p class="text-xs text-red-500 font-bold mt-1.5">{{ $message }}</p>
                     @enderror
@@ -61,7 +44,6 @@
                     <label class="block text-xs sm:text-sm font-black uppercase tracking-wider text-black mb-2">
                         Kota Tujuan <span class="text-red-500">*</span>
                     </label>
-<<<<<<< HEAD
                     <select id="select-tujuan" name="tujuan" required
                         class="w-full px-4 py-3 text-xs text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition font-bold">
                         <option value="Padang" {{ old('tujuan', 'Padang') == 'Padang' ? 'selected' : '' }}>Padang</option>
@@ -69,17 +51,12 @@
                         <option value="BIM" {{ old('tujuan') == 'BIM' ? 'selected' : '' }}>Bandara Internasional Minangkabau (BIM)</option>
                         <option value="Sijunjung" {{ old('tujuan') == 'Sijunjung' ? 'selected' : '' }}>Sijunjung</option>
                     </select>
-=======
-                    <input type="text" name="tujuan" value="{{ old('tujuan', 'Padang') }}" required placeholder="Contoh: Padang"
-                        class="w-full px-4 py-3.5 text-sm font-semibold text-black bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition outline-none">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                     @error('tujuan')
                         <p class="text-xs text-red-500 font-bold mt-1.5">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
-<<<<<<< HEAD
             <!-- Route Info Banner -->
             <div id="route-info-banner" class="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-1 text-xs">
                 <div class="flex justify-between font-extrabold text-slate-900">
@@ -93,9 +70,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-=======
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                 <div>
                     <label class="block text-xs sm:text-sm font-black uppercase tracking-wider text-black mb-2">
                         Tanggal Keberangkatan <span class="text-red-500">*</span>
@@ -111,15 +85,10 @@
                     <label class="block text-xs sm:text-sm font-black uppercase tracking-wider text-black mb-2">
                         Jam Keberangkatan <span class="text-red-500">*</span>
                     </label>
-<<<<<<< HEAD
                     <select id="select-jam" name="jam" required
                         class="w-full px-4 py-3 text-xs text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition font-bold">
                         <!-- Populated by JavaScript -->
                     </select>
-=======
-                    <input type="text" name="jam" value="{{ old('jam', '08:00') }}" required placeholder="08:00"
-                        class="w-full px-4 py-3.5 text-sm font-semibold text-black bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition outline-none">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                     @error('jam')
                         <p class="text-xs text-red-500 font-bold mt-1.5">{{ $message }}</p>
                     @enderror
@@ -162,63 +131,23 @@
                 @enderror
             </div>
 
-<<<<<<< HEAD
             <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
                 <a href="{{ route('admin.jadwal.index') }}" class="px-5 py-2.5 text-xs font-bold text-white bg-red-500 hover:bg-red-700 rounded-xl transition">
                     Batal
                 </a>
                 <button type="submit" class="px-6 py-2.5 text-xs font-extrabold text-slate-950 bg-brand-500 hover:bg-brand-600 rounded-xl shadow-xs transition cursor-pointer">
                     Simpan
-=======
-            <div>
-                <label class="block text-xs sm:text-sm font-black uppercase tracking-wider text-black mb-2">
-                    Harga Tiket per Kursi (Rp) <span class="text-red-500">*</span>
-                </label>
-                <input type="number" name="harga" value="{{ old('harga', '100000') }}" required min="0" step="1000" placeholder="100000"
-                    class="w-full px-4 py-3.5 text-sm font-semibold text-black bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition outline-none">
-                @error('harga')
-                    <p class="text-xs text-red-500 font-bold mt-1.5">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="pt-6 border-t border-slate-200 flex items-center justify-end gap-3">
-                <a href="{{ route('admin.jadwal.index') }}" class="px-5 py-3 text-xs sm:text-sm font-bold text-black hover:bg-slate-100 rounded-xl transition cursor-pointer">
-                    Batal
-                </a>
-                <button type="submit" class="px-6 py-3 text-xs sm:text-sm font-black text-slate-950 bg-amber-400 hover:bg-amber-300 active:bg-amber-500 active:scale-95 rounded-xl shadow-sm transition cursor-pointer">
-                    Simpan & Buat 6 Kursi Otomatis
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                 </button>
             </div>
         </form>
     </div>
 </div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const asalSelect = document.getElementById('select-asal');
     const tujuanSelect = document.getElementById('select-tujuan');
     const jamSelect = document.getElementById('select-jam');
 
-    const routeTitle = document.getElementById('route-title');
-    const routePrice = document.getElementById('route-price');
-    const routeDriver = document.getElementById('route-driver');
-    const routeCompany = document.getElementById('route-company');
-
-    const timesFromSijunjung = [
-        { val: '05:00:00', label: 'Jam 05:00 Pagi' },
-        { val: '08:00:00', label: 'Jam 08:00 Pagi' },
-        { val: '10:00:00', label: 'Jam 10:00 Pagi' },
-        { val: '13:00:00', label: 'Jam 13:00 (1 Siang)' },
-        { val: '17:00:00', label: 'Jam 17:00 (5 Sore)' }
-    ];
-
-    const timesToSijunjung = [
-        { val: '09:00:00', label: 'Jam 09:00 Pagi' },
-        { val: '11:00:00', label: 'Jam 11:00 Siang' },
-        { val: '13:00:00', label: 'Jam 13:00 (1 Siang)' },
-        { val: '15:00:00', label: 'Jam 15:00 (3 Sore)' },
-        { val: '17:00:00', label: 'Jam 17:00 (5 Sore)' },
         { val: '19:00:00', label: 'Jam 19:00 (7 Malam)' }
     ];
 

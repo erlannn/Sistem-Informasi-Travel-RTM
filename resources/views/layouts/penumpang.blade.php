@@ -67,16 +67,6 @@
 
                 <!-- Right Side: Notifications, Avatar and Logout (Desktop) -->
                 <div class="hidden md:flex items-center space-x-4">
-<<<<<<< HEAD
-=======
-                    
-                    <!-- Notification Bell Button -->
-                    <button class="p-2.5 text-black hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-colors relative cursor-pointer focus:ring-2 focus:ring-amber-200 focus:outline-none">
-                        <!-- Pulse Indicator -->
-                        <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white animate-pulse"></span>
-                        <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
-                    </button>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
 
                     <!-- Divider -->
                     <div class="h-6 w-px bg-slate-200"></div>
@@ -88,17 +78,9 @@
                                 <div class="w-9 h-9 rounded-full bg-slate-950 text-amber-400 border-2 border-amber-400/50 hover:border-amber-400 flex items-center justify-center font-black text-xs shadow-xs transition-all">
                                     {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                                 </div>
-<<<<<<< HEAD
                             </div>
                             <div class="hidden xl:flex flex-col text-left">
                                 <span class="text-xs font-bold text-slate-800 leading-tight">{{ Auth::user()->name }}</span>
-=======
-                                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border border-white"></span>
-                            </div>
-                            <div class="hidden xl:flex flex-col text-left">
-                                <span class="text-xs font-black text-black leading-tight">{{ Auth::user()->name }}</span>
-                                <span class="text-[9px] text-amber-900 font-extrabold bg-amber-100 px-1.5 py-0.5 rounded border border-amber-300 mt-0.5 inline-block">Penumpang</span>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                             </div>
                         </div>
 
@@ -108,14 +90,8 @@
                         <!-- Logout Button -->
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
-<<<<<<< HEAD
                             <button type="submit" class="px-3 py-2 rounded-xl text-sm font-semibold border border-slate-200 bg-slate-200 hover:bg-red-500 hover:text-white transition-colors focus:outline-none cursor-pointer">
                                 Keluar
-=======
-                            <button type="submit" class="text-xs font-black text-red-600 hover:text-red-700 hover:bg-red-50 px-2.5 py-1.5 rounded-lg transition-colors focus:outline-none cursor-pointer flex items-center gap-1.5">
-                                <i class="fa-solid fa-right-from-bracket"></i>
-                                <span>Keluar</span>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                             </button>
                         </form>
                     @else

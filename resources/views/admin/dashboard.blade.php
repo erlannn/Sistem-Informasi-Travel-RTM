@@ -9,23 +9,9 @@
     <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-7 sm:p-8 md:p-10 relative overflow-hidden">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
             <div>
-<<<<<<< HEAD
                 <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
                     Selamat Datang, Admin RTM Travel
                 </h1>
-=======
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="px-3.5 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black uppercase tracking-wider">
-                        Control Center
-                    </span>
-                </div>
-                <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-black tracking-tight">
-                    Selamat Datang, Admin CV. Travel RTM
-                </h1>
-                <p class="text-xs sm:text-sm md:text-base text-black font-medium mt-2 leading-relaxed max-w-3xl">
-                    Kelola data armada, sopir, penumpang, jadwal perjalanan, dan seluruh transaksi pemesanan dalam satu sistem terpadu.
-                </p>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
             </div>
         </div>
     </div>
@@ -54,7 +40,6 @@
             </a>
 
             <!-- Stat: Armada -->
-<<<<<<< HEAD
             <a href="{{ route('admin.armada.index') }}" class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition border-l-4 border-l-brand-500 block">
                 <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">Total Armada</span>
                 <div class="text-2xl font-extrabold text-slate-900">{{ $stats['total_armada'] }}</div>
@@ -66,29 +51,12 @@
                 <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">Total Sopir</span>
                 <div class="text-2xl font-extrabold text-slate-900">{{ $stats['total_sopir'] }}</div>
                 <span class="text-[11px] text-brand-600 font-bold block mt-2">Lihat Selengkapnya &rarr;</span>
-=======
-            <a href="{{ route('admin.armada.index') }}" class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-400/80 transition-all border-l-4 border-l-slate-950 block group">
-                <span class="text-xs font-black uppercase tracking-wider text-black block mb-2">Total Armada</span>
-                <div class="text-3xl sm:text-4xl font-black text-black tracking-tight">{{ $stats['total_armada'] }}</div>
-                <span class="text-xs sm:text-sm text-amber-600 font-extrabold block mt-3 group-hover:translate-x-1 transition-transform">Kelola Armada &rarr;</span>
-            </a>
-
-            <!-- Stat: Sopir -->
-            <a href="{{ route('admin.sopir.index') }}" class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-400/80 transition-all border-l-4 border-l-slate-950 block group">
-                <span class="text-xs font-black uppercase tracking-wider text-black block mb-2">Total Sopir</span>
-                <div class="text-3xl sm:text-4xl font-black text-black tracking-tight">{{ $stats['total_sopir'] }}</div>
-                <span class="text-xs sm:text-sm text-amber-600 font-extrabold block mt-3 group-hover:translate-x-1 transition-transform">Kelola Sopir &rarr;</span>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
             </a>
         </div>
     </div>
 
     <!-- Recent Tables Grid -->
-<<<<<<< HEAD
     {{-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-=======
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
         <!-- Recent Pemesanan -->
         <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-6">

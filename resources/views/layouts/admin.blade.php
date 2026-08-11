@@ -24,22 +24,12 @@
   @stack('styles')
 </head>
 
-<<<<<<< HEAD
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex antialiased" x-data="{ mobileSidebarOpen: false, desktopSidebarOpen: localStorage.getItem('admin_sidebar_open') !== 'false', toggleDesktopSidebar() { this.desktopSidebarOpen = !this.desktopSidebarOpen; localStorage.setItem('admin_sidebar_open', this.desktopSidebarOpen); } }">
 
   <!-- Sidebar Component (Deep Slate #0F172A with Brand Accent) -->
   <aside x-show="desktopSidebarOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="-translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="-translate-x-full opacity-0" class="w-64 bg-slate-900 text-slate-300 hidden md:flex flex-col border-r border-slate-800 shrink-0 min-h-screen sticky top-0 h-screen z-40">
     <!-- Brand Info Header with Logo PNG & Toggle Button -->
     <div class="h-20 border-b border-slate-800 flex items-center justify-between px-5">
-=======
-<body class="bg-slate-50 text-black font-sans min-h-screen flex antialiased" x-data="{ mobileSidebarOpen: false }">
-
-  <!-- Sidebar Component (Deep Slate #0F172A with Brand Accent) -->
-  <!-- Sidebar Component (Deep Slate with High-Contrast Amber Highlights) -->
-  <aside class="w-64 bg-slate-950 text-slate-100 hidden md:flex flex-col border-r border-slate-800 shrink-0 min-h-screen sticky top-0 h-screen z-40">
-    <!-- Brand Info Header with Logo PNG -->
-    <div class="h-20 border-b border-slate-800 flex items-center px-6 gap-3">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
       <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center p-2 shadow-md shrink-0">
           <img src="{{ asset('images/logo.png') }}" alt="Logo CV. Travel RTM" class="w-full h-auto object-contain select-none pointer-events-none">
@@ -57,7 +47,6 @@
     <!-- Sidebar Navigation Menus -->
     <nav class="flex-grow py-6 px-4 space-y-2 overflow-y-auto">
       <a href="{{ route('admin.dashboard') }}"
-<<<<<<< HEAD
         class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.dashboard') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
         <i class="fa-solid fa-gauge-high text-sm text-center w-5"></i>
         <span>Dashboard</span>
@@ -97,41 +86,6 @@
         class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.setoran.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
         <i class="fa-solid fa-file-invoice-dollar text-sm text-center w-5"></i>
         <span>Laporan</span>
-=======
-        class="flex items-center px-4 py-3.5 rounded-xl text-sm transition-all {{ Request::routeIs('admin.dashboard') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-gauge-high mr-3 text-base text-center w-5"></i>
-        <span>Dashboard</span>
-      </a>
-
-      <a href="{{ route('admin.armada.index') }}"
-        class="flex items-center px-4 py-3.5 rounded-xl text-sm transition-all {{ Request::routeIs('admin.armada.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-car mr-3 text-base text-center w-5"></i>
-        <span>Kelola Armada</span>
-      </a>
-
-      <a href="{{ route('admin.sopir.index') }}"
-        class="flex items-center px-4 py-3.5 rounded-xl text-sm transition-all {{ Request::routeIs('admin.sopir.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-user-tie mr-3 text-base text-center w-5"></i>
-        <span>Kelola Sopir</span>
-      </a>
-
-      <a href="{{ route('admin.penumpang.index') }}"
-        class="flex items-center px-4 py-3.5 rounded-xl text-sm transition-all {{ Request::routeIs('admin.penumpang.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-users mr-3 text-base text-center w-5"></i>
-        <span>Data Penumpang</span>
-      </a>
-
-      <a href="{{ route('admin.jadwal.index') }}"
-        class="flex items-center px-4 py-3.5 rounded-xl text-sm transition-all {{ Request::routeIs('admin.jadwal.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-calendar-days mr-3 text-base text-center w-5"></i>
-        <span>Jadwal Perjalanan</span>
-      </a>
-
-      <a href="{{ route('admin.pemesanan.index') }}"
-        class="flex items-center px-4 py-3.5 rounded-xl text-sm transition-all {{ Request::routeIs('admin.pemesanan.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-receipt mr-3 text-base text-center w-5"></i>
-        <span>Transaksi Pemesanan</span>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
       </a>
     </nav>
   </aside>
@@ -159,7 +113,6 @@
         <i class="fa-solid fa-xmark text-xl"></i>
       </button>
     </div>
-<<<<<<< HEAD
     <nav class="flex-grow py-6 px-4 space-y-1.5 overflow-y-auto">
       <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.dashboard') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
         <i class="fa-solid fa-gauge-high text-sm text-center w-5"></i>
@@ -188,32 +141,6 @@
       <a href="{{ route('admin.setoran.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.setoran.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
         <i class="fa-solid fa-file-invoice-dollar text-sm text-center w-5"></i>
         <span>Laporan</span>
-=======
-    <nav class="flex-grow py-6 px-4 space-y-2 overflow-y-auto">
-      <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3.5 rounded-xl text-sm {{ Request::routeIs('admin.dashboard') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black' : 'text-slate-200 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-gauge-high mr-3 text-base text-center w-5"></i>
-        <span>Dashboard</span>
-      </a>
-      <a href="{{ route('admin.armada.index') }}" class="flex items-center px-4 py-3.5 rounded-xl text-sm {{ Request::routeIs('admin.armada.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black' : 'text-slate-200 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-car mr-3 text-base text-center w-5"></i>
-        <span>Kelola Armada</span>
-      </a>
-      <a href="{{ route('admin.sopir.index') }}" class="flex items-center px-4 py-3.5 rounded-xl text-sm {{ Request::routeIs('admin.sopir.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black' : 'text-slate-200 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-user-tie mr-3 text-base text-center w-5"></i>
-        <span>Kelola Sopir</span>
-      </a>
-      <a href="{{ route('admin.penumpang.index') }}" class="flex items-center px-4 py-3.5 rounded-xl text-sm {{ Request::routeIs('admin.penumpang.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black' : 'text-slate-200 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-users mr-3 text-base text-center w-5"></i>
-        <span>Data Penumpang</span>
-      </a>
-      <a href="{{ route('admin.jadwal.index') }}" class="flex items-center px-4 py-3.5 rounded-xl text-sm {{ Request::routeIs('admin.jadwal.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black' : 'text-slate-200 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-calendar-days mr-3 text-base text-center w-5"></i>
-        <span>Jadwal Perjalanan</span>
-      </a>
-      <a href="{{ route('admin.pemesanan.index') }}" class="flex items-center px-4 py-3.5 rounded-xl text-sm {{ Request::routeIs('admin.pemesanan.*') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black' : 'text-slate-200 hover:text-amber-400 font-bold' }}">
-        <i class="fa-solid fa-receipt mr-3 text-base text-center w-5"></i>
-        <span>Transaksi Pemesanan</span>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
       </a>
     </nav>
   </div>
@@ -226,17 +153,12 @@
 
       <!-- Mobile Sidebar Toggle -->
       <div class="flex items-center gap-3 md:hidden">
-<<<<<<< HEAD
         <button @click="mobileSidebarOpen = true" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors text-xs font-bold cursor-pointer">
-=======
-        <button @click="mobileSidebarOpen = true" class="w-10 h-10 rounded-xl bg-slate-950 text-white flex items-center justify-center hover:bg-slate-900 transition-colors text-xs font-bold shadow-xs">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
           <i class="fa-solid fa-bars text-sm"></i>
         </button>
         <span class="font-black text-black text-sm uppercase tracking-wider">CV. Travel RTM</span>
       </div>
 
-<<<<<<< HEAD
       <!-- Desktop Sidebar Toggle & Title -->
       <div class="hidden md:flex items-center gap-4">
         <button @click="toggleDesktopSidebar()" 
@@ -250,14 +172,6 @@
           </h1>
           <p class="text-xs text-slate-500 font-medium">Pengelolaan Sistem Informasi CV. Travel RTM</p>
         </div>
-=======
-      <!-- Desktop Breadcrumb / Title -->
-      <div class="hidden md:block">
-        <h1 class="text-xl font-black text-black tracking-tight uppercase">
-          @yield('page_title', 'Admin Control Center')
-        </h1>
-        <p class="text-xs sm:text-sm text-black font-medium">Pengelolaan Sistem Informasi CV. Travel RTM</p>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
       </div>
 
       <!-- Admin Profile & Actions Header -->

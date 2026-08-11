@@ -26,13 +26,8 @@
                     <span class="px-3 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black uppercase tracking-wider">
                         #SOPIR-{{ $sopir->id_sopir }}
                     </span>
-<<<<<<< HEAD
                     <h2 class="text-lg font-extrabold text-slate-900 mt-1">{{ $sopir->nama }}</h2>
                     <p class="text-xs text-emerald-600 font-bold">Sistem Bagi Hasil Per-Perjalanan</p>
-=======
-                    <h2 class="text-xl font-black text-black mt-2 leading-tight">{{ $sopir->nama }}</h2>
-                    <p class="text-xs sm:text-sm text-black font-semibold mt-0.5">Gaji: Rp {{ number_format($sopir->gaji, 0, ',', '.') }}</p>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                 </div>
             </div>
 

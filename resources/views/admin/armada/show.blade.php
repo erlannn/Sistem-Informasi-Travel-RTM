@@ -49,17 +49,12 @@
                     @endif
                 </div>
                 <div>
-<<<<<<< HEAD
                     <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px] mb-0.5">Kapasitas Kursi</span>
                     <span class="font-extrabold text-brand-700 text-sm">{{ $armada->kursi ?? 5 }} Kursi Penumpang</span>
                 </div>
                 <div>
                     <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px] mb-0.5">Total Jadwal Ditugaskan</span>
                     <span class="font-bold text-slate-900 text-sm">{{ $armada->jadwals_count }} Perjalanan</span>
-=======
-                    <span class="text-black font-black uppercase tracking-wider block text-xs mb-1.5">Total Jadwal Ditugaskan</span>
-                    <span class="font-black text-black text-base">{{ $armada->jadwals_count }} Perjalanan</span>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                 </div>
             </div>
         </div>

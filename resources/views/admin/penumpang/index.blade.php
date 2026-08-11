@@ -9,19 +9,9 @@
     <!-- Header Section -->
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
         <div>
-<<<<<<< HEAD
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
                 Data Penumpang
             </h1>
-=======
-            <span class="px-3.5 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black uppercase tracking-wider">
-                Database Penumpang
-            </span>
-            <h1 class="text-xl sm:text-2xl font-black text-black tracking-tight mt-2">
-                Data Seluruh Penumpang
-            </h1>
-            <p class="text-xs sm:text-sm text-black font-medium mt-1 leading-relaxed">Daftar pelanggan terdaftar yang pernah melakukan registrasi atau pemesanan tiket travel.</p>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
         </div>
 
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -52,7 +42,6 @@
             <table class="w-full text-left text-sm text-black">
                 <thead class="bg-slate-100 text-black uppercase text-xs font-black border-b border-slate-200">
                     <tr>
-<<<<<<< HEAD
                         <th class="p-3.5 rounded-l-xl">ID</th>
                         <th class="p-3.5">Nama Penumpang</th>
                         <th class="p-3.5">Email</th>
@@ -60,15 +49,6 @@
                         <th class="p-3.5">Alamat</th>
                         <th class="p-3.5 text-center">Total Pesanan</th>
                         <th class="p-3.5 rounded-r-xl text-center">Aksi</th>
-=======
-                        <th class="py-4 px-4 sm:px-5 rounded-l-xl">ID</th>
-                        <th class="py-4 px-4 sm:px-5">Nama Penumpang</th>
-                        <th class="py-4 px-4 sm:px-5">Email</th>
-                        <th class="py-4 px-4 sm:px-5">No. Telepon / HP</th>
-                        <th class="py-4 px-4 sm:px-5">Alamat</th>
-                        <th class="py-4 px-4 sm:px-5 text-center">Total Pesanan</th>
-                        <th class="py-4 px-4 sm:px-5 rounded-r-xl text-center">Aksi</th>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">

@@ -9,19 +9,9 @@
     <!-- Header Section -->
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
         <div>
-<<<<<<< HEAD
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
                 Kelola Sopir Travel
             </h1>
-=======
-            <span class="px-3.5 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black uppercase tracking-wider">
-                Data Sopir
-            </span>
-            <h1 class="text-xl sm:text-2xl font-black text-black tracking-tight mt-2">
-                Kelola Driver & Sopir Travel
-            </h1>
-            <p class="text-xs sm:text-sm text-black font-medium mt-1 leading-relaxed">Daftar pengemudi resmi CV. Travel RTM beserta rincian kontak dan gaji.</p>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
         </div>
 
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -40,13 +30,8 @@
             </form>
 
             <a href="{{ route('admin.sopir.create') }}"
-<<<<<<< HEAD
                 class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold text-xs rounded-xl shadow-xs transition flex items-center justify-center cursor-pointer shrink-0 w-full sm:w-auto">
                 Tambah Sopir
-=======
-                class="px-5 py-3 bg-amber-400 hover:bg-amber-300 active:bg-amber-500 active:scale-95 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-sm transition flex items-center justify-center cursor-pointer shrink-0">
-                + Tambah Sopir Baru
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
             </a>
         </div>
     </div>
@@ -57,7 +42,6 @@
             <table class="w-full text-left text-sm text-black">
                 <thead class="bg-slate-100 text-black uppercase text-xs font-black border-b border-slate-200">
                     <tr>
-<<<<<<< HEAD
                         <th class="p-3.5 rounded-l-xl">NO</th>
                         <th class="p-3.5">Nama Sopir</th>
                         <th class="p-3.5">No. Telepon / WA</th>
@@ -65,15 +49,6 @@
                         {{-- <th class="p-3.5">Gaji (Rp)</th> --}}
                         <th class="p-3.5 text-center">Jadwal Tugas</th>
                         <th class="p-3.5 rounded-r-xl text-center">Aksi</th>
-=======
-                        <th class="py-4 px-4 sm:px-5 rounded-l-xl">ID</th>
-                        <th class="py-4 px-4 sm:px-5">Nama Sopir</th>
-                        <th class="py-4 px-4 sm:px-5">No. Telepon / WA</th>
-                        <th class="py-4 px-4 sm:px-5">Alamat</th>
-                        <th class="py-4 px-4 sm:px-5">Gaji Pokok</th>
-                        <th class="py-4 px-4 sm:px-5 text-center">Jadwal Tugas</th>
-                        <th class="py-4 px-4 sm:px-5 rounded-r-xl text-center">Aksi</th>
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -92,19 +67,11 @@
                             <td class="py-4 px-4 sm:px-5 font-medium text-black max-w-xs truncate">
                                 {{ $s->alamat ?? '-' }}
                             </td>
-<<<<<<< HEAD
                             {{-- <td class="p-3.5 font-extrabold text-slate-900">
                                 Rp {{ number_format($s->gaji, 0, ',', '.') }}
                             </td> --}}
                             <td class="p-3.5 text-center font-bold text-slate-700">
                                 <span class="px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200">
-=======
-                            <td class="py-4 px-4 sm:px-5 font-black text-amber-700">
-                                Rp {{ number_format($s->gaji, 0, ',', '.') }}
-                            </td>
-                            <td class="py-4 px-4 sm:px-5 text-center font-black text-black">
-                                <span class="px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-xs font-black">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                                     {{ $s->jadwals_count }} Tugas
                                 </span>
                             </td>

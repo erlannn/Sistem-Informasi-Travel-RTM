@@ -50,7 +50,6 @@
             </div>
 
             <div>
-<<<<<<< HEAD
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Jumlah / Kapasitas Kursi <span class="text-red-500">*</span>
                 </label>
@@ -63,9 +62,6 @@
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-=======
-                <label class="block text-xs sm:text-sm font-black uppercase tracking-wider text-black mb-2">
->>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
                     Status Operasional <span class="text-red-500">*</span>
                 </label>
                 <select name="status" required
