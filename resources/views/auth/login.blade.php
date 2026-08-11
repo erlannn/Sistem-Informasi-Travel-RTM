@@ -6,20 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login - Travel RTM</title>
 
-    <!-- Fonts -->
+    <!-- Fonts: Traveloka Font Stack (Plus Jakarta Sans & Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen font-sans antialiased text-slate-900 bg-white">
+<body class="min-h-screen font-sans antialiased text-black bg-white">
 
     <div class="flex min-h-screen flex-col md:flex-row">
         
         <!-- Left Side: Brand Banner (Visible only on md screens and up, full height) -->
-        <div class="hidden md:flex md:w-1/2 bg-slate-50 relative items-center justify-center p-12 overflow-hidden border-r border-slate-100">
+        <div class="hidden md:flex md:w-1/2 bg-slate-50 relative items-center justify-center p-12 overflow-hidden border-r border-slate-200">
             
             <div class="relative z-10 text-center max-w-sm">
                 <!-- Brand Logo with clean dark circle -->
@@ -28,39 +28,37 @@
                 </div>
                 
                 <!-- Brand Title -->
-                <h1 class="text-2xl font-bold tracking-wider text-slate-900 uppercase leading-none">
+                <h1 class="text-2xl font-black tracking-wider text-black uppercase leading-none">
                     Travel RTM
                 </h1>
-                <p class="text-[10px] text-gold-600 font-semibold tracking-widest uppercase mt-2">
+                <p class="text-xs text-amber-600 font-black tracking-widest uppercase mt-2">
                     RTM Family
                 </p>
-                <div class="w-10 h-[2px] bg-brand-500 rounded-full mx-auto mt-4"></div>
-                <p class="text-xs text-slate-500 mt-6 leading-relaxed font-light">
-                    Solusi perjalanan antar kota terbaik dengan kenyamanan dan keamanan kelas utama.
+                <div class="w-12 h-[3px] bg-amber-400 rounded-full mx-auto mt-4"></div>
+                <p class="text-xs text-black mt-6 leading-relaxed font-medium">
+                    Solusi perjalanan antarkota terbaik dengan kenyamanan dan keamanan kelas utama di Sumatera Barat.
                 </p>
             </div>
         </div>
 
         <!-- Right Side: Form (Centered, full height) -->
         <div class="w-full md:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-white relative">
-            <!-- Subtle background glows for right side (only mobile visual enhancement) -->
-            <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500/5 rounded-full blur-3xl pointer-events-none md:hidden"></div>
             
             <div class="w-full max-w-md">
                 
                 <!-- On mobile, show logo at top of the form -->
                 <div class="text-center md:hidden mb-8">
-                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-slate-950 p-5 border border-slate-800 shadow-md mb-3">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-slate-950 p-4 border border-slate-800 shadow-md mb-3">
                         <img src="{{ asset('images/logo.png') }}" alt="Logo RTM" class="w-full h-auto object-contain select-none pointer-events-none">
                     </div>
-                    <h2 class="text-sm font-bold tracking-wider text-slate-900 uppercase leading-none">Travel RTM</h2>
-                    <p class="text-[9px] text-gold-600 font-semibold tracking-widest uppercase mt-1">RTM Family</p>
+                    <h2 class="text-base font-black tracking-wider text-black uppercase leading-none">Travel RTM</h2>
+                    <p class="text-[10px] text-amber-600 font-black tracking-widest uppercase mt-1">RTM Family</p>
                 </div>
 
                 <!-- Form Heading -->
                 <div class="mb-8 text-center md:text-left">
-                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Login</h2>
-                    <p class="text-xs text-slate-500 mt-1.5">Masukkan email dan password untuk mengakses akun Anda</p>
+                    <h2 class="text-2xl font-black text-black tracking-tight uppercase">Masuk Akun</h2>
+                    <p class="text-xs sm:text-sm text-black mt-1.5 font-normal">Masukkan email dan password untuk mengakses akun Anda</p>
                 </div>
 
                 @if(session('success'))
@@ -80,15 +78,15 @@
                     
                     <!-- Input: Email -->
                     <div>
-                        <label for="email" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Email</label>
+                        <label for="email" class="block text-xs font-black uppercase tracking-wider text-black mb-2">Email</label>
                         <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-black">
                                 <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                                 </svg>
                             </span>
                             <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus placeholder="nama@email.com" 
-                                class="block w-full pl-10.5 pr-4 py-2.5 text-sm text-slate-800 bg-slate-50 border @error('email') border-status-danger ring-2 ring-status-danger/10 @else border-slate-200 @enderror rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all placeholder:text-slate-400 outline-none">
+                                class="block w-full pl-10.5 pr-4 py-3 text-sm font-bold text-black bg-slate-50 border @error('email') border-status-danger ring-2 ring-status-danger/10 @else border-slate-200 @enderror rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all placeholder:text-slate-400 outline-none">
                         </div>
                         @error('email')
                             <p class="text-status-danger text-xs mt-1.5 font-bold flex items-center gap-1">
@@ -100,17 +98,17 @@
                     <!-- Input: Password -->
                     <div>
                         <div class="flex justify-between items-center mb-2">
-                            <label for="password" class="block text-xs font-bold uppercase tracking-wider text-slate-600">Password</label>
+                            <label for="password" class="block text-xs font-black uppercase tracking-wider text-black">Password</label>
                         </div>
                         <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-black">
                                 <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                                 </svg>
                             </span>
                             <input type="password" id="password" name="password" required placeholder="••••••••" 
-                                class="block w-full pl-10.5 pr-10 py-2.5 text-sm text-slate-800 bg-slate-50 border @error('password') border-status-danger ring-2 ring-status-danger/10 @else border-slate-200 @enderror rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all placeholder:text-slate-400 outline-none">
-                            <button type="button" onclick="togglePasswordVisibility('password', this)" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer">
+                                class="block w-full pl-10.5 pr-10 py-3 text-sm font-bold text-black bg-slate-50 border @error('password') border-status-danger ring-2 ring-status-danger/10 @else border-slate-200 @enderror rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all placeholder:text-slate-400 outline-none">
+                            <button type="button" onclick="togglePasswordVisibility('password', this)" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-black hover:text-amber-600 focus:outline-none cursor-pointer">
                                 <!-- Eye Open Icon -->
                                 <svg class="w-4.5 h-4.5 eye-open" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
@@ -130,9 +128,9 @@
                     </div>
 
                     <!-- Remember Me Checkbox -->
-                    <div class="flex items-center justify-between text-xs">
-                        <label class="flex items-center text-slate-700 font-semibold cursor-pointer">
-                            <input type="checkbox" name="remember" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500 cursor-pointer">
+                    <div class="flex items-center justify-between text-xs sm:text-sm">
+                        <label class="flex items-center text-black font-semibold cursor-pointer">
+                            <input type="checkbox" name="remember" class="rounded border-slate-300 text-amber-500 focus:ring-amber-400 cursor-pointer">
                             <span class="ml-2">Ingat saya</span>
                         </label>
                     </div>
@@ -140,7 +138,7 @@
                     <!-- Submit Button -->
                     <div class="pt-2">
                         <button type="submit" 
-                            class="w-full py-3 px-4 text-sm font-bold uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-950 border border-gold-500/20 hover:border-gold-500/50 rounded-xl shadow-md transition-colors cursor-pointer text-center">
+                            class="w-full py-3.5 px-4 text-sm font-black uppercase tracking-wider text-slate-950 bg-amber-400 hover:bg-amber-300 active:bg-amber-500 active:scale-98 rounded-xl shadow-md transition-all cursor-pointer text-center">
                             MASUK
                         </button>
                     </div>
@@ -148,9 +146,9 @@
 
                 <!-- Footer link to register -->
                 <div class="mt-8 text-center">
-                    <p class="text-xs font-semibold text-slate-500">
+                    <p class="text-xs sm:text-sm font-semibold text-black">
                         Belum punya akun? 
-                        <a href="{{ route('register') }}" class="text-brand-600 hover:text-brand-700 transition-colors font-bold ml-1">Daftar</a>
+                        <a href="{{ route('register') }}" class="text-brand-600 hover:text-amber-600 active:text-amber-700 transition-colors font-bold ml-1">Daftar Akun</a>
                     </p>
                 </div>
             </div>

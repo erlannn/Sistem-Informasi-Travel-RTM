@@ -37,12 +37,126 @@
     --color-status-pending: #f59e0b;
     --color-status-danger: #ef4444;
 
-    /* Typography & Font Settings */
-    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    /* Typography & Font Settings (Traveloka Modern Web Font Concept: Plus Jakarta Sans & Inter) */
+    --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
     /* Shadows */
     --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     --shadow-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================================
+   GLOBAL TEXT COLOR & CONTRAST (Pemberian Warna Kontras Berdasarkan UI/UX)
+   ========================================================================== */
+body {
+    color: #000000;
+}
+
+/* Light Background Defaults: Crisp Black Text */
+p, span, h1, h2, h3, h4, h5, h6, label, input, select, textarea, td, th, dt, dd {
+    color: inherit;
+}
+
+/* Map gray/slate utility classes on light backgrounds */
+.text-slate-600,
+.text-slate-700,
+.text-slate-800,
+.text-slate-900,
+.text-gray-600,
+.text-gray-700,
+.text-gray-800,
+.text-gray-900 {
+    color: #000000;
+}
+
+/* Specific high-contrast utility colors */
+.text-black {
+    color: #000000 !important;
+}
+.text-white {
+    color: #ffffff !important;
+}
+.text-slate-100 {
+    color: #f1f5f9 !important;
+}
+.text-slate-200 {
+    color: #e2e8f0 !important;
+}
+.text-slate-300 {
+    color: #cbd5e1 !important;
+}
+.text-slate-400 {
+    color: #94a3b8 !important;
+}
+.text-slate-500 {
+    color: #64748b !important;
+}
+
+/* High Contrast Brand & Status Colors */
+.text-amber-300 {
+    color: #fde047 !important;
+}
+.text-amber-400, .text-gold-400 {
+    color: #fbbf24 !important;
+}
+.text-amber-500, .text-brand-500, .text-gold-500 {
+    color: #f59e0b !important;
+}
+.text-amber-600, .text-brand-600, .text-gold-600 {
+    color: #d97706 !important;
+}
+.text-amber-700, .text-brand-700, .text-gold-700 {
+    color: #b45309 !important;
+}
+.text-amber-800, .text-amber-900 {
+    color: #78350f !important;
+}
+.text-emerald-400 {
+    color: #34d399 !important;
+}
+.text-emerald-500, .text-emerald-600 {
+    color: #059669 !important;
+}
+.text-emerald-700 {
+    color: #047857 !important;
+}
+.text-rose-500, .text-rose-600 {
+    color: #e11d48 !important;
+}
+.text-red-600 {
+    color: #dc2626 !important;
+}
+
+/* ==========================================================================
+   HIGH CONTRAST RULES FOR SIDEBAR, DARK NAVBAR, & FOOTER
+   ========================================================================== */
+aside.bg-slate-900,
+aside.bg-slate-950,
+.bg-slate-900,
+.bg-slate-950,
+#mobile-drawer,
+header nav.bg-slate-950 {
+    color: #f8fafc;
+}
+
+aside a,
+#mobile-drawer a {
+    color: #e2e8f0;
+}
+
+aside a:hover,
+#mobile-drawer a:hover {
+    color: #fbbf24 !important;
+}
+
+/* Footer Click & Active Interactivity */
+footer a, footer button {
+    transition: color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
+}
+footer a:active, footer button:active {
+    color: #fbbf24 !important;
+    background-color: rgba(251, 191, 36, 0.15);
+    transform: scale(0.96) translateX(2px);
 }
 
 .glass-card {
