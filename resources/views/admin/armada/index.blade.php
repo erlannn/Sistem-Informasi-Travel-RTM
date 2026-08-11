@@ -4,26 +4,26 @@
 @section('page_title', 'Kelola Armada Travel')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-8">
 
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
         <div>
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight">
                 Kelola Armada Travel
             </h1>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-center gap-3">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <!-- Search Form -->
             <form action="{{ route('admin.armada.index') }}" method="GET" class="flex items-center gap-2 w-full sm:w-auto">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari merk, warna, status..."
-                    class="px-4 py-2.5 text-xs text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition w-full sm:w-64">
-                <button type="submit" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl shadow-xs transition">
+                    class="px-4 py-3 text-sm text-black font-semibold bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition w-full sm:w-64 outline-none">
+                <button type="submit" class="px-5 py-3 bg-slate-950 hover:bg-slate-900 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-xs transition cursor-pointer">
                     Cari
                 </button>
                 @if(request()->filled('search'))
-                    <a href="{{ route('admin.armada.index') }}" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl transition">
+                    <a href="{{ route('admin.armada.index') }}" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-black font-bold text-xs sm:text-sm rounded-xl transition cursor-pointer">
                         Reset
                     </a>
                 @endif
@@ -35,13 +35,8 @@
             </a>
         </div>
     </div>
-
     <!-- Table Card -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-slate-700">
-                <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-extrabold border-b border-slate-200">
-                    <tr>
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
                         <th class="p-3.5 rounded-l-xl">NO</th>
                         <th class="p-3.5">Merk Armada</th>
                         <th class="p-3.5">Warna</th>
@@ -53,55 +48,49 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($armadas as $a)
-                        <tr class="hover:bg-slate-50/80 transition">
-                            <td class="p-3.5 font-bold text-slate-400">#{{ $a->id_armada }}</td>
-                            <td class="p-3.5 font-bold text-slate-900">
+                            <td class="py-4 px-4 sm:px-5 font-black text-black">#{{ $a->id_armada }}</td>
+                            <td class="py-4 px-4 sm:px-5 font-black text-black">
                                 {{ $a->merk }}
                             </td>
-                            <td class="p-3.5 font-medium text-slate-600">
+                            <td class="py-4 px-4 sm:px-5 font-semibold text-black">
                                 {{ $a->warna }}
                             </td>
-                            <td class="p-3.5 font-bold text-slate-800">
-                                <span class="px-2.5 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 font-extrabold">
-                                    {{ $a->kursi ?? 5 }} Kursi
-                                </span>
-                            </td>
-                            <td class="p-3.5 font-bold text-slate-800">
-                                <span class="px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200">
+                            <td class="py-4 px-4 sm:px-5 font-black text-black">
+                                <span class="px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-xs font-black">
                                     {{ $a->jadwals_count }} Jadwal
                                 </span>
                             </td>
-                            <td class="p-3.5 text-center">
+                            <td class="py-4 px-4 sm:px-5 text-center">
                                 @if($a->status == 'Aktif')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    <span class="px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-900 border border-emerald-300">
                                         Aktif
                                     </span>
                                 @elseif($a->status == 'Perbaikan')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                    <span class="px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300">
                                         Perbaikan
                                     </span>
                                 @else
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200">
+                                    <span class="px-3 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-900 border border-rose-300">
                                         Nonaktif
                                     </span>
                                 @endif
                             </td>
-                            <td class="p-3.5 text-center">
-                                <div class="flex items-center justify-center gap-1.5">
+                            <td class="py-4 px-4 sm:px-5 text-center">
+                                <div class="flex items-center justify-center gap-2">
                                     <a href="{{ route('admin.armada.show', $a->id_armada) }}"
-                                        class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition">
+                                        class="px-3 py-1.5 rounded-lg text-xs font-black text-black bg-slate-100 hover:bg-slate-200 border border-slate-300 active:scale-95 transition cursor-pointer">
                                         Detail
                                     </a>
 
                                     <a href="{{ route('admin.armada.edit', $a->id_armada) }}"
-                                        class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 transition">
+                                        class="px-3 py-1.5 rounded-lg text-xs font-black text-amber-950 bg-amber-100 hover:bg-amber-200 border border-amber-300 active:scale-95 transition cursor-pointer">
                                         Edit
                                     </a>
 
-                                    <form action="{{ route('admin.armada.destroy', $a->id_armada) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus armada ini dari database?');">
+                                    <form action="{{ route('admin.armada.destroy', $a->id_armada) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus armada ini dari database?');" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 transition">
+                                        <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-black text-rose-900 bg-rose-100 hover:bg-rose-200 border border-rose-300 active:scale-95 transition cursor-pointer">
                                             Hapus
                                         </button>
                                     </form>
@@ -110,7 +99,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-8 text-center text-slate-400 font-medium">
+                            <td colspan="6" class="py-12 text-center text-black font-semibold text-sm">
                                 Belum ada data armada travel di database. Klik "+ Tambah Armada Baru" untuk menambahkan.
                             </td>
                         </tr>

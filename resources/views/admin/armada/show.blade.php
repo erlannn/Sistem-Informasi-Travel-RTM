@@ -4,46 +4,46 @@
 @section('page_title', 'Detail Data Armada')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-8">
 
     <!-- Top Navigation & Actions -->
     <div class="flex items-center justify-between">
-        <a href="{{ route('admin.armada.index') }}" class="px-4 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition inline-flex items-center gap-2">
+        <a href="{{ route('admin.armada.index') }}" class="px-5 py-3 text-xs sm:text-sm font-black text-black bg-white border border-slate-200 rounded-xl hover:bg-slate-50 active:scale-95 shadow-sm transition inline-flex items-center gap-2 cursor-pointer">
             &larr; Kembali ke Data Armada
         </a>
     </div>
 
     <!-- Main Card Profile & Info -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         
         <!-- Left Profile Card -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
             <div class="flex items-center gap-4 border-b border-slate-100 pb-6">
-                <div class="w-16 h-16 rounded-2xl bg-slate-900 text-brand-500 font-black text-2xl flex items-center justify-center shadow-md">
-                    <i class="fa-solid fa-van-shuttle text-2xl"></i>
+                <div class="w-16 h-16 rounded-2xl bg-slate-950 text-amber-400 font-black text-2xl flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-car text-2xl"></i>
                 </div>
                 <div>
-                    <span class="px-2.5 py-0.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[10px] font-extrabold uppercase tracking-wider">
+                    <span class="px-3 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black uppercase tracking-wider">
                         #ARMADA-{{ $armada->id_armada }}
                     </span>
-                    <h2 class="text-lg font-extrabold text-slate-900 mt-1">{{ $armada->merk }}</h2>
-                    <p class="text-xs text-slate-500 font-medium">Warna: {{ $armada->warna }}</p>
+                    <h2 class="text-xl font-black text-black mt-2 leading-tight">{{ $armada->merk }}</h2>
+                    <p class="text-xs sm:text-sm text-black font-semibold mt-0.5">Warna: {{ $armada->warna }}</p>
                 </div>
             </div>
 
-            <div class="space-y-4 text-xs">
+            <div class="space-y-4 text-sm">
                 <div>
-                    <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px] mb-0.5">Status Operasional</span>
+                    <span class="text-black font-black uppercase tracking-wider block text-xs mb-1.5">Status Operasional</span>
                     @if($armada->status == 'Aktif')
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-block">
+                        <span class="px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-900 border border-emerald-300 inline-block">
                             Aktif
                         </span>
                     @elseif($armada->status == 'Perbaikan')
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 inline-block">
+                        <span class="px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300 inline-block">
                             Perbaikan / Servis
                         </span>
                     @else
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200 inline-block">
+                        <span class="px-3 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-900 border border-rose-300 inline-block">
                             Nonaktif
                         </span>
                     @endif
@@ -60,49 +60,49 @@
         </div>
 
         <!-- Right Linked Schedules Table -->
-        <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="lg:col-span-2 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-5">
                 <div>
-                    <h3 class="text-base font-extrabold text-slate-900">Daftar Perjalanan Armada Ini</h3>
-                    <p class="text-xs text-slate-500 font-medium">Jadwal travel yang menggunakan kendaraan ini.</p>
+                    <h3 class="text-lg font-black text-black">Daftar Perjalanan Armada Ini</h3>
+                    <p class="text-xs sm:text-sm text-black font-medium mt-0.5">Jadwal travel yang menggunakan kendaraan ini.</p>
                 </div>
-                <span class="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-extrabold rounded-full">
+                <span class="px-3.5 py-1.5 bg-slate-100 border border-slate-200 text-black text-xs font-black rounded-full">
                     Total: {{ $armada->jadwals->count() }} Jadwal
                 </span>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs text-slate-700">
-                    <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-extrabold border-b border-slate-200">
+                <table class="w-full text-left text-sm text-black">
+                    <thead class="bg-slate-100 text-black uppercase text-xs font-black border-b border-slate-200">
                         <tr>
-                            <th class="p-3">ID Jadwal</th>
-                            <th class="p-3">Rute (Asal &rarr; Tujuan)</th>
-                            <th class="p-3">Tanggal & Waktu</th>
-                            <th class="p-3">Sopir</th>
-                            <th class="p-3 text-right">Harga</th>
+                            <th class="py-3.5 px-4 rounded-l-xl">ID Jadwal</th>
+                            <th class="py-3.5 px-4">Rute (Asal &rarr; Tujuan)</th>
+                            <th class="py-3.5 px-4">Tanggal & Waktu</th>
+                            <th class="py-3.5 px-4">Sopir</th>
+                            <th class="py-3.5 px-4 rounded-r-xl text-right">Harga</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         @forelse($armada->jadwals as $j)
-                            <tr class="hover:bg-slate-50/80 transition">
-                                <td class="p-3 font-extrabold text-slate-900">#{{ $j->id_jadwal }}</td>
-                                <td class="p-3 font-bold text-slate-900">
-                                    <span class="text-brand-700">{{ $j->asal }}</span> &rarr; {{ $j->tujuan }}
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="py-4 px-4 font-black text-black">#{{ $j->id_jadwal }}</td>
+                                <td class="py-4 px-4 font-black text-black">
+                                    <span>{{ $j->asal }}</span> &rarr; {{ $j->tujuan }}
                                 </td>
-                                <td class="p-3 font-medium text-slate-600">
+                                <td class="py-4 px-4 font-medium text-black">
                                     {{ $j->tanggal }} &bull; Jam {{ $j->jam }}
                                 </td>
-                                <td class="p-3 font-semibold text-slate-800">
+                                <td class="py-4 px-4 font-bold text-black">
                                     {{ $j->sopir->nama ?? 'N/A' }}
                                 </td>
-                                <td class="p-3 text-right font-extrabold text-slate-900">
+                                <td class="py-4 px-4 text-right font-black text-amber-700">
                                     Rp {{ number_format($j->harga, 0, ',', '.') }}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="p-6 text-center text-slate-400 font-medium">
-                                    Armada ini belum ditugaskan untuk jadwal perjalanan apapun.
+                                <td colspan="5" class="py-10 text-center text-black font-semibold text-sm">
+                                    Belum ada riwayat jadwal perjalanan yang ditugaskan ke armada ini.
                                 </td>
                             </tr>
                         @endforelse

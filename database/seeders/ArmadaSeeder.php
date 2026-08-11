@@ -85,3 +85,4 @@ class ArmadaSeeder extends Seeder
         );
     }
 }
+

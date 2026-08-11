@@ -4,9 +4,9 @@
 @section('page_title', 'Tambah Armada Baru')
 
 @section('content')
-<div class="max-w-3xl mx-auto space-y-6">
+<div class="max-w-3xl mx-auto space-y-8">
     <!-- Header Card -->
-    <div class="flex items-center justify-between bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+    <div class="flex items-center justify-between bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
         <div>
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
                 Tambah Kendaraan Armada Baru
@@ -18,29 +18,24 @@
     </div>
 
     <!-- Form Card -->
-    <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-xs">
-        <form action="{{ route('admin.armada.store') }}" method="POST" class="space-y-5">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 md:p-10 border border-slate-200 shadow-sm">
+        <form action="{{ route('admin.armada.store') }}" method="POST" class="space-y-6">
             @csrf
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Merk Armada <span class="text-red-500">*</span>
                 </label>
-                <input type="text" name="merk" value="{{ old('merk') }}" required placeholder="Contoh: Toyota HiAce Commuter / Isuzu Elf"
-                    class="w-full px-4 py-3 text-xs text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition">
+                <input type="text" name="merk" value="{{ old('merk') }}" required placeholder="Contoh: Toyota HiAce Commuter / Kijang Innova Reborn"
+                    class="w-full px-4 py-3.5 text-sm font-semibold text-black bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition outline-none">
                 @error('merk')
-                    <p class="text-xs text-red-500 font-bold mt-1">{{ $message }}</p>
-                @enderror
+                    <p class="text-xs text-red-500 font-bold mt-1.5">{{ $message }}</p>
             </div>
 
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                    Warna Kendaraan <span class="text-red-500">*</span>
-                </label>
-                <input type="text" name="warna" value="{{ old('warna') }}" required placeholder="Contoh: Putih Silver / Hitam Metallic"
-                    class="w-full px-4 py-3 text-xs text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition">
+                <input type="text" name="warna" value="{{ old('warna') }}" required placeholder="Contoh: Putih / Hitam / Silver"
+                    class="w-full px-4 py-3.5 text-sm font-semibold text-black bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition outline-none">
                 @error('warna')
-                    <p class="text-xs text-red-500 font-bold mt-1">{{ $message }}</p>
+                    <p class="text-xs text-red-500 font-bold mt-1.5">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -61,22 +56,19 @@
                     Status Operasional <span class="text-red-500">*</span>
                 </label>
                 <select name="status" required
-                    class="w-full px-4 py-3 text-xs text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition">
                     <option value="Aktif" {{ old('status', 'Aktif') == 'Aktif' ? 'selected' : '' }}>Aktif (Default)</option>
                     <option value="Perbaikan" {{ old('status') == 'Perbaikan' ? 'selected' : '' }}>Perbaikan / Servis</option>
                     <option value="Nonaktif" {{ old('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                 </select>
                 @error('status')
-                    <p class="text-xs text-red-500 font-bold mt-1">{{ $message }}</p>
+                    <p class="text-xs text-red-500 font-bold mt-1.5">{{ $message }}</p>
                 @enderror
             </div>
-
-            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-                <a href="{{ route('admin.armada.index') }}" class="px-5 py-2.5 text-xs font-bold text-white bg-red-500 hover:bg-red-700 rounded-xl transition">
+                <a href="{{ route('admin.armada.index') }}" class="px-5 py-3 text-xs sm:text-sm font-bold text-black hover:bg-slate-100 rounded-xl transition cursor-pointer">
                     Batal
                 </a>
-                <button type="submit" class="px-6 py-2.5 text-xs font-extrabold text-slate-950 bg-brand-500 hover:bg-brand-600 rounded-xl shadow-xs transition">
-                    Simpan
+                <button type="submit" class="px-6 py-3 text-xs sm:text-sm font-black text-slate-950 bg-amber-400 hover:bg-amber-300 active:bg-amber-500 active:scale-95 rounded-xl shadow-sm transition cursor-pointer">
+                    Simpan Armada Baru
                 </button>
             </div>
         </form>

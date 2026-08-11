@@ -4,10 +4,10 @@
 @section('page_title', 'Pemesanan Tiket')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-8">
 
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
         <div>
             <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
                 Kelola Pemesanan
@@ -35,10 +35,10 @@
     </div>
 
     <!-- Table Card -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-slate-700">
-                <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-extrabold border-b border-slate-200">
+            <table class="w-full text-left text-sm text-black">
+                <thead class="bg-slate-100 text-black uppercase text-xs font-black border-b border-slate-200">
                     <tr>
                         <th class="p-3.5 rounded-l-xl">ID Pesanan</th>
                         <th class="p-3.5">Penumpang</th>
@@ -58,11 +58,11 @@
                             <td class="p-3.5 font-extrabold text-slate-900">#{{ $p->id_pemesanan }}</td>
                             <td class="p-3.5 font-bold text-slate-900">
                                 <div>{{ $p->penumpang->nama ?? 'N/A' }}</div>
-                                <div class="text-[10px] text-slate-400 font-normal">{{ $p->penumpang->no_hp ?? '-' }}</div>
+                                <div class="text-xs text-black font-medium mt-0.5">{{ $p->penumpang->no_hp ?? '-' }}</div>
                             </td>
-                            <td class="p-3.5 font-semibold text-slate-800">
-                                <span class="text-brand-700 font-bold">{{ $p->jadwal->asal ?? '-' }}</span> &rarr; <span class="text-slate-800 font-bold">{{ $p->jadwal->tujuan ?? '-' }}</span>
-                                <div class="text-[10px] text-slate-400 font-normal">{{ $p->jadwal->tanggal ?? '' }} &bull; Jam {{ $p->jadwal->jam ?? '' }}</div>
+                            <td class="py-4 px-4 sm:px-5 font-bold text-black">
+                                <span>{{ $p->jadwal->asal ?? '-' }}</span> &rarr; <span>{{ $p->jadwal->tujuan ?? '-' }}</span>
+                                <div class="text-xs text-black font-medium mt-0.5">{{ $p->jadwal->tanggal ?? '' }} &bull; Jam {{ $p->jadwal->jam ?? '' }}</div>
                             </td>
                             <td class="p-3.5 font-extrabold text-slate-900">
                                 <span class="px-2.5 py-1 rounded-lg bg-gold-50 border border-gold-200/60 text-gold-700 font-black">
@@ -88,10 +88,10 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="p-3.5 text-center">
+                            <td class="py-4 px-4 sm:px-5 text-center">
                                 <div class="flex items-center justify-center gap-2">
                                     <!-- Status Form Dropdown -->
-                                    <form action="{{ route('admin.pemesanan.update_status', $p->id_pemesanan) }}" method="POST">
+                                    <form action="{{ route('admin.pemesanan.update_status', $p->id_pemesanan) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PATCH')
                                         <select name="status_perjalanan" onchange="this.form.submit()" class="px-2.5 py-1 text-[11px] font-bold bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:ring-1 focus:ring-brand-500 cursor-pointer">
@@ -107,10 +107,10 @@
                                     </a>
 
                                     <!-- Delete Action -->
-                                    <form action="{{ route('admin.pemesanan.destroy', $p->id_pemesanan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus transaksi pemesanan #{{ $p->id_pemesanan }}? Status kursi terkait akan dikembalikan ke Tersedia.');">
+                                    <form action="{{ route('admin.pemesanan.destroy', $p->id_pemesanan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data transaksi ini? Kursi terkait akan direset menjadi tersedia.');" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-2.5 py-1 text-[11px] font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition">
+                                        <button type="submit" class="px-3 py-1.5 text-xs font-black text-rose-900 bg-rose-100 hover:bg-rose-200 border border-rose-300 rounded-lg active:scale-95 transition cursor-pointer">
                                             Hapus
                                         </button>
                                     </form>

@@ -10,10 +10,10 @@
     <meta name="description" content="Pesan tiket travel RTM Family dengan mudah, cepat, dan aman. Nikmati perjalanan dengan armada terbaik dan layanan prima.">
     <meta name="author" content="CV Travel RTM">
 
-    <!-- Fonts -->
+    <!-- Fonts: Traveloka Font Stack (Plus Jakarta Sans & Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -22,42 +22,46 @@
     @stack('styles')
     @yield('styles')
 </head>
-<body class="flex flex-col min-h-full font-sans antialiased text-slate-900 bg-slate-50">
+<body class="flex flex-col min-h-full font-sans antialiased text-black bg-slate-50">
 
     <!-- Header Navbar with White Glassmorphism -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/60 shadow-sm relative">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm relative">
         <!-- Bottom Accent Gradient Border Line -->
-        <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-500 via-gold-400 to-brand-500 opacity-80"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 opacity-90"></div>
 
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-24">
+            <div class="flex items-center justify-between h-20 sm:h-24">
                 
                 <!-- Left: Logo & Title (Brand Identity in Dark Circle) -->
                 <div class="flex items-center">
-                    <a href="{{ url('/') }}" class="group focus:outline-none flex">
-                        <div class="w-20 h-20 rounded-full bg-slate-950 hover:bg-slate-900 border border-slate-800 shadow-md group-hover:border-slate-700 flex items-center justify-center p-1.5 transition-all duration-200">
+                    <a href="{{ url('/') }}" class="group focus:outline-none flex items-center gap-3">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-950 hover:bg-slate-900 border border-slate-800 shadow-md flex items-center justify-center p-1.5 transition-all duration-200">
                             <!-- Logo PNG Image -->
                             <img src="{{ asset('images/logo.png') }}" alt="Logo RTM Family" class="w-full h-auto object-contain select-none pointer-events-none">
+                        </div>
+                        <div class="hidden sm:block text-left">
+                            <span class="block text-sm font-black text-black uppercase tracking-wider">CV. Travel RTM</span>
+                            <span class="block text-[10px] text-amber-600 font-extrabold tracking-widest uppercase">RTM Family</span>
                         </div>
                     </a>
                 </div>
 
                 <!-- Center: Desktop Navigation Menu (Text Only) -->
-                <nav class="hidden md:flex items-center space-x-1">
-                    <a href="{{ route('penumpang.beranda') }}" class="px-4 py-2 text-xs lg:text-sm font-semibold rounded-xl transition-all {{ request()->routeIs('penumpang.beranda') || request()->routeIs('penumpang.dashboard') ? 'text-brand-600 bg-brand-50/80 border border-brand-100 shadow-[0_2px_8px_rgba(37,99,235,0.06)]' : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50/80' }}">
+                <nav class="hidden md:flex items-center space-x-1.5">
+                    <a href="{{ route('penumpang.beranda') }}" class="px-4 py-2 text-xs lg:text-sm rounded-xl transition-all {{ request()->routeIs('penumpang.beranda') || request()->routeIs('penumpang.dashboard') ? 'text-amber-950 bg-amber-400/25 border border-amber-400 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50/70 font-extrabold' }}">
                         Beranda
                     </a>
                     
-                    <a href="{{ route('penumpang.jadwal') }}" class="px-4 py-2 text-xs lg:text-sm font-semibold rounded-xl transition-all {{ request()->routeIs('penumpang.jadwal') || request()->routeIs('penumpang.pilih_kursi') || request()->routeIs('penumpang.konfirmasi') ? 'text-brand-600 bg-brand-50/80 border border-brand-100 shadow-[0_2px_8px_rgba(37,99,235,0.06)]' : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50/80' }}">
+                    <a href="{{ route('penumpang.jadwal') }}" class="px-4 py-2 text-xs lg:text-sm rounded-xl transition-all {{ request()->routeIs('penumpang.jadwal') || request()->routeIs('penumpang.pilih_kursi') || request()->routeIs('penumpang.konfirmasi') ? 'text-amber-950 bg-amber-400/25 border border-amber-400 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50/70 font-extrabold' }}">
                         Cari Tiket
                     </a>
 
-                    <a href="{{ route('penumpang.status') }}" class="px-4 py-2 text-xs lg:text-sm font-semibold rounded-xl transition-all {{ request()->routeIs('penumpang.status') || request()->routeIs('penumpang.status.detail') ? 'text-brand-600 bg-brand-50/80 border border-brand-100 shadow-[0_2px_8px_rgba(37,99,235,0.06)]' : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50/80' }}">
+                    <a href="{{ route('penumpang.status') }}" class="px-4 py-2 text-xs lg:text-sm rounded-xl transition-all {{ request()->routeIs('penumpang.status') || request()->routeIs('penumpang.status.detail') ? 'text-amber-950 bg-amber-400/25 border border-amber-400 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50/70 font-extrabold' }}">
                         Status Pemesanan
                     </a>
 
-                    <a href="{{ route('penumpang.profil') }}" class="px-4 py-2 text-xs lg:text-sm font-semibold rounded-xl transition-all {{ request()->routeIs('penumpang.profil') ? 'text-brand-600 bg-brand-50/80 border border-brand-100 shadow-[0_2px_8px_rgba(37,99,235,0.06)]' : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50/80' }}">
-                        Profil
+                    <a href="{{ route('penumpang.profil') }}" class="px-4 py-2 text-xs lg:text-sm rounded-xl transition-all {{ request()->routeIs('penumpang.profil') ? 'text-amber-950 bg-amber-400/25 border border-amber-400 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50/70 font-extrabold' }}">
+                        Profil Saya
                     </a>
                 </nav>
 
@@ -71,7 +75,7 @@
                     @auth
                         <div class="flex items-center gap-3">
                             <div class="relative cursor-pointer group">
-                                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-brand-50 to-brand-100/50 border border-brand-200 hover:border-brand-400 flex items-center justify-center text-brand-600 font-extrabold text-xs shadow-sm group-hover:shadow-[0_2px_8px_rgba(37,99,235,0.12)] transition-all">
+                                <div class="w-9 h-9 rounded-full bg-slate-950 text-amber-400 border-2 border-amber-400/50 hover:border-amber-400 flex items-center justify-center font-black text-xs shadow-xs transition-all">
                                     {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                                 </div>
                             </div>
@@ -91,14 +95,14 @@
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition">Masuk</a>
-                        <a href="{{ route('register') }}" class="px-4 py-2 text-xs font-bold text-slate-900 bg-brand-500 hover:bg-brand-400 rounded-xl shadow-md transition">Daftar</a>
+                        <a href="{{ route('login') }}" class="text-xs font-bold text-black hover:text-amber-600 transition px-3 py-2">Masuk</a>
+                        <a href="{{ route('register') }}" class="px-4 py-2 text-xs font-black text-slate-950 bg-amber-400 hover:bg-amber-300 rounded-xl shadow-xs transition">Daftar</a>
                     @endauth
                 </div>
 
                 <!-- Mobile Hamburger Icon (Styled) -->
                 <div class="flex items-center md:hidden">
-                    <button id="mobile-menu-toggle" type="button" class="inline-flex items-center justify-center p-2.5 rounded-xl text-slate-500 hover:text-brand-600 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <button id="mobile-menu-toggle" type="button" class="inline-flex items-center justify-center p-2.5 rounded-xl bg-slate-950 text-white hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Buka Menu</span>
                         <!-- Icon Hamburger -->
                         <svg id="hamburger-icon" class="block w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -114,42 +118,42 @@
         </div>
 
         <!-- Mobile Navigation Menu Dropdown with Glassmorphism backdrop (White Theme) -->
-        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-lg transition-all duration-300 ease-in-out">
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-lg transition-all duration-300 ease-in-out">
             <div class="px-3 pt-3 pb-5 space-y-2">
-                <a href="{{ route('penumpang.beranda') }}" class="block px-3 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('penumpang.beranda') || request()->routeIs('penumpang.dashboard') ? 'text-brand-600 bg-brand-50 border-l-4 border-brand-500 shadow-xs' : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50' }}">
+                <a href="{{ route('penumpang.beranda') }}" class="block px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('penumpang.beranda') || request()->routeIs('penumpang.dashboard') ? 'text-amber-950 bg-amber-400/25 border-l-4 border-amber-500 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50 font-bold' }}">
                     Beranda
                 </a>
                 
-                <a href="{{ route('penumpang.jadwal') }}" class="block px-3 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('penumpang.jadwal') || request()->routeIs('penumpang.pilih_kursi') || request()->routeIs('penumpang.konfirmasi') ? 'text-brand-600 bg-brand-50 border-l-4 border-brand-500 shadow-xs' : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50' }}">
+                <a href="{{ route('penumpang.jadwal') }}" class="block px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('penumpang.jadwal') || request()->routeIs('penumpang.pilih_kursi') || request()->routeIs('penumpang.konfirmasi') ? 'text-amber-950 bg-amber-400/25 border-l-4 border-amber-500 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50 font-bold' }}">
                     Cari Tiket
                 </a>
                 
-                <a href="{{ route('penumpang.status') }}" class="block px-3 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('penumpang.status') || request()->routeIs('penumpang.status.detail') ? 'text-brand-600 bg-brand-50 border-l-4 border-brand-500 shadow-xs' : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50' }}">
+                <a href="{{ route('penumpang.status') }}" class="block px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('penumpang.status') || request()->routeIs('penumpang.status.detail') ? 'text-amber-950 bg-amber-400/25 border-l-4 border-amber-500 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50 font-bold' }}">
                     Status Pemesanan
                 </a>
                 
-                <a href="{{ route('penumpang.profil') }}" class="block px-3 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('penumpang.profil') ? 'text-brand-600 bg-brand-50 border-l-4 border-brand-500 shadow-xs' : 'text-slate-600 hover:text-brand-600 hover:bg-slate-50' }}">
+                <a href="{{ route('penumpang.profil') }}" class="block px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('penumpang.profil') ? 'text-amber-950 bg-amber-400/25 border-l-4 border-amber-500 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50 font-bold' }}">
                     Profil Saya
                 </a>
                 
                 <!-- Mobile Divider & Session Action -->
-                <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between px-3">
+                <div class="pt-4 mt-3 border-t border-slate-200 flex items-center justify-between px-3">
                     @auth
                         <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-50 to-brand-100/50 border border-brand-200 flex items-center justify-center text-brand-600 font-bold text-xs">
+                            <div class="w-8 h-8 rounded-full bg-slate-950 text-amber-400 border border-amber-400/50 flex items-center justify-center font-black text-xs">
                                 {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                             </div>
-                            <span class="text-xs font-bold text-slate-700">{{ Auth::user()->name }}</span>
+                            <span class="text-xs font-black text-black">{{ Auth::user()->name }}</span>
                         </div>
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="text-xs font-bold text-status-danger hover:text-red-500 transition-colors">
+                            <button type="submit" class="text-xs font-black text-red-600 hover:text-red-700 transition-colors">
                                 Keluar
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="text-xs font-bold text-slate-700">Masuk</a>
-                        <a href="{{ route('register') }}" class="text-xs font-bold text-brand-600">Daftar</a>
+                        <a href="{{ route('login') }}" class="text-xs font-bold text-black hover:text-amber-600">Masuk</a>
+                        <a href="{{ route('register') }}" class="text-xs font-black text-amber-600 hover:text-amber-700">Daftar</a>
                     @endauth
                 </div>
             </div>
@@ -168,48 +172,49 @@
                 <!-- Branding Info -->
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center space-x-3">
-                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-500 shadow-md">
-                            <span class="font-extrabold text-white text-sm">R</span>
+                        <div class="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-950 shadow-md">
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo RTM Family" class="w-7 h-auto object-contain">
                         </div>
-                        <span class="text-md font-bold tracking-wide text-slate-900">
+                        <span class="text-base font-black tracking-wide text-black uppercase">
                             Travel RTM Family
                         </span>
                     </div>
-                    <p class="mt-4 text-sm leading-relaxed text-slate-500 max-w-sm">
-                        Menghubungkan Anda dengan destinasi pilihan secara aman, nyaman, dan terjadwal. Pelopor perjalanan antar kota terbaik di kelasnya.
+                    <p class="mt-4 text-xs sm:text-sm leading-relaxed text-black max-w-sm font-normal">
+                        Menghubungkan Anda dengan destinasi pilihan secara aman, nyaman, dan terjadwal. Pelopor perjalanan antarkota terbaik di Sumatera Barat.
                     </p>
                 </div>
 
                 <!-- Quick Links -->
                 <div>
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Navigasi</h3>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-black border-l-2 border-amber-400 pl-2">Navigasi</h3>
                     <ul class="mt-4 space-y-2">
-                        <li><a href="#" class="text-sm text-slate-500 hover:text-brand-500 transition-colors">Cari Tiket</a></li>
-                        <li><a href="#" class="text-sm text-slate-500 hover:text-brand-500 transition-colors">Rekomendasi Jadwal</a></li>
-                        <li><a href="#" class="text-sm text-slate-500 hover:text-brand-500 transition-colors">Syarat & Ketentuan</a></li>
+                        <li><a href="{{ route('penumpang.jadwal') }}" class="inline-block text-xs sm:text-sm text-black hover:text-amber-600 active:text-amber-700 active:bg-amber-50 active:scale-95 px-2 py-1 rounded-lg transition-all font-medium">Cari Tiket</a></li>
+                        <li><a href="{{ route('penumpang.status') }}" class="inline-block text-xs sm:text-sm text-black hover:text-amber-600 active:text-amber-700 active:bg-amber-50 active:scale-95 px-2 py-1 rounded-lg transition-all font-medium">Status Pemesanan</a></li>
+                        <li><a href="{{ url('/#layanan') }}" class="inline-block text-xs sm:text-sm text-black hover:text-amber-600 active:text-amber-700 active:bg-amber-50 active:scale-95 px-2 py-1 rounded-lg transition-all font-medium">Keunggulan Layanan</a></li>
+                        <li><a href="{{ url('/#armada') }}" class="inline-block text-xs sm:text-sm text-black hover:text-amber-600 active:text-amber-700 active:bg-amber-50 active:scale-95 px-2 py-1 rounded-lg transition-all font-medium">Pilihan Armada</a></li>
                     </ul>
                 </div>
 
                 <!-- Contact & Support -->
                 <div>
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Dukungan</h3>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-black border-l-2 border-amber-400 pl-2">Dukungan</h3>
                     <ul class="mt-4 space-y-2">
-                        <li><a href="#" class="text-sm text-slate-500 hover:text-brand-500 transition-colors">Hubungi CS</a></li>
-                        <li><a href="#" class="text-sm text-slate-500 hover:text-brand-500 transition-colors">Pusat Bantuan</a></li>
-                        <li><a href="#" class="text-sm text-slate-500 hover:text-brand-500 transition-colors">Kantor Cabang</a></li>
+                        <li><a href="https://wa.me/628123456789" target="_blank" class="inline-block text-xs sm:text-sm text-black hover:text-emerald-600 active:text-emerald-700 active:bg-emerald-50 active:scale-95 px-2 py-1 rounded-lg transition-all font-medium"><i class="fa-brands fa-whatsapp text-emerald-500 mr-1"></i> Hubungi WhatsApp CS</a></li>
+                        <li><a href="{{ url('/#faq') }}" class="inline-block text-xs sm:text-sm text-black hover:text-amber-600 active:text-amber-700 active:bg-amber-50 active:scale-95 px-2 py-1 rounded-lg transition-all font-medium">Tanya Jawab (FAQ)</a></li>
+                        <li><a href="{{ url('/#kontak') }}" class="inline-block text-xs sm:text-sm text-black hover:text-amber-600 active:text-amber-700 active:bg-amber-50 active:scale-95 px-2 py-1 rounded-lg transition-all font-medium">Lokasi Kantor</a></li>
                     </ul>
                 </div>
             </div>
 
             <!-- Copyright / Bottom -->
-            <div class="pt-8 mt-12 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <p class="text-xs text-slate-400">
-                    &copy; 2026 CV Travel RTM. Hak Cipta Dilindungi.
+            <div class="pt-8 mt-12 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
+                <p class="text-black font-semibold">
+                    &copy; {{ date('Y') }} CV. Travel RTM Family. Hak Cipta Dilindungi.
                 </p>
-                <div class="flex space-x-6 text-xs text-slate-400">
-                    <a href="#" class="hover:text-slate-600">Kebijakan Privasi</a>
+                <div class="flex space-x-4 text-black font-medium">
+                    <a href="{{ url('/') }}" class="hover:text-amber-600 active:text-amber-700 active:scale-95 transition-all">Kebijakan Privasi</a>
                     <span>&bull;</span>
-                    <a href="#" class="hover:text-slate-600">Ketentuan Layanan</a>
+                    <a href="{{ url('/') }}" class="hover:text-amber-600 active:text-amber-700 active:scale-95 transition-all">Syarat & Ketentuan</a>
                 </div>
             </div>
         </div>

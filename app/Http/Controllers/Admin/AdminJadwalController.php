@@ -80,7 +80,7 @@ class AdminJadwalController extends Controller
         /** @var Jadwal $jadwal */
         $jadwal = Jadwal::create($validated);
 
-        $armada = Armada::find($validated['id_armada']);
+        $armada = Armada::find($validated['id_armada'], ['*']);
         $totalKursi = $armada ? ($armada->kursi ?? 6) : 6;
 
         // Generate seats automatically matching the armada seat count
@@ -131,7 +131,7 @@ class AdminJadwalController extends Controller
         $validated['harga'] = $pricing['harga'];
         $validated['bagi_hasil_sopir'] = $pricing['bagi_hasil_sopir'];
 
-        $jadwal->update($validated);
+        $jadwal->fill($validated)->save();
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal perjalanan berhasil diperbarui!');
     }
@@ -141,13 +141,13 @@ class AdminJadwalController extends Controller
         /** @var Jadwal $jadwal */
         $jadwal = Jadwal::findOrFail($id);
 
-        if ($jadwal->pemesanans()->count() > 0) {
+        if ($jadwal->pemesanans()->count('*') > 0) {
             return redirect()->route('admin.jadwal.index')->with('error', 'Jadwal tidak dapat dihapus karena sudah ada pemesanan tiket pada jadwal ini!');
         }
 
         // Remove related seats first
         Kursi::query()->where('id_jadwal', '=', $id)->delete();
-        $jadwal->delete();
+        Jadwal::destroy($id);
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal perjalanan & data kursi berhasil dihapus!');
     }

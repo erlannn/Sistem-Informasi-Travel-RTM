@@ -67,7 +67,7 @@ class AdminSopirController extends Controller
             'alamat' => 'nullable|string',
         ]);
 
-        $sopir->update($validated);
+        $sopir->fill($validated)->save();
 
         return redirect()->route('admin.sopir.index')->with('success', 'Data sopir berhasil diperbarui di database!');
     }
@@ -77,11 +77,11 @@ class AdminSopirController extends Controller
         /** @var Sopir $sopir */
         $sopir = Sopir::findOrFail($id);
 
-        if ($sopir->jadwals()->count() > 0) {
+        if ($sopir->jadwals()->count('*') > 0) {
             return redirect()->route('admin.sopir.index')->with('error', 'Data sopir tidak dapat dihapus karena masih ditugaskan pada jadwal perjalanan!');
         }
 
-        $sopir->delete();
+        Sopir::destroy($id);
 
         return redirect()->route('admin.sopir.index')->with('success', 'Data sopir berhasil dihapus dari database!');
     }

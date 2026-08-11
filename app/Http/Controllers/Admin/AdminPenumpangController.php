@@ -82,7 +82,7 @@ class AdminPenumpangController extends Controller
         /** @var Penumpang $penumpang */
         $penumpang = Penumpang::findOrFail($id);
         $oldEmail = $penumpang->email;
-        $user = User::where('email', $oldEmail)->first();
+        $user = User::where('email', '=', $oldEmail)->first();
 
         // Remove empty password string so nullable min:6 validation passes
         if ($request->input('password') === '' || $request->input('password') === null) {
@@ -112,7 +112,7 @@ class AdminPenumpangController extends Controller
             $updateData['password'] = Hash::make($validated['password']);
         }
 
-        $penumpang->update($updateData);
+        $penumpang->fill($updateData)->save();
 
         // Update corresponding User account if exists
         if ($user) {
@@ -123,7 +123,7 @@ class AdminPenumpangController extends Controller
             if (!empty($validated['password'])) {
                 $userData['password'] = Hash::make($validated['password']);
             }
-            $user->update($userData);
+            $user->fill($userData)->save();
         }
 
         return redirect()->route('admin.penumpang.index')->with('success', 'Data penumpang berhasil diperbarui!');
@@ -135,10 +135,10 @@ class AdminPenumpangController extends Controller
         $penumpang = Penumpang::findOrFail($id);
         $email = $penumpang->email;
 
-        $penumpang->delete();
+        Penumpang::destroy($id);
 
         // Delete user account if exists
-        User::where('email', $email)->delete();
+        User::where('email', '=', $email)->delete();
 
         return redirect()->route('admin.penumpang.index')->with('success', 'Data penumpang berhasil dihapus!');
     }

@@ -16,13 +16,13 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $stats = [
-            'total_admin' => Admin::query()->count(),
-            'total_penumpang' => Penumpang::query()->count(),
-            'total_sopir' => Sopir::query()->count(),
-            'total_armada' => Armada::query()->count(),
-            'total_jadwal' => Jadwal::query()->count(),
-            'total_kursi' => Kursi::query()->count(),
-            'total_pemesanan' => Pemesanan::query()->count(),
+            'total_admin' => Admin::query()->count('*'),
+            'total_penumpang' => Penumpang::query()->count('*'),
+            'total_sopir' => Sopir::query()->count('*'),
+            'total_armada' => Armada::query()->count('*'),
+            'total_jadwal' => Jadwal::query()->count('*'),
+            'total_kursi' => Kursi::query()->count('*'),
+            'total_pemesanan' => Pemesanan::query()->count('*'),
         ];
 
         $recentPemesanans = Pemesanan::with(['penumpang', 'jadwal', 'kursi'])
