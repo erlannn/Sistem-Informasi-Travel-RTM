@@ -219,7 +219,7 @@
                     Kembali ke Jadwal
                 </a>
                 <button type="submit" id="submit-btn" disabled class="w-full sm:w-auto px-8 py-3 text-sm font-semibold text-slate-400 bg-slate-200 rounded-xl transition-all cursor-not-allowed shadow-sm">
-                    Lanjutkan Ke Pembayaran
+                    Lanjutkan Ke Pemesanan
                 </button>
             </div>
         </form>

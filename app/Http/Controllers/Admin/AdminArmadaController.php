@@ -71,7 +71,7 @@ class AdminArmadaController extends Controller
             'status' => 'required|in:Aktif,Nonaktif,Perbaikan',
         ]);
 
-        $armada->update($validated);
+        $armada->fill($validated)->save();
 
         return redirect()->route('admin.armada.index')->with('success', 'Data armada berhasil diperbarui di database!');
     }
@@ -82,11 +82,11 @@ class AdminArmadaController extends Controller
         $armada = Armada::findOrFail($id);
 
         // Check if armada has linked schedules
-        if ($armada->jadwals()->count() > 0) {
+        if ($armada->jadwals()->count('*') > 0) {
             return redirect()->route('admin.armada.index')->with('error', 'Armada tidak dapat dihapus karena masih terikat pada jadwal perjalanan!');
         }
 
-        $armada->delete();
+        Armada::destroy($id);
 
         return redirect()->route('admin.armada.index')->with('success', 'Data armada berhasil dihapus dari database!');
     }

@@ -12,6 +12,7 @@ class ArmadaSeeder extends Seeder
      */
     public function run(): void
     {
+<<<<<<< HEAD
         Armada::firstOrCreate(
             ['merk' => 'Toyota Avanza'],
             [
@@ -83,5 +84,25 @@ class ArmadaSeeder extends Seeder
                 'status' => 'Aktif',
             ]
         );
+=======
+        $armadas = [
+            ['merk' => 'Toyota Avanza', 'warna' => 'Pink', 'status' => 'Tersedia'],
+            ['merk' => 'Daihatsu Xenia', 'warna' => 'Khaki', 'status' => 'Tersedia'],
+            ['merk' => 'Toyota Calya', 'warna' => 'Putih', 'status' => 'Tersedia'],
+            ['merk' => 'Toyota Calya', 'warna' => 'Hitam', 'status' => 'Tersedia'],
+            ['merk' => 'Toyota Calya', 'warna' => 'Grey', 'status' => 'Tersedia'],
+            ['merk' => 'Toyota Avanza', 'warna' => 'Hitam', 'status' => 'Tersedia'],
+            ['merk' => 'Toyota Calya', 'warna' => 'Merah Maroon', 'status' => 'Tersedia'],
+            ['merk' => 'Kijang Inova Reborn', 'warna' => 'Putih', 'status' => 'Tersedia'],
+        ];
+
+        foreach ($armadas as $data) {
+            Armada::firstOrCreate(
+                ['merk' => $data['merk'], 'warna' => $data['warna']],
+                ['status' => $data['status']]
+            );
+        }
+>>>>>>> a0f5ea27d30b535e03fa56f82fcb748e7b313b14
     }
 }
+

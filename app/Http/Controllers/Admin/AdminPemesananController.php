@@ -85,7 +85,7 @@ class AdminPemesananController extends Controller
             }
         }
 
-        $pemesanan->delete();
+        Pemesanan::destroy($id);
 
         return redirect()->route('admin.pemesanan.index')->with('success', "Transaksi pemesanan #{$id} berhasil dihapus!");
     }

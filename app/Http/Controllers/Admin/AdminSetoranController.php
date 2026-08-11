@@ -92,9 +92,9 @@ class AdminSetoranController extends Controller
     /**
      * Verifikasi setoran kas dari supir untuk jadwal tertentu
      */
-    public function verifikasiSetoran($id_jadwal)
+    public function verifikasiSetoran(int|string $id_jadwal)
     {
-        $updatedCount = Pemesanan::where('id_jadwal', $id_jadwal)
+        $updatedCount = Pemesanan::where('id_jadwal', '=', $id_jadwal)
             ->where(function($q) {
                 $q->where('status_perjalanan', 'Selesai')
                   ->orWhere('status_pembayaran', 'Lunas');
