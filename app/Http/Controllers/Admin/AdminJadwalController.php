@@ -54,7 +54,7 @@ class AdminJadwalController extends Controller
     public function create()
     {
         $armadas = Armada::all();
-        $sopirs = Sopir::all();
+        $sopirs = Sopir::query()->where('status', 'Aktif')->get();
         return view('admin.jadwal.create', compact('armadas', 'sopirs'));
     }
 
@@ -105,7 +105,9 @@ class AdminJadwalController extends Controller
     {
         $jadwal = Jadwal::findOrFail($id);
         $armadas = Armada::all();
-        $sopirs = Sopir::all();
+        $sopirs = Sopir::query()->where('status', 'Aktif')
+            ->orWhere('id_sopir', $jadwal->id_sopir)
+            ->get();
         return view('admin.jadwal.edit', compact('jadwal', 'armadas', 'sopirs'));
     }
 

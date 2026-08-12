@@ -37,7 +37,10 @@ class AdminSopirController extends Controller
             'nama' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
             'alamat' => 'nullable|string',
+            'status' => 'nullable|in:Aktif,Tidak Aktif',
         ]);
+
+        $validated['status'] = $validated['status'] ?? 'Aktif';
 
         Sopir::create($validated);
 
@@ -65,6 +68,7 @@ class AdminSopirController extends Controller
             'nama' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
             'alamat' => 'nullable|string',
+            'status' => 'required|in:Aktif,Tidak Aktif',
         ]);
 
         $sopir->fill($validated)->save();
@@ -77,12 +81,9 @@ class AdminSopirController extends Controller
         /** @var Sopir $sopir */
         $sopir = Sopir::findOrFail($id);
 
-        if ($sopir->jadwals()->count('*') > 0) {
-            return redirect()->route('admin.sopir.index')->with('error', 'Data sopir tidak dapat dihapus karena masih ditugaskan pada jadwal perjalanan!');
-        }
+        $sopir->status = 'Tidak Aktif';
+        $sopir->save();
 
-        Sopir::destroy($id);
-
-        return redirect()->route('admin.sopir.index')->with('success', 'Data sopir berhasil dihapus dari database!');
+        return redirect()->route('admin.sopir.index')->with('success', 'Data sopir berhasil dinon-aktifkan!');
     }
 }

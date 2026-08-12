@@ -114,73 +114,76 @@
                             </div>
                             <div>
                                 <h2 class="text-lg font-bold text-slate-900">Rekomendasi Jadwal</h2>
-                                <p class="text-xs text-slate-500">Pilihan rute terpopuler penumpang RTM Family</p>
+                                <p class="text-xs text-slate-500">Personalisasi berbasis Content-Based Filtering (CBF)</p>
                             </div>
                         </div>
                         
-                        <!-- Mini filter/status indicator -->
+                        <!-- Status indicator -->
                         <span class="text-xs font-medium text-brand-500 bg-brand-50 px-2.5 py-1 rounded-full">
-                            Terupdate Hari Ini
+                            @if(!empty($hasHistory)) Terpersonalisasi @else Akun Baru @endif
                         </span>
                     </div>
 
                     <!-- Recommended Schedule Cards list -->
                     <div class="space-y-4">
-                        @forelse($jadwals as $j)
-                            <div class="group relative bg-slate-50 hover:bg-white rounded-2xl border border-slate-200/60 p-5 transition-all duration-300 hover:shadow-card hover:border-gold-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <!-- Popularity Ribbon Accent -->
-                                <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gold-500 rounded-l-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                
-                                <div class="flex items-start gap-4">
-                                    <!-- Star Icon -->
-                                    <div class="mt-1 flex items-center justify-center w-8 h-8 rounded-lg bg-gold-100 text-gold-600">
-                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <!-- Route Details -->
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-bold text-slate-900 text-sm md:text-base">{{ $j->asal }}</span>
-                                            <!-- Right Arrow Icon -->
-                                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path></svg>
-                                            <span class="font-bold text-slate-900 text-sm md:text-base">{{ $j->tujuan }}</span>
+                        @if(!empty($hasHistory) && count($jadwals ?? []) > 0)
+                            @foreach($jadwals as $j)
+                                <div class="group relative bg-slate-50 hover:bg-white rounded-2xl border border-slate-200/60 p-5 transition-all duration-300 hover:shadow-card hover:border-gold-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <!-- Popularity Ribbon Accent -->
+                                    <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gold-500 rounded-l-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    
+                                    <div class="flex items-start gap-4">
+                                        <!-- Star Icon -->
+                                        <div class="mt-1 flex items-center justify-center w-8 h-8 rounded-lg bg-gold-100 text-gold-600">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                                         </div>
-                                        <!-- Meta Badges -->
-                                        <div class="flex flex-wrap items-center gap-2.5 text-xs text-slate-500">
-                                            <!-- Time Badge -->
-                                            <span class="flex items-center gap-1 font-semibold text-slate-800 bg-slate-200/60 px-2 py-0.5 rounded">
-                                                {{ \Carbon\Carbon::parse($j->jam)->format('H.i') }} WIB ({{ $j->tanggal }})
-                                            </span>
-                                            <span class="text-slate-300">|</span>
-                                            <!-- Fleet Class -->
-                                            <span class="flex items-center gap-1">
-                                                {{ $j->armada->merk ?? 'Super Executive' }}
-                                            </span>
-                                            <span class="text-slate-300">|</span>
-                                            <!-- Status Badge -->
-                                            <span class="text-status-success font-medium flex items-center gap-1">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-status-success inline-block"></span>
-                                                Ada Kursi
-                                            </span>
+                                        <div class="space-y-2">
+                                            <!-- Route Details -->
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-bold text-slate-900 text-sm md:text-base">{{ $j->asal }}</span>
+                                                <!-- Right Arrow Icon -->
+                                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path></svg>
+                                                <span class="font-bold text-slate-900 text-sm md:text-base">{{ $j->tujuan }}</span>
+                                            </div>
+                                            <!-- Meta Badges -->
+                                            <div class="flex flex-wrap items-center gap-2.5 text-xs text-slate-500">
+                                                <!-- Time Badge -->
+                                                <span class="flex items-center gap-1 font-semibold text-slate-800 bg-slate-200/60 px-2 py-0.5 rounded">
+                                                    {{ \Carbon\Carbon::parse($j->jam)->format('H.i') }} WIB ({{ $j->tanggal }})
+                                                </span>
+                                                <span class="text-slate-300">|</span>
+                                                <!-- Fleet Class -->
+                                                <span class="flex items-center gap-1">
+                                                    {{ $j->armada->merk ?? 'Super Executive' }}
+                                                </span>
+                                                @if(isset($j->match_percentage))
+                                                    <span class="text-slate-300">|</span>
+                                                    <span class="text-amber-800 bg-amber-100 font-bold px-2 py-0.5 rounded text-[11px]">
+                                                        ✨ {{ $j->match_percentage }}% Cocok
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- CTA & Price -->
-                                <div class="flex items-center md:flex-col md:items-end justify-between md:justify-center border-t md:border-t-0 border-slate-200/60 pt-3 md:pt-0 gap-2">
-                                    <div class="text-left md:text-right">
-                                        <span class="text-xs text-slate-400 block">Mulai dari</span>
-                                        <span class="text-base font-extrabold text-brand-600">Rp {{ number_format($j->harga, 0, ',', '.') }}</span>
+                                    <!-- CTA & Price -->
+                                    <div class="flex items-center md:flex-col md:items-end justify-between md:justify-center border-t md:border-t-0 border-slate-200/60 pt-3 md:pt-0 gap-2">
+                                        <div class="text-left md:text-right">
+                                            <span class="text-xs text-slate-400 block">Mulai dari</span>
+                                            <span class="text-base font-extrabold text-brand-600">Rp {{ number_format($j->harga, 0, ',', '.') }}</span>
+                                        </div>
+                                        <a href="{{ route('penumpang.pilih_kursi', $j->id_jadwal) }}" class="px-4 py-2 text-xs font-semibold text-slate-900 bg-gold-50/80 hover:bg-gold-100/80 border border-gold-200/60 rounded-lg shadow-xs transition-colors flex items-center gap-1">
+                                            Lihat Jadwal
+                                        </a>
                                     </div>
-                                    <a href="{{ route('penumpang.pilih_kursi', $j->id_jadwal) }}" class="px-4 py-2 text-xs font-semibold text-slate-900 bg-gold-50/80 hover:bg-gold-100/80 border border-gold-200/60 rounded-lg shadow-xs transition-colors flex items-center gap-1">
-                                        Lihat Jadwal
-                                    </a>
                                 </div>
+                            @endforeach
+                        @else
+                            <div class="p-6 text-center text-slate-600 text-xs sm:text-sm bg-slate-50 rounded-2xl border border-slate-200">
+                                <p class="font-bold text-slate-800 mb-1">Belum ada rekomendasi jadwal untuk akun Anda.</p>
+                                <p class="text-slate-500">Lakukan pemesanan pertama Anda untuk mengaktifkan rekomendasi berbasis Content-Based Filtering (CBF).</p>
                             </div>
-                        @empty
-                            <div class="p-6 text-center text-slate-500 text-sm bg-slate-50 rounded-2xl border border-slate-200">
-                                Belum ada rekomendasi jadwal keberangkatan yang tersedia saat ini.
-                            </div>
-                        @endforelse
+                        @endif
 
                     </div>
                 </div>

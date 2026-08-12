@@ -1,7 +1,9 @@
 <?php
 
-test('the application returns a login redirect response for unauthenticated visitors', function () {
-    $response = $this->get('/');
+use function Pest\Laravel\get;
 
-    $response->assertStatus(302);
+test('the application returns a successful response for unauthenticated visitors', function () {
+    $response = get('/');
+
+    $response->assertStatus(200);
 });

@@ -13,14 +13,38 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\LaravelPdf\Facades\Pdf;
 
+use App\Services\ContentBasedFilteringService;
+
 class PenumpangDashboardController extends Controller
 {
+    protected ContentBasedFilteringService $cbfService;
+
+    public function __construct(ContentBasedFilteringService $cbfService)
+    {
+        $this->cbfService = $cbfService;
+    }
+
     /**
-     * Dashboard view (legacy)
+     * Dashboard view
      */
     public function index()
     {
-        return $this->beranda();
+        $user = Auth::user();
+        $penumpang = Penumpang::query()->where('email', $user->email)->first();
+
+        $hasHistory = $penumpang ? Pemesanan::query()->where('id_penumpang', $penumpang->id_penumpang)
+            ->where('status_perjalanan', '!=', 'Batal')
+            ->exists() : false;
+
+        $recommendedJadwals = $this->cbfService->getRecommendations($penumpang, 6);
+        $availableJadwals = $recommendedJadwals;
+
+        $myPemesanans = $penumpang ? Pemesanan::with(['jadwal.armada', 'kursi'])
+            ->where('id_penumpang', $penumpang->id_penumpang)
+            ->latest('id_pemesanan')
+            ->get() : collect([]);
+
+        return view('penumpang.dashboard', compact('penumpang', 'recommendedJadwals', 'availableJadwals', 'hasHistory', 'myPemesanans'));
     }
 
     /**
@@ -29,16 +53,16 @@ class PenumpangDashboardController extends Controller
     public function beranda()
     {
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', '=', $user->email)->first();
+        $penumpang = Penumpang::query()->where('email', $user->email)->first();
 
-        $jadwals = Jadwal::with(['armada', 'sopir'])
-            ->where('tanggal', '>=', now()->toDateString())
-            ->orderBy('tanggal', 'asc')
-            ->orderBy('jam', 'asc')
-            ->take(6)
-            ->get();
+        $hasHistory = $penumpang ? Pemesanan::query()->where('id_penumpang', $penumpang->id_penumpang)
+            ->where('status_perjalanan', '!=', 'Batal')
+            ->exists() : false;
 
-        return view('penumpang.beranda', compact('penumpang', 'jadwals'));
+        $recommendedJadwals = $this->cbfService->getRecommendations($penumpang, 6);
+        $jadwals = $recommendedJadwals;
+
+        return view('penumpang.beranda', compact('penumpang', 'recommendedJadwals', 'jadwals', 'hasHistory'));
     }
 
     /**
@@ -93,7 +117,7 @@ class PenumpangDashboardController extends Controller
             return redirect()->route('penumpang.jadwal')->with('error', 'Jadwal tidak ditemukan.');
         }
 
-        $kursis = Kursi::where('id_jadwal', '=', $jadwal->id_jadwal)->get();
+        $kursis = Kursi::query()->where('id_jadwal', $jadwal->id_jadwal)->get();
 
         return view('penumpang.pilih_kursi', compact('jadwal', 'kursis'));
     }
@@ -117,16 +141,16 @@ class PenumpangDashboardController extends Controller
         }
         $idKursiArray = array_filter(array_map('trim', $idKursiArray));
 
-        $kursis = Kursi::where('id_jadwal', '=', $id_jadwal)
+        $kursis = Kursi::query()->where('id_jadwal', $id_jadwal)
             ->whereIn('id_kursi', $idKursiArray)
             ->get();
 
         if ($kursis->isEmpty()) {
-            $kursis = Kursi::where('id_jadwal', '=', $id_jadwal)->where('status', '=', 'Tersedia')->take(1)->get();
+            $kursis = Kursi::query()->where('id_jadwal', $id_jadwal)->where('status', 'Tersedia')->take(1)->get();
         }
 
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', '=', $user->email)->first();
+        $penumpang = Penumpang::query()->where('email', $user->email)->first();
 
         $jumlahPenumpang = $kursis->count() > 0 ? $kursis->count() : 1;
         $totalBayar = $jadwal->harga * $jumlahPenumpang;
@@ -157,7 +181,7 @@ class PenumpangDashboardController extends Controller
         ]);
 
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', '=', $user->email)->firstOrFail();
+        $penumpang = Penumpang::query()->where('email', $user->email)->firstOrFail();
 
         $jadwal = Jadwal::findOrFail($request->id_jadwal);
 
@@ -192,7 +216,7 @@ class PenumpangDashboardController extends Controller
     public function status(Request $request)
     {
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', '=', $user->email)->first();
+        $penumpang = Penumpang::query()->where('email', $user->email)->first();
 
         $search = $request->input('search');
 
@@ -223,6 +247,55 @@ class PenumpangDashboardController extends Controller
     }
 
     /**
+     * Membatalkan Pemesanan Tiket Penumpang
+     */
+    public function batalkanTiket(int|string $id_pemesanan)
+    {
+        $pemesanan = Pemesanan::with(['kursi'])->findOrFail($id_pemesanan);
+
+        $user = Auth::user();
+        $penumpang = Penumpang::query()->where('email', $user->email)->first();
+
+        if ($penumpang && $pemesanan->id_penumpang !== $penumpang->id_penumpang) {
+            return back()->with('error', 'Anda tidak memiliki akses untuk membatalkan tiket ini.');
+        }
+
+        if ($pemesanan->status_perjalanan === 'Selesai') {
+            return back()->with('error', 'Tiket tidak dapat dibatalkan karena perjalanan sudah selesai.');
+        }
+
+        $relatedPemesanans = Pemesanan::query()->where('id_penumpang', $pemesanan->id_penumpang)
+            ->where('id_jadwal', $pemesanan->id_jadwal)
+            ->where('tanggal_pesan', $pemesanan->tanggal_pesan)
+            ->whereBetween('created_at', [
+                \Carbon\Carbon::parse($pemesanan->created_at)->subSeconds(15),
+                \Carbon\Carbon::parse($pemesanan->created_at)->addSeconds(15)
+            ])
+            ->get();
+
+        if ($relatedPemesanans->isEmpty()) {
+            $relatedPemesanans = collect([$pemesanan]);
+        }
+
+        foreach ($relatedPemesanans as $p) {
+            $p->status_perjalanan = 'Batal';
+            $p->save();
+
+            if ($p->id_kursi) {
+                /** @var Kursi|null $kursi */
+                $kursi = Kursi::find($p->id_kursi, ['*']);
+                if ($kursi) {
+                    $kursi->status = 'Kosong';
+                    $kursi->save();
+                }
+            }
+        }
+
+        return redirect()->route('penumpang.status')
+            ->with('success', 'Pemesanan tiket berhasil dibatalkan dan data telah diperbarui!');
+    }
+
+    /**
      * Cetak Status Pembayaran PDF (Spatie PDF)
      */
     public function cetakPdf(int|string $id_pemesanan)
@@ -241,7 +314,7 @@ class PenumpangDashboardController extends Controller
     public function profil()
     {
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', '=', $user->email)->first();
+        $penumpang = Penumpang::query()->where('email', $user->email)->first();
 
         return view('penumpang.profil', compact('user', 'penumpang'));
     }
@@ -252,7 +325,7 @@ class PenumpangDashboardController extends Controller
     public function profilUpdate(Request $request)
     {
         $user = Auth::user();
-        $penumpang = Penumpang::where('email', '=', $user->email)->first();
+        $penumpang = Penumpang::query()->where('email', $user->email)->first();
 
         $request->validate([
             'nama' => 'required|string|max:255',

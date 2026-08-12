@@ -99,6 +99,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/konfirmasi', [PenumpangDashboardController::class, 'konfirmasiStore'])->name('konfirmasi.store');
         Route::get('/status', [PenumpangDashboardController::class, 'status'])->name('status');
         Route::get('/status/{id_pemesanan}', [PenumpangDashboardController::class, 'statusDetail'])->name('status.detail');
+        Route::post('/status/{id_pemesanan}/batal', [PenumpangDashboardController::class, 'batalkanTiket'])->name('status.batal');
         Route::get('/status/{id_pemesanan}/pdf', [PenumpangDashboardController::class, 'cetakPdf'])->name('status.pdf');
         Route::get('/profil', [PenumpangDashboardController::class, 'profil'])->name('profil');
         Route::put('/profil', [PenumpangDashboardController::class, 'profilUpdate'])->name('profil.update');

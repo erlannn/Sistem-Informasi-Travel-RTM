@@ -271,6 +271,11 @@
                     </div>
 
                     <div class="info-row">
+                        <span class="label">Sopir Travel</span>
+                        <span class="value">{{ $pemesanan->jadwal->sopir->nama ?? '-' }}</span>
+                    </div>
+
+                    <div class="info-row">
                         <span class="label">Nomor Kursi Dipesan</span>
                         <span class="value value-gold">{{ $seatsText }}</span>
                     </div>
