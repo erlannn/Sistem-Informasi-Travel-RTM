@@ -133,6 +133,12 @@
                                 <span class="text-sm font-extrabold text-gold-600 bg-gold-50 px-2 py-0.5 rounded border border-gold-200/60 inline-block mt-0.5">{{ $seatsText }}</span>
                             </div>
                         </div>
+                        <div class="grid grid-cols-2 gap-4 pt-1">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Sopir Travel</span>
+                                <span class="text-sm font-bold text-slate-800">{{ $pemesanan->jadwal->sopir->nama ?? '-' }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -233,6 +239,16 @@
             <a href="{{ route('penumpang.status') }}" class="w-full sm:w-auto px-6 py-3 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors text-center cursor-pointer">
                 Kembali
             </a>
+
+            @if(($pemesanan->status_perjalanan ?? 'Pending') !== 'Selesai' && ($pemesanan->status_perjalanan ?? 'Pending') !== 'Batal')
+                <form action="{{ route('penumpang.status.batal', $pemesanan->id_pemesanan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan tiket ini? Data akan langsung diperbarui ke sistem.');" class="w-full sm:w-auto">
+                    @csrf
+                    <button type="submit" class="w-full sm:w-auto px-6 py-3 text-sm font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        Batalkan Tiket
+                    </button>
+                </form>
+            @endif
             
             <!-- Cetak Status Pembayaran (Spatie PDF) -->
             <a href="{{ route('penumpang.status.pdf', $pemesanan->id_pemesanan) }}" target="_blank" class="w-full sm:w-auto px-8 py-3 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-950 border border-gold-500/20 hover:border-gold-500/45 rounded-xl shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5">

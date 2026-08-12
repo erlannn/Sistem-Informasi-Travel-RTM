@@ -37,15 +37,18 @@
     </div>
     <!-- Table Card -->
     <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-black">
+                <thead class="bg-slate-100 text-black uppercase text-xs font-black border-b border-slate-200">
+                    <tr>
                         <th class="p-3.5 rounded-l-xl">NO</th>
                         <th class="p-3.5">Rute (Asal &rarr; Tujuan)</th>
                         <th class="p-3.5">Tanggal & Jam</th>
                         <th class="p-3.5">Armada</th>
                         <th class="p-3.5">Sopir</th>
-                        {{-- <th class="p-3.5">Harga Tiket</th>
-                        <th class="p-3.5 text-center">Pemesanan</th> --}}
                         <th class="p-3.5 rounded-r-xl text-center">Aksi</th>
                     </tr>
+                </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($jadwals as $j)
                         <tr class="hover:bg-slate-50 transition">
@@ -55,15 +58,16 @@
                                 &rarr;
                                 <span>{{ $j->tujuan }}</span>
                             </td>
-                            {{-- <td class="p-3.5 font-extrabold text-slate-900">
-                                Rp {{ number_format($j->harga, 0, ',', '.') }}
+                            <td class="py-4 px-4 sm:px-5 font-semibold text-black">
+                                {{ \Carbon\Carbon::parse($j->tanggal)->translatedFormat('d M Y') }} &bull; {{ $j->jam }} WIB
                             </td>
-                            <td class="py-4 px-4 sm:px-5 text-center font-black text-black">
-                                <span class="px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-xs font-black">
-                                    {{ $j->pemesanans_count }} Pesanan
-                                </span>
-                            </td> --}}
-                            <td class="p-3.5 text-center">
+                            <td class="py-4 px-4 sm:px-5 font-semibold text-black">
+                                {{ $j->armada->merk ?? '-' }} ({{ $j->armada->warna ?? '-' }})
+                            </td>
+                            <td class="py-4 px-4 sm:px-5 font-semibold text-black">
+                                {{ $j->sopir->nama ?? '-' }}
+                            </td>
+                            <td class="py-4 px-4 sm:px-5 text-center">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <a href="{{ route('admin.jadwal.show', $j->id_jadwal) }}"
                                         class="px-3 py-1.5 rounded-lg text-xs font-black text-black bg-slate-100 hover:bg-slate-200 border border-slate-300 active:scale-95 transition cursor-pointer">
@@ -87,8 +91,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="py-12 text-center text-black font-semibold text-sm">
-                                Belum ada jadwal keberangkatan. Klik "+ Buat Jadwal Baru" untuk menambahkan.
+                            <td colspan="6" class="py-12 text-center text-black font-semibold text-sm">
+                                Belum ada jadwal keberangkatan. Klik "+ Tambah Jadwal Baru" untuk menambahkan.
                             </td>
                         </tr>
                     @endforelse

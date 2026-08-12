@@ -94,7 +94,7 @@ class AdminSetoranController extends Controller
      */
     public function verifikasiSetoran(int|string $id_jadwal)
     {
-        $updatedCount = Pemesanan::where('id_jadwal', '=', $id_jadwal)
+        $updatedCount = Pemesanan::query()->where('id_jadwal', $id_jadwal)
             ->where(function($q) {
                 $q->where('status_perjalanan', 'Selesai')
                   ->orWhere('status_pembayaran', 'Lunas');

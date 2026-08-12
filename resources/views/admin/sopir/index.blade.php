@@ -46,7 +46,7 @@
                         <th class="p-3.5">Nama Sopir</th>
                         <th class="p-3.5">No. Telepon / WA</th>
                         <th class="p-3.5">Alamat</th>
-                        {{-- <th class="p-3.5">Gaji (Rp)</th> --}}
+                        <th class="p-3.5 text-center">Status</th>
                         <th class="p-3.5 text-center">Jadwal Tugas</th>
                         <th class="p-3.5 rounded-r-xl text-center">Aksi</th>
                     </tr>
@@ -67,9 +67,17 @@
                             <td class="py-4 px-4 sm:px-5 font-medium text-black max-w-xs truncate">
                                 {{ $s->alamat ?? '-' }}
                             </td>
-                            {{-- <td class="p-3.5 font-extrabold text-slate-900">
-                                Rp {{ number_format($s->gaji, 0, ',', '.') }}
-                            </td> --}}
+                            <td class="p-3.5 text-center font-bold">
+                                @if(($s->status ?? 'Aktif') === 'Aktif')
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-black text-emerald-700 bg-emerald-100 border border-emerald-300">
+                                        Aktif
+                                    </span>
+                                @else
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-black text-rose-700 bg-rose-100 border border-rose-300">
+                                        Tidak Aktif
+                                    </span>
+                                @endif
+                            </td>
                             <td class="p-3.5 text-center font-bold text-slate-700">
                                 <span class="px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200">
                                     {{ $s->jadwals_count }} Tugas
@@ -87,13 +95,15 @@
                                         Edit
                                     </a>
 
-                                    <form action="{{ route('admin.sopir.destroy', $s->id_sopir) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data sopir ini dari database?');" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-black text-rose-900 bg-rose-100 hover:bg-rose-200 border border-rose-300 active:scale-95 transition cursor-pointer">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    @if(($s->status ?? 'Aktif') === 'Aktif')
+                                        <form action="{{ route('admin.sopir.destroy', $s->id_sopir) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menon-aktifkan sopir ini?');" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-black text-rose-900 bg-rose-100 hover:bg-rose-200 border border-rose-300 active:scale-95 transition cursor-pointer">
+                                                Non-Aktifkan
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

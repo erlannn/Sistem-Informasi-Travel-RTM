@@ -37,6 +37,10 @@
     </div>
     <!-- Table Card -->
     <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-black">
+                <thead class="bg-slate-100 text-black uppercase text-xs font-black border-b border-slate-200">
+                    <tr>
                         <th class="p-3.5 rounded-l-xl">NO</th>
                         <th class="p-3.5">Merk Armada</th>
                         <th class="p-3.5">Warna</th>
@@ -48,12 +52,18 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($armadas as $a)
+                        <tr class="hover:bg-slate-50 transition">
                             <td class="py-4 px-4 sm:px-5 font-black text-black">#{{ $a->id_armada }}</td>
                             <td class="py-4 px-4 sm:px-5 font-black text-black">
                                 {{ $a->merk }}
                             </td>
                             <td class="py-4 px-4 sm:px-5 font-semibold text-black">
                                 {{ $a->warna }}
+                            </td>
+                            <td class="py-4 px-4 sm:px-5 font-black text-black">
+                                <span class="px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-xs font-black">
+                                    {{ $a->kursi }} Kursi
+                                </span>
                             </td>
                             <td class="py-4 px-4 sm:px-5 font-black text-black">
                                 <span class="px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-xs font-black">
@@ -99,8 +109,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="py-12 text-center text-black font-semibold text-sm">
-                                Belum ada data armada travel di database. Klik "+ Tambah Armada Baru" untuk menambahkan.
+                            <td colspan="7" class="py-12 text-center text-black font-semibold text-sm">
+                                Belum ada data armada travel di database. Klik "+ Tambah Armada" untuk menambahkan.
                             </td>
                         </tr>
                     @endforelse

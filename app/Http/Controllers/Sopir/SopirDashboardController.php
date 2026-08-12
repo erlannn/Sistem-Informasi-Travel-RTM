@@ -16,7 +16,7 @@ class SopirDashboardController extends Controller
     private function getSopir()
     {
         $user = Auth::user();
-        return Sopir::where('nama', '=', $user->name)->first();
+        return Sopir::query()->where('nama', $user->name)->first();
     }
 
     public function index()
@@ -126,7 +126,7 @@ class SopirDashboardController extends Controller
         return view('sopir.jadwal', compact('sopir', 'jadwals', 'search', 'searchDate'));
     }
 
-    public function jadwalDetail($id)
+    public function jadwalDetail(int|string $id)
     {
         $sopir = $this->getSopir();
         if (!$sopir) {
@@ -144,7 +144,7 @@ class SopirDashboardController extends Controller
     }
 
     // Aksi 1: Penumpang naik mobil (Boarding)
-    public function penumpangNaik($id_pemesanan)
+    public function penumpangNaik(int|string $id_pemesanan)
     {
         $pemesanan = Pemesanan::findOrFail($id_pemesanan);
         $pemesanan->update([
@@ -155,7 +155,7 @@ class SopirDashboardController extends Controller
     }
 
     // Aksi 2: Sampai tujuan dan terima pembayaran cash
-    public function terimaBayarCash($id_pemesanan)
+    public function terimaBayarCash(int|string $id_pemesanan)
     {
         $pemesanan = Pemesanan::findOrFail($id_pemesanan);
         
@@ -166,7 +166,8 @@ class SopirDashboardController extends Controller
         ]);
 
         if ($pemesanan->id_kursi) {
-            $kursi = Kursi::find($pemesanan->id_kursi);
+            /** @var Kursi|null $kursi */
+            $kursi = Kursi::find($pemesanan->id_kursi, ['*']);
             if ($kursi) {
                 $kursi->status = 'Kosong';
                 $kursi->save();
@@ -177,12 +178,13 @@ class SopirDashboardController extends Controller
     }
 
     // Aksi 3: Penumpang Batal / No-Show
-    public function batalkanPesanan($id_pemesanan)
+    public function batalkanPesanan(int|string $id_pemesanan)
     {
         $pemesanan = Pemesanan::findOrFail($id_pemesanan);
         
         if ($pemesanan->id_kursi) {
-            $kursi = Kursi::find($pemesanan->id_kursi);
+            /** @var Kursi|null $kursi */
+            $kursi = Kursi::find($pemesanan->id_kursi, ['*']);
             if ($kursi) {
                 $kursi->status = 'Kosong';
                 $kursi->save();
@@ -196,19 +198,19 @@ class SopirDashboardController extends Controller
         return back()->with('success', 'Pesanan berhasil dibatalkan dan kursi dilepaskan.');
     }
 
-    public function selesaikanPerjalanan(Request $request, $id)
+    public function selesaikanPerjalanan(Request $request, int|string $id)
     {
         $sopir = $this->getSopir();
         if (!$sopir) {
             return redirect()->route('login')->with('error', 'Data sopir tidak ditemukan.');
         }
 
-        $jadwal = Jadwal::where('id_sopir', '=', $sopir->id_sopir)
-            ->where('id_jadwal', '=', $id)
+        $jadwal = Jadwal::query()->where('id_sopir', $sopir->id_sopir)
+            ->where('id_jadwal', $id)
             ->firstOrFail();
 
         // Get all active bookings for this schedule (status_perjalanan Pending / Naik)
-        $pemesanans = Pemesanan::where('id_jadwal', '=', $jadwal->id_jadwal)
+        $pemesanans = Pemesanan::query()->where('id_jadwal', $jadwal->id_jadwal)
             ->whereIn('status_perjalanan', ['Pending', 'Naik'])
             ->get();
 
@@ -216,6 +218,7 @@ class SopirDashboardController extends Controller
             return redirect()->back()->with('error', 'Tidak ada pemesanan aktif (Pending/Naik) untuk diselesaikan pada jadwal ini.');
         }
 
+        /** @var Pemesanan $pemesanan */
         foreach ($pemesanans as $pemesanan) {
             $pemesanan->update([
                 'status_perjalanan' => 'Selesai',
@@ -225,7 +228,8 @@ class SopirDashboardController extends Controller
 
             // Release seat
             if ($pemesanan->id_kursi) {
-                $kursi = Kursi::find($pemesanan->id_kursi);
+                /** @var Kursi|null $kursi */
+                $kursi = Kursi::find($pemesanan->id_kursi, ['*']);
                 if ($kursi) {
                     $kursi->status = 'Kosong';
                     $kursi->save();
@@ -236,15 +240,15 @@ class SopirDashboardController extends Controller
         return redirect()->route('sopir.jadwal.detail', $id)->with('success', 'Perjalanan berhasil diselesaikan! Status pemesanan semua penumpang telah diperbarui menjadi Selesai.');
     }
 
-    public function penumpang(Request $request, $id)
+    public function penumpang(Request $request, int|string $id)
     {
         $sopir = $this->getSopir();
         if (!$sopir) {
             return redirect()->route('login')->with('error', 'Data sopir tidak ditemukan.');
         }
 
-        $jadwal = Jadwal::where('id_sopir', '=', $sopir->id_sopir)
-            ->where('id_jadwal', '=', $id)
+        $jadwal = Jadwal::query()->where('id_sopir', $sopir->id_sopir)
+            ->where('id_jadwal', $id)
             ->firstOrFail();
 
         $search = $request->input('search');
@@ -351,7 +355,7 @@ class SopirDashboardController extends Controller
 
         // Generate list of available periods based on driver schedules
         $periods = [];
-        $driverJadwalDates = Jadwal::where('id_sopir', '=', $sopir->id_sopir)
+        $driverJadwalDates = Jadwal::query()->where('id_sopir', $sopir->id_sopir)
             ->select('tanggal')
             ->orderBy('tanggal', 'desc')
             ->pluck('tanggal')

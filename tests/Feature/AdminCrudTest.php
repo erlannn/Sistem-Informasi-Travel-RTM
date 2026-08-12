@@ -11,80 +11,97 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
+
 uses(RefreshDatabase::class);
 
-beforeEach(function () {
+function createAdminUser(): User
+{
     Role::firstOrCreate(['name' => 'Admin']);
     Role::firstOrCreate(['name' => 'Sopir']);
     Role::firstOrCreate(['name' => 'Penumpang']);
 
-    $this->admin = User::create([
+    /** @var User $admin */
+    $admin = User::create([
         'name' => 'Admin Test',
-        'email' => 'admin@rtm.com',
+        'email' => 'admin_' . uniqid() . '@rtm.com',
         'password' => Hash::make('password123'),
     ]);
-    $this->admin->assignRole('Admin');
-});
+    $admin->assignRole('Admin');
+
+    return $admin;
+}
 
 test('admin can perform full CRUD on armada', function () {
+    $admin = createAdminUser();
+
     // 1. Create (Store)
-    $response = $this->actingAs($this->admin)->post(route('admin.armada.store'), [
+    $response = actingAs($admin)->post(route('admin.armada.store'), [
         'merk' => 'Toyota HiAce Premio Test',
         'warna' => 'Hitam',
         'kursi' => 6,
         'status' => 'Aktif',
     ]);
     $response->assertRedirect(route('admin.armada.index'));
-    $this->assertDatabaseHas('armadas', ['merk' => 'Toyota HiAce Premio Test', 'kursi' => 6]);
+    assertDatabaseHas('armadas', ['merk' => 'Toyota HiAce Premio Test', 'kursi' => 6]);
 
-    $armada = Armada::where('merk', 'Toyota HiAce Premio Test')->first();
+    /** @var Armada $armada */
+    $armada = Armada::where('merk', '=', 'Toyota HiAce Premio Test', 'and')->first();
 
     // 2. Update
-    $response = $this->actingAs($this->admin)->put(route('admin.armada.update', $armada->id_armada), [
+    $response = actingAs($admin)->put(route('admin.armada.update', $armada->id_armada), [
         'merk' => 'Toyota HiAce Premio Updated',
         'warna' => 'Putih',
         'kursi' => 8,
         'status' => 'Perbaikan',
     ]);
     $response->assertRedirect(route('admin.armada.index'));
-    $this->assertDatabaseHas('armadas', ['id_armada' => $armada->id_armada, 'merk' => 'Toyota HiAce Premio Updated', 'kursi' => 8]);
+    assertDatabaseHas('armadas', ['id_armada' => $armada->id_armada, 'merk' => 'Toyota HiAce Premio Updated', 'kursi' => 8]);
 
     // 3. Delete (Destroy)
-    $response = $this->actingAs($this->admin)->delete(route('admin.armada.destroy', $armada->id_armada));
+    $response = actingAs($admin)->delete(route('admin.armada.destroy', $armada->id_armada));
     $response->assertRedirect(route('admin.armada.index'));
-    $this->assertDatabaseMissing('armadas', ['id_armada' => $armada->id_armada]);
+    assertDatabaseMissing('armadas', ['id_armada' => $armada->id_armada]);
 });
 
 test('admin can perform full CRUD on sopir', function () {
+    $admin = createAdminUser();
+
     // 1. Create
-    $response = $this->actingAs($this->admin)->post(route('admin.sopir.store'), [
+    $response = actingAs($admin)->post(route('admin.sopir.store'), [
         'nama' => 'Pak Joko Driver Test',
         'no_hp' => '081234567890',
         'alamat' => 'Sijunjung',
     ]);
     $response->assertRedirect(route('admin.sopir.index'));
-    $this->assertDatabaseHas('sopirs', ['nama' => 'Pak Joko Driver Test']);
+    assertDatabaseHas('sopirs', ['nama' => 'Pak Joko Driver Test']);
 
-    $sopir = Sopir::where('nama', 'Pak Joko Driver Test')->first();
+    /** @var Sopir $sopir */
+    $sopir = Sopir::where('nama', '=', 'Pak Joko Driver Test', 'and')->first();
 
     // 2. Update
-    $response = $this->actingAs($this->admin)->put(route('admin.sopir.update', $sopir->id_sopir), [
+    $response = actingAs($admin)->put(route('admin.sopir.update', $sopir->id_sopir), [
         'nama' => 'Pak Joko Driver Updated',
         'no_hp' => '081299998888',
         'alamat' => 'Padang',
+        'status' => 'Aktif',
     ]);
     $response->assertRedirect(route('admin.sopir.index'));
-    $this->assertDatabaseHas('sopirs', ['id_sopir' => $sopir->id_sopir, 'nama' => 'Pak Joko Driver Updated']);
+    assertDatabaseHas('sopirs', ['id_sopir' => $sopir->id_sopir, 'nama' => 'Pak Joko Driver Updated', 'status' => 'Aktif']);
 
-    // 3. Delete
-    $response = $this->actingAs($this->admin)->delete(route('admin.sopir.destroy', $sopir->id_sopir));
+    // 3. Deactivate (soft delete via destroy route)
+    $response = actingAs($admin)->delete(route('admin.sopir.destroy', $sopir->id_sopir));
     $response->assertRedirect(route('admin.sopir.index'));
-    $this->assertDatabaseMissing('sopirs', ['id_sopir' => $sopir->id_sopir]);
+    assertDatabaseHas('sopirs', ['id_sopir' => $sopir->id_sopir, 'status' => 'Tidak Aktif']);
 });
 
 test('admin can perform full CRUD on penumpang', function () {
+    $admin = createAdminUser();
+
     // 1. Create
-    $response = $this->actingAs($this->admin)->post(route('admin.penumpang.store'), [
+    $response = actingAs($admin)->post(route('admin.penumpang.store'), [
         'nama' => 'Budi Penumpang Test',
         'email' => 'budi_test@gmail.com',
         'no_hp' => '081122334455',
@@ -92,13 +109,14 @@ test('admin can perform full CRUD on penumpang', function () {
         'password' => 'secret123',
     ]);
     $response->assertRedirect(route('admin.penumpang.index'));
-    $this->assertDatabaseHas('penumpangs', ['email' => 'budi_test@gmail.com']);
-    $this->assertDatabaseHas('users', ['email' => 'budi_test@gmail.com']);
+    assertDatabaseHas('penumpangs', ['email' => 'budi_test@gmail.com']);
+    assertDatabaseHas('users', ['email' => 'budi_test@gmail.com']);
 
-    $penumpang = Penumpang::where('email', 'budi_test@gmail.com')->first();
+    /** @var Penumpang $penumpang */
+    $penumpang = Penumpang::where('email', '=', 'budi_test@gmail.com', 'and')->first();
 
     // 2. Update
-    $response = $this->actingAs($this->admin)->put(route('admin.penumpang.update', $penumpang->id_penumpang), [
+    $response = actingAs($admin)->put(route('admin.penumpang.update', $penumpang->id_penumpang), [
         'nama' => 'Budi Penumpang Updated',
         'email' => 'budi_test@gmail.com', // keep same email
         'no_hp' => '081122339999',
@@ -106,22 +124,24 @@ test('admin can perform full CRUD on penumpang', function () {
         'password' => '', // empty password
     ]);
     $response->assertRedirect(route('admin.penumpang.index'));
-    $this->assertDatabaseHas('penumpangs', ['id_penumpang' => $penumpang->id_penumpang, 'nama' => 'Budi Penumpang Updated']);
+    assertDatabaseHas('penumpangs', ['id_penumpang' => $penumpang->id_penumpang, 'nama' => 'Budi Penumpang Updated']);
 
     // 3. Delete
-    $response = $this->actingAs($this->admin)->delete(route('admin.penumpang.destroy', $penumpang->id_penumpang));
+    $response = actingAs($admin)->delete(route('admin.penumpang.destroy', $penumpang->id_penumpang));
     $response->assertRedirect(route('admin.penumpang.index'));
-    $this->assertDatabaseMissing('penumpangs', ['id_penumpang' => $penumpang->id_penumpang]);
-    $this->assertDatabaseMissing('users', ['email' => 'budi_test@gmail.com']);
+    assertDatabaseMissing('penumpangs', ['id_penumpang' => $penumpang->id_penumpang]);
+    assertDatabaseMissing('users', ['email' => 'budi_test@gmail.com']);
 });
 
 test('admin can management jadwal and status/deletion of pemesanan', function () {
+    $admin = createAdminUser();
+
     $armada = Armada::create(['merk' => 'Toyota HiAce', 'warna' => 'Silver', 'kursi' => 6, 'status' => 'Aktif']);
     $sopir = Sopir::create(['nama' => 'Pak Budi', 'no_hp' => '081234567890', 'alamat' => 'Padang']);
     $penumpang = Penumpang::create(['nama' => 'Siti', 'email' => 'siti@test.com', 'password' => Hash::make('secret'), 'no_hp' => '0812999', 'alamat' => 'Padang']);
 
     // 1. Store Jadwal
-    $response = $this->actingAs($this->admin)->post(route('admin.jadwal.store'), [
+    $response = actingAs($admin)->post(route('admin.jadwal.store'), [
         'id_armada' => $armada->id_armada,
         'id_sopir' => $sopir->id_sopir,
         'asal' => 'Sijunjung',
@@ -132,14 +152,17 @@ test('admin can management jadwal and status/deletion of pemesanan', function ()
         'bagi_hasil_sopir' => 30000,
     ]);
     $response->assertRedirect(route('admin.jadwal.index'));
-    $this->assertDatabaseHas('jadwals', ['asal' => 'Sijunjung', 'tujuan' => 'Padang']);
+    assertDatabaseHas('jadwals', ['asal' => 'Sijunjung', 'tujuan' => 'Padang']);
 
-    $jadwal = Jadwal::where('asal', 'Sijunjung')->first();
-    $this->assertCount(6, Kursi::where('id_jadwal', $jadwal->id_jadwal)->get());
+    /** @var Jadwal $jadwal */
+    $jadwal = Jadwal::where('asal', '=', 'Sijunjung', 'and')->first();
+    expect(Kursi::where('id_jadwal', '=', $jadwal->id_jadwal, 'and')->get())->toHaveCount(6);
 
-    $kursi = Kursi::where('id_jadwal', $jadwal->id_jadwal)->first();
+    /** @var Kursi $kursi */
+    $kursi = Kursi::where('id_jadwal', '=', $jadwal->id_jadwal, 'and')->first();
 
     // 2. Create Pemesanan (simulating booking created by Penumpang)
+    /** @var Pemesanan $pemesanan */
     $pemesanan = Pemesanan::create([
         'id_penumpang' => $penumpang->id_penumpang,
         'id_jadwal' => $jadwal->id_jadwal,
@@ -153,19 +176,19 @@ test('admin can management jadwal and status/deletion of pemesanan', function ()
     $kursi->update(['status' => 'Terisi']);
 
     // 3. Update Status Pemesanan by Admin
-    $response = $this->actingAs($this->admin)->patch(route('admin.pemesanan.update_status', $pemesanan->id_pemesanan), [
+    $response = actingAs($admin)->patch(route('admin.pemesanan.update_status', $pemesanan->id_pemesanan), [
         'status_perjalanan' => 'Selesai',
     ]);
     $response->assertRedirect(route('admin.pemesanan.index'));
-    $this->assertDatabaseHas('pemesanans', ['id_pemesanan' => $pemesanan->id_pemesanan, 'status_perjalanan' => 'Selesai', 'status_pembayaran' => 'Lunas']);
+    assertDatabaseHas('pemesanans', ['id_pemesanan' => $pemesanan->id_pemesanan, 'status_perjalanan' => 'Selesai', 'status_pembayaran' => 'Lunas']);
 
     // 4. Delete Pemesanan by Admin
-    $response = $this->actingAs($this->admin)->delete(route('admin.pemesanan.destroy', $pemesanan->id_pemesanan));
+    $response = actingAs($admin)->delete(route('admin.pemesanan.destroy', $pemesanan->id_pemesanan));
     $response->assertRedirect(route('admin.pemesanan.index'));
-    $this->assertDatabaseMissing('pemesanans', ['id_pemesanan' => $pemesanan->id_pemesanan]);
+    assertDatabaseMissing('pemesanans', ['id_pemesanan' => $pemesanan->id_pemesanan]);
 
     // 5. Update Jadwal
-    $response = $this->actingAs($this->admin)->put(route('admin.jadwal.update', $jadwal->id_jadwal), [
+    $response = actingAs($admin)->put(route('admin.jadwal.update', $jadwal->id_jadwal), [
         'id_armada' => $armada->id_armada,
         'id_sopir' => $sopir->id_sopir,
         'asal' => 'Sijunjung',
@@ -174,10 +197,10 @@ test('admin can management jadwal and status/deletion of pemesanan', function ()
         'jam' => '10:00',
     ]);
     $response->assertRedirect(route('admin.jadwal.index'));
-    $this->assertDatabaseHas('jadwals', ['id_jadwal' => $jadwal->id_jadwal, 'tujuan' => 'Solok']);
+    assertDatabaseHas('jadwals', ['id_jadwal' => $jadwal->id_jadwal, 'tujuan' => 'Solok']);
 
     // 6. Delete Jadwal
-    $response = $this->actingAs($this->admin)->delete(route('admin.jadwal.destroy', $jadwal->id_jadwal));
+    $response = actingAs($admin)->delete(route('admin.jadwal.destroy', $jadwal->id_jadwal));
     $response->assertRedirect(route('admin.jadwal.index'));
-    $this->assertDatabaseMissing('jadwals', ['id_jadwal' => $jadwal->id_jadwal]);
+    assertDatabaseMissing('jadwals', ['id_jadwal' => $jadwal->id_jadwal]);
 });
