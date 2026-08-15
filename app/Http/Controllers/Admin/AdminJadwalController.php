@@ -39,8 +39,8 @@ class AdminJadwalController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('asal', 'like', "%{$search}%")
-                  ->orWhere('tujuan', 'like', "%{$search}%")
-                  ->orWhere('tanggal', 'like', "%{$search}%");
+                    ->orWhere('tujuan', 'like', "%{$search}%")
+                    ->orWhere('tanggal', 'like', "%{$search}%");
             });
         }
 
