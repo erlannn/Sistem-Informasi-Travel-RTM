@@ -97,23 +97,5 @@ class RoleAndPermissionSeeder extends Seeder
         );
         $userPenumpang2->assignRole($rolePenumpang);
 
-        // 5. Create Default Sopir Users
-        $userSopir1 = User::firstOrCreate(
-            ['email' => 'agus@rtmtravel.com'],
-            [
-                'name' => 'Agus Setiawan',
-                'password' => Hash::make('password123'),
-            ]
-        );
-        $userSopir1->assignRole($roleSopir);
-
-        $userSopir2 = User::firstOrCreate(
-            ['email' => 'joko@rtmtravel.com'],
-            [
-                'name' => 'Joko Widodo',
-                'password' => Hash::make('password123'),
-            ]
-        );
-        $userSopir2->assignRole($roleSopir);
     }
 }

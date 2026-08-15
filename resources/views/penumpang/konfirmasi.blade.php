@@ -177,7 +177,7 @@
             </div>
         </div>
         
-        <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Pembelian Tiket Berhasil! 🎉</h3>
+        <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Pembelian Tiket Berhasil!</h3>
         <p class="mt-2 text-xs text-slate-500 leading-relaxed">
             Pemesanan tiket travel RTM Family Anda telah berhasil diproses. Mengalihkan ke rincian tiket...
         </p>

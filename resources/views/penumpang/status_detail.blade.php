@@ -168,10 +168,10 @@
             </div>
 
             <!-- Lower Ticket Body: Financial details and Barcode -->
-            <div class="p-6 md:p-8 bg-slate-50/50 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            <div class="p-6 md:p-8 bg-slate-50/50 grid grid-cols-1 md:grid-cols-6 gap-6 items-center">
                 
                 <!-- Price info (7 Cols) -->
-                <div class="md:col-span-7 space-y-3">
+                <div class="md:col-span-6 space-y-3">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Detail Harga & Pembayaran</h3>
                     <div class="space-y-1.5">
                         <div class="flex justify-between items-center text-xs text-slate-500">
@@ -196,40 +196,6 @@
                         @endif
                     </p>
                 </div>
-
-                <!-- Digital Ticket Barcode concept -->
-                <div class="md:col-span-5 flex flex-col items-center justify-center border-t md:border-t-0 md:border-l border-slate-200/80 pt-6 md:pt-0 md:pl-6">
-                    <div class="bg-white p-3.5 rounded-xl border border-slate-200/60 shadow-xs flex flex-col items-center gap-1.5">
-                        <!-- Barcode Lines -->
-                        <div class="flex items-center gap-[2.5px] h-9 w-[150px] overflow-hidden select-none">
-                            <span class="block bg-slate-950 w-[2px] h-full"></span>
-                            <span class="block bg-slate-950 w-[4px] h-full"></span>
-                            <span class="block bg-white w-[2px] h-full"></span>
-                            <span class="block bg-slate-950 w-[1px] h-full"></span>
-                            <span class="block bg-slate-950 w-[3px] h-full"></span>
-                            <span class="block bg-white w-[3px] h-full"></span>
-                            <span class="block bg-slate-950 w-[5px] h-full"></span>
-                            <span class="block bg-slate-950 w-[1px] h-full"></span>
-                            <span class="block bg-white w-[2px] h-full"></span>
-                            <span class="block bg-slate-950 w-[2px] h-full"></span>
-                            <span class="block bg-white w-[4px] h-full"></span>
-                            <span class="block bg-slate-950 w-[4px] h-full"></span>
-                            <span class="block bg-slate-950 w-[1px] h-full"></span>
-                            <span class="block bg-white w-[2px] h-full"></span>
-                            <span class="block bg-slate-950 w-[3px] h-full"></span>
-                            <span class="block bg-slate-950 w-[2px] h-full"></span>
-                            <span class="block bg-white w-[1px] h-full"></span>
-                            <span class="block bg-slate-950 w-[4px] h-full"></span>
-                            <span class="block bg-slate-950 w-[2px] h-full"></span>
-                            <span class="block bg-white w-[2px] h-full"></span>
-                            <span class="block bg-slate-950 w-[1px] h-full"></span>
-                            <span class="block bg-slate-950 w-[3px] h-full"></span>
-                        </div>
-                        <span class="text-[9px] font-mono tracking-[0.25em] text-slate-500 font-bold">{{ $kode }}</span>
-                    </div>
-                    <span class="text-[9px] text-slate-400 font-medium mt-1 uppercase tracking-wider text-center">Tunjukkan QR/Barcode Ke Sopir</span>
-                </div>
-
             </div>
 
         </div>

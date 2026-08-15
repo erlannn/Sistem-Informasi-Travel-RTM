@@ -49,4 +49,65 @@ class Jadwal extends Model
     {
         return $this->hasMany(Pemesanan::class, 'id_jadwal', 'id_jadwal');
     }
+
+    /**
+     * Check if the schedule departure date and time have already passed.
+     */
+    public function isPast(): bool
+    {
+        if (!$this->tanggal || !$this->jam) {
+            return false;
+        }
+
+        $departureDateTime = \Carbon\Carbon::parse($this->tanggal . ' ' . $this->jam);
+        return $departureDateTime->isPast();
+    }
+
+    /**
+     * Scope query to only include schedules with an active armada.
+     */
+    public function scopeArmadaAktif($query)
+    {
+        return $query->whereHas('armada', function ($q) {
+            $q->where('status', 'Aktif');
+        });
+    }
+
+    /**
+     * Scope query to only include future / upcoming schedules.
+     */
+    public function scopeMendatang($query)
+    {
+        $today = now()->toDateString();
+        $currentTime = now()->format('H:i:s');
+
+        return $query->where(function ($q) use ($today, $currentTime) {
+            $q->where('tanggal', '>', $today)
+              ->orWhere(function ($q2) use ($today, $currentTime) {
+                  $q2->whereDate('tanggal', $today)
+                     ->where('jam', '>', $currentTime);
+              });
+        });
+    }
+
+    /**
+     * Scope query to validate schedules for a given date input.
+     */
+    public function scopeValidForDate($query, ?string $tanggal)
+    {
+        if (!$tanggal) {
+            return $this->scopeMendatang($query);
+        }
+
+        $today = now()->toDateString();
+        $currentTime = now()->format('H:i:s');
+
+        if ($tanggal === $today) {
+            return $query->whereDate('tanggal', $tanggal)->where('jam', '>', $currentTime);
+        } elseif ($tanggal < $today) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->whereDate('tanggal', $tanggal);
+    }
 }

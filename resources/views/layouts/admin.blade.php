@@ -27,119 +27,153 @@
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex antialiased" x-data="{ mobileSidebarOpen: false, desktopSidebarOpen: localStorage.getItem('admin_sidebar_open') !== 'false', toggleDesktopSidebar() { this.desktopSidebarOpen = !this.desktopSidebarOpen; localStorage.setItem('admin_sidebar_open', this.desktopSidebarOpen); } }">
 
   <!-- Sidebar Component (Deep Slate #0F172A with Brand Accent) -->
-  <aside x-show="desktopSidebarOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="-translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="-translate-x-full opacity-0" class="w-64 bg-slate-900 text-slate-300 hidden md:flex flex-col border-r border-slate-800 shrink-0 min-h-screen sticky top-0 h-screen z-40">
-    <!-- Brand Info Header with Logo PNG & Toggle Button -->
-    <div class="h-20 border-b border-slate-800 flex items-center justify-between px-5">
-      <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center p-2 shadow-md shrink-0">
+  <aside x-show="desktopSidebarOpen" 
+         x-transition:enter="transition ease-out duration-200" 
+         x-transition:enter-start="-translate-x-full opacity-0" 
+         x-transition:enter-end="translate-x-0 opacity-100" 
+         x-transition:leave="transition ease-in duration-150" 
+         x-transition:leave-start="translate-x-0 opacity-100" 
+         x-transition:leave-end="-translate-x-full opacity-0" 
+         class="w-64 bg-slate-900 text-slate-300 hidden md:flex flex-col border-r border-slate-800 shrink-0 min-h-screen sticky top-0 h-screen z-40 select-none">
+    
+    <!-- Brand Info Header with Logo PNG -->
+    <div class="h-20 border-b border-slate-800/80 flex items-center justify-between px-5 shrink-0 bg-slate-900/50">
+      <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group focus:outline-none">
+        <div class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center p-1.5 shadow-inner shrink-0 group-hover:border-amber-500/50 transition-colors">
           <img src="{{ asset('images/logo.png') }}" alt="Logo CV. Travel RTM" class="w-full h-auto object-contain select-none pointer-events-none">
         </div>
-        <div>
-          <span class="font-extrabold text-white text-sm tracking-tight block">CV. Travel RTM</span>
-          <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-wider">Admin Dashboard</span>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-white text-sm tracking-tight block group-hover:text-amber-400 transition-colors">CV. Travel RTM</span>
+          <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-widest">Admin Dashboard</span>
         </div>
       </a>
-      {{-- <button @click="toggleDesktopSidebar()" class="hidden md:flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0" title="Tutup Sidebar">
-        <i class="fa-solid fa-chevron-left text-xs"></i>
-      </button> --}}
     </div>
 
     <!-- Sidebar Navigation Menus -->
-    <nav class="flex-grow py-6 px-4 space-y-2 overflow-y-auto">
+    <nav class="flex-grow py-6 px-3 space-y-1.5 overflow-y-auto custom-scrollbar">
+     
+      <!-- Dashboard -->
       <a href="{{ route('admin.dashboard') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.dashboard') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        <i class="fa-solid fa-gauge-high text-sm text-center w-5"></i>
+        class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all duration-200 group relative {{ Request::routeIs('admin.dashboard') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400 shadow-xs' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-gauge-high text-base text-center w-5 transition-transform group-hover:scale-110 {{ Request::routeIs('admin.dashboard') ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200' }}"></i>
         <span>Dashboard</span>
       </a>
 
+      <!-- Jadwal Perjalanan -->
       <a href="{{ route('admin.jadwal.index') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.jadwal.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        <i class="fa-solid fa-calendar-days text-sm text-center w-5"></i>
+        class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all duration-200 group relative {{ Request::routeIs('admin.jadwal.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400 shadow-xs' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-calendar-days text-base text-center w-5 transition-transform group-hover:scale-110 {{ Request::routeIs('admin.jadwal.*') ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200' }}"></i>
         <span>Jadwal Perjalanan</span>
       </a>
 
+      <!-- Kelola Armada -->
       <a href="{{ route('admin.armada.index') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.armada.*') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        <i class="fa-solid fa-van-shuttle text-sm text-center w-5"></i>
+        class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all duration-200 group relative {{ Request::routeIs('admin.armada.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400 shadow-xs' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-van-shuttle text-base text-center w-5 transition-transform group-hover:scale-110 {{ Request::routeIs('admin.armada.*') ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200' }}"></i>
         <span>Kelola Armada</span>
       </a>
 
+      <!-- Kelola Sopir -->
       <a href="{{ route('admin.sopir.index') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.sopir.*') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        <i class="fa-solid fa-id-card text-sm text-center w-5"></i>
+        class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all duration-200 group relative {{ Request::routeIs('admin.sopir.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400 shadow-xs' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-id-card text-base text-center w-5 transition-transform group-hover:scale-110 {{ Request::routeIs('admin.sopir.*') ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200' }}"></i>
         <span>Kelola Sopir</span>
       </a>
 
+      <!-- Data Penumpang -->
       <a href="{{ route('admin.penumpang.index') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.penumpang.*') ? 'bg-brand-500/15 text-brand-500 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        <i class="fa-solid fa-users text-sm text-center w-5"></i>
+        class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all duration-200 group relative {{ Request::routeIs('admin.penumpang.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400 shadow-xs' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-users text-base text-center w-5 transition-transform group-hover:scale-110 {{ Request::routeIs('admin.penumpang.*') ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200' }}"></i>
         <span>Data Penumpang</span>
       </a>
 
+      <!-- Transaksi Pemesanan -->
       <a href="{{ route('admin.pemesanan.index') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.pemesanan.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        <i class="fa-solid fa-ticket text-sm text-center w-5"></i>
+        class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all duration-200 group relative {{ Request::routeIs('admin.pemesanan.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400 shadow-xs' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-ticket text-base text-center w-5 transition-transform group-hover:scale-110 {{ Request::routeIs('admin.pemesanan.*') ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200' }}"></i>
         <span>Transaksi Pemesanan</span>
       </a>
 
+      <!-- Laporan -->
       <a href="{{ route('admin.setoran.index') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all {{ Request::routeIs('admin.setoran.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'hover:bg-slate-800/80 hover:text-white text-slate-400' }}">
-        <i class="fa-solid fa-file-invoice-dollar text-sm text-center w-5"></i>
+        class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all duration-200 group relative {{ Request::routeIs('admin.setoran.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400 shadow-xs' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-file-invoice-dollar text-base text-center w-5 transition-transform group-hover:scale-110 {{ Request::routeIs('admin.setoran.*') ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200' }}"></i>
         <span>Laporan</span>
       </a>
     </nav>
   </aside>
 
   <!-- Mobile Drawer Sidebar Backdrop -->
-  <div x-show="mobileSidebarOpen" @click="mobileSidebarOpen = false" x-transition:enter="transition-opacity ease-linear duration-200"
-    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-    x-transition:leave="transition-opacity ease-linear duration-200" x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0" class="fixed inset-0 bg-slate-950/80 z-40 md:hidden"></div>
+  <div x-show="mobileSidebarOpen" 
+       @click="mobileSidebarOpen = false" 
+       x-transition:enter="transition-opacity ease-linear duration-200"
+       x-transition:enter-start="opacity-0" 
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition-opacity ease-linear duration-200" 
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0" 
+       class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-40 md:hidden"></div>
 
   <!-- Mobile Sidebar Drawer Panel -->
-  <div x-show="mobileSidebarOpen" x-transition:enter="transition ease-in-out duration-300 transform"
-    x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
-    x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0"
-    x-transition:leave-end="-translate-x-full"
-    class="fixed inset-y-0 left-0 w-64 bg-slate-950 text-slate-100 z-50 flex flex-col md:hidden border-r border-slate-800">
-    <div class="h-20 border-b border-slate-800 flex items-center justify-between px-6">
+  <div x-show="mobileSidebarOpen" 
+       x-transition:enter="transition ease-in-out duration-300 transform"
+       x-transition:enter-start="-translate-x-full" 
+       x-transition:enter-end="translate-x-0"
+       x-transition:leave="transition ease-in-out duration-300 transform" 
+       x-transition:leave-start="translate-x-0"
+       x-transition:leave-end="-translate-x-full"
+       class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-slate-100 z-50 flex flex-col md:hidden border-r border-slate-800 shadow-2xl select-none">
+    
+    <div class="h-20 border-b border-slate-800/80 flex items-center justify-between px-5 bg-slate-900/50">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center p-1.5">
+        <div class="w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center p-1.5 shadow-inner">
           <img src="{{ asset('images/logo.png') }}" alt="Logo Portal" class="w-full h-auto object-contain">
         </div>
-        <span class="font-extrabold text-white text-sm">Admin Portal</span>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-white text-sm">Admin Portal</span>
+          <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-widest">CV. Travel RTM</span>
+        </div>
       </div>
-      <button @click="mobileSidebarOpen = false" class="text-slate-300 hover:text-white p-2">
-        <i class="fa-solid fa-xmark text-xl"></i>
+      <button @click="mobileSidebarOpen = false" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors">
+        <i class="fa-solid fa-xmark text-lg"></i>
       </button>
     </div>
-    <nav class="flex-grow py-6 px-4 space-y-1.5 overflow-y-auto">
-      <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.dashboard') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        <i class="fa-solid fa-gauge-high text-sm text-center w-5"></i>
+
+    <nav class="flex-grow py-6 px-3 space-y-1.5 overflow-y-auto">
+      <div class="px-3 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Main Navigation</div>
+
+      <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all {{ Request::routeIs('admin.dashboard') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-gauge-high text-base text-center w-5 {{ Request::routeIs('admin.dashboard') ? 'text-amber-400' : 'text-slate-400' }}"></i>
         <span>Dashboard</span>
       </a>
-      <a href="{{ route('admin.jadwal.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.jadwal.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        <i class="fa-solid fa-calendar-days text-sm text-center w-5"></i>
+
+      <a href="{{ route('admin.jadwal.index') }}" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all {{ Request::routeIs('admin.jadwal.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-calendar-days text-base text-center w-5 {{ Request::routeIs('admin.jadwal.*') ? 'text-amber-400' : 'text-slate-400' }}"></i>
         <span>Jadwal Perjalanan</span>
       </a>
-      <a href="{{ route('admin.armada.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.armada.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        <i class="fa-solid fa-van-shuttle text-sm text-center w-5"></i>
+
+      <a href="{{ route('admin.armada.index') }}" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all {{ Request::routeIs('admin.armada.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-van-shuttle text-base text-center w-5 {{ Request::routeIs('admin.armada.*') ? 'text-amber-400' : 'text-slate-400' }}"></i>
         <span>Kelola Armada</span>
       </a>
-      <a href="{{ route('admin.sopir.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.sopir.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        <i class="fa-solid fa-id-card text-sm text-center w-5"></i>
+
+      <a href="{{ route('admin.sopir.index') }}" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all {{ Request::routeIs('admin.sopir.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-id-card text-base text-center w-5 {{ Request::routeIs('admin.sopir.*') ? 'text-amber-400' : 'text-slate-400' }}"></i>
         <span>Kelola Sopir</span>
       </a>
-      <a href="{{ route('admin.penumpang.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.penumpang.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        <i class="fa-solid fa-users text-sm text-center w-5"></i>
+
+      <a href="{{ route('admin.penumpang.index') }}" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all {{ Request::routeIs('admin.penumpang.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-users text-base text-center w-5 {{ Request::routeIs('admin.penumpang.*') ? 'text-amber-400' : 'text-slate-400' }}"></i>
         <span>Data Penumpang</span>
       </a>
-      <a href="{{ route('admin.pemesanan.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.pemesanan.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        <i class="fa-solid fa-ticket text-sm text-center w-5"></i>
+
+      <a href="{{ route('admin.pemesanan.index') }}" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all {{ Request::routeIs('admin.pemesanan.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-ticket text-base text-center w-5 {{ Request::routeIs('admin.pemesanan.*') ? 'text-amber-400' : 'text-slate-400' }}"></i>
         <span>Transaksi Pemesanan</span>
       </a>
-      <a href="{{ route('admin.setoran.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ Request::routeIs('admin.setoran.*') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
-        <i class="fa-solid fa-file-invoice-dollar text-sm text-center w-5"></i>
+
+      <a href="{{ route('admin.setoran.index') }}" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all {{ Request::routeIs('admin.setoran.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
+        <i class="fa-solid fa-file-invoice-dollar text-base text-center w-5 {{ Request::routeIs('admin.setoran.*') ? 'text-amber-400' : 'text-slate-400' }}"></i>
         <span>Laporan</span>
       </a>
     </nav>

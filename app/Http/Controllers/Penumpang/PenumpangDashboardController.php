@@ -74,7 +74,7 @@ class PenumpangDashboardController extends Controller
         $tujuan = $request->input('tujuan');
         $tanggal = $request->input('tanggal');
 
-        $query = Jadwal::with(['armada', 'sopir', 'kursis']);
+        $query = Jadwal::with(['armada', 'sopir', 'kursis'])->armadaAktif();
 
         if ($asal) {
             $query->where('asal', 'LIKE', "%{$asal}%");
@@ -82,11 +82,8 @@ class PenumpangDashboardController extends Controller
         if ($tujuan) {
             $query->where('tujuan', 'LIKE', "%{$tujuan}%");
         }
-        if ($tanggal) {
-            $query->whereDate('tanggal', $tanggal);
-        } else {
-            $query->where('tanggal', '>=', now()->toDateString());
-        }
+
+        $query->validForDate($tanggal);
 
         $jadwals = $query->orderBy('tanggal', 'asc')->orderBy('jam', 'asc')->paginate(10)->withQueryString();
 
@@ -108,13 +105,18 @@ class PenumpangDashboardController extends Controller
         $id_jadwal = $id_jadwal ?? $request->input('id_jadwal');
 
         if (!$id_jadwal) {
-            $jadwal = Jadwal::with(['armada', 'sopir', 'kursis'])->where('tanggal', '>=', now()->toDateString())->first();
+            $jadwal = Jadwal::with(['armada', 'sopir', 'kursis'])
+                ->armadaAktif()
+                ->mendatang()
+                ->orderBy('tanggal', 'asc')
+                ->orderBy('jam', 'asc')
+                ->first();
         } else {
-            $jadwal = Jadwal::with(['armada', 'sopir', 'kursis'])->findOrFail($id_jadwal);
+            $jadwal = Jadwal::with(['armada', 'sopir', 'kursis'])->find($id_jadwal);
         }
 
-        if (!$jadwal) {
-            return redirect()->route('penumpang.jadwal')->with('error', 'Jadwal tidak ditemukan.');
+        if (!$jadwal || $jadwal->isPast() || ($jadwal->armada && $jadwal->armada->status !== 'Aktif')) {
+            return redirect()->route('penumpang.jadwal')->with('error', 'Jadwal ini tidak dapat dipesan karena armada kendaraan sedang non-aktif / dalam perbaikan.');
         }
 
         $kursis = Kursi::query()->where('id_jadwal', $jadwal->id_jadwal)->get();
@@ -130,7 +132,11 @@ class PenumpangDashboardController extends Controller
         $id_jadwal = $request->input('id_jadwal');
         $id_kursi_raw = $request->input('id_kursi');
 
-        $jadwal = Jadwal::with(['armada', 'sopir'])->findOrFail($id_jadwal);
+        $jadwal = Jadwal::with(['armada', 'sopir'])->find($id_jadwal);
+
+        if (!$jadwal || $jadwal->isPast() || ($jadwal->armada && $jadwal->armada->status !== 'Aktif')) {
+            return redirect()->route('penumpang.jadwal')->with('error', 'Jadwal ini tidak dapat dipesan karena armada kendaraan sedang non-aktif / dalam perbaikan.');
+        }
 
         if (is_array($id_kursi_raw)) {
             $idKursiArray = $id_kursi_raw;
@@ -180,10 +186,13 @@ class PenumpangDashboardController extends Controller
             'id_kursi_list.*' => 'exists:kursis,id_kursi',
         ]);
 
+        $jadwal = Jadwal::with(['armada'])->find($request->id_jadwal);
+        if (!$jadwal || $jadwal->isPast() || ($jadwal->armada && $jadwal->armada->status !== 'Aktif')) {
+            return redirect()->route('penumpang.jadwal')->with('error', 'Pemesanan tiket gagal. Armada kendaraan pada jadwal ini sedang non-aktif / dalam perbaikan.');
+        }
+
         $user = Auth::user();
         $penumpang = Penumpang::query()->where('email', $user->email)->firstOrFail();
-
-        $jadwal = Jadwal::findOrFail($request->id_jadwal);
 
         $createdPemesanans = [];
         foreach ($idKursiArray as $kId) {

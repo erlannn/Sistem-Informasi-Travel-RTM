@@ -21,7 +21,7 @@ class AdminArmadaController extends Controller
             });
         }
 
-        $armadas = $query->get();
+        $armadas = $query->paginate(10)->withQueryString();
 
         return view('admin.armada.index', compact('armadas'));
     }

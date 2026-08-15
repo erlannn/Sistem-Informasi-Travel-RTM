@@ -141,3 +141,50 @@ test('driver can complete trip and check updated status and salary', function ()
     // Cash collected directly: 1 Passenger * Rp 75.000 ticket price = Rp 75.000
     $gajiResponse->assertSee('Rp 75.000');
 });
+
+test('driver dashboard shows today departure schedules that have passengers', function () {
+    // Create second schedule today with passenger
+    $jadwal2 = Jadwal::create([
+        'id_armada' => $this->armada->id_armada,
+        'id_sopir' => $this->sopir->id_sopir,
+        'asal' => 'Padang',
+        'tujuan' => 'Bukittinggi',
+        'tanggal' => now()->toDateString(),
+        'jam' => '14:00:00',
+        'harga' => 80000.00,
+        'bagi_hasil_sopir' => 30000.00,
+    ]);
+
+    $kursi2 = Kursi::create([
+        'id_jadwal' => $jadwal2->id_jadwal,
+        'nomor_kursi' => '2',
+        'status' => 'Terisi',
+    ]);
+
+    Pemesanan::create([
+        'id_penumpang' => $this->penumpang->id_penumpang,
+        'id_jadwal' => $jadwal2->id_jadwal,
+        'id_kursi' => $kursi2->id_kursi,
+        'tanggal_pesan' => now()->toDateString(),
+        'jumlah_penumpang' => 1,
+        'total_bayar' => 80000.00,
+        'metode_pembayaran' => 'Cash',
+        'status_pembayaran' => 'Belum Bayar',
+        'status_perjalanan' => 'Pending',
+    ]);
+
+    $response = $this->actingAs($this->driverUser)->get(route('sopir.dashboard'));
+    $response->assertStatus(200);
+    $response->assertSee('Sijunjung');
+    $response->assertSee('Padang');
+    $response->assertSee('Bukittinggi');
+});
+
+test('driver dashboard shows empty state text when no departure schedule today has passengers', function () {
+    // Delete booking from initial setup
+    $this->pemesanan->delete();
+
+    $response = $this->actingAs($this->driverUser)->get(route('sopir.dashboard'));
+    $response->assertStatus(200);
+    $response->assertSee('Belum ada penumpang yang memesan tiket');
+});

@@ -13,72 +13,64 @@ class ArmadaSeeder extends Seeder
     public function run(): void
     {
         Armada::firstOrCreate(
-            ['merk' => 'Toyota Avanza'],
+            ['merk' => 'Toyota Avanza', 'warna' => 'Pink'],
             [
-                'warna' => 'Pink',
                 'kursi' => 7,
                 'status' => 'Aktif',
             ]
         );
 
         Armada::firstOrCreate(
-            ['merk' => 'Daihatsu Xenia'],
+            ['merk' => 'Daihatsu Xenia', 'warna' => 'Khaki'],
             [
-                'warna' => 'Khaki',
                 'kursi' => 7,
                 'status' => 'Aktif',
             ]
         );
 
         Armada::firstOrCreate(
-            ['merk' => 'Toyota Calya'],
+            ['merk' => 'Toyota Calya', 'warna' => 'Putih'],
             [
-                'warna' => 'Putih',
                 'kursi' => 7,
                 'status' => 'Aktif',
             ]
         );
 
         Armada::firstOrCreate(
-            ['merk' => 'Toyota Calya'],
+            ['merk' => 'Toyota Calya', 'warna' => 'Hitam'],
             [
-                'warna' => 'Hitam',
                 'kursi' => 7,
                 'status' => 'Aktif',
             ]
         );
 
         Armada::firstOrCreate(
-            ['merk' => 'Toyota Calya'],
+            ['merk' => 'Toyota Calya', 'warna' => 'Grey'],
             [
-                'warna' => 'Grey',
                 'kursi' => 7,
                 'status' => 'Aktif',
             ]
         );
 
         Armada::firstOrCreate(
-            ['merk' => 'Toyota Avanza'],
+            ['merk' => 'Toyota Avanza', 'warna' => 'Hitam'],
             [
-                'warna' => 'Hitam',
                 'kursi' => 7,
                 'status' => 'Aktif',
             ]
         );
 
         Armada::firstOrCreate(
-            ['merk' => 'Toyota Calya'],
+            ['merk' => 'Toyota Calya', 'warna' => 'Merah Maroon'],
             [
-                'warna' => 'Merah Maroon',
                 'kursi' => 7,
                 'status' => 'Aktif',
             ]
         );
 
         Armada::firstOrCreate(
-            ['merk' => 'Kijang Inova Reborn'],
+            ['merk' => 'Kijang Inova Reborn', 'warna' => 'Putih'],
             [
-                'warna' => 'Putih',
                 'kursi' => 7,
                 'status' => 'Aktif',
             ]

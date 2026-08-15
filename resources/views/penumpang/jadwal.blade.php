@@ -53,7 +53,7 @@
                 <div class="flex flex-col items-center justify-center sm:pl-4 pr-2 pt-2 sm:pt-0">
                     <label for="summary-tanggal" class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1.5 text-center">Tanggal Perjalanan</label>
                     <div class="relative w-full">
-                        <input type="date" id="summary-tanggal" name="tanggal" value="{{ $tanggal }}" class="w-full bg-slate-800/80 text-sm font-semibold text-white outline-none cursor-pointer border border-slate-700 hover:border-slate-500 rounded-xl transition-colors py-2 px-4 text-center focus:ring-2 focus:ring-gold-500/40" style="color-scheme: dark;">
+                        <input type="date" id="summary-tanggal" name="tanggal" value="{{ $tanggal }}" min="{{ date('Y-m-d') }}" class="w-full bg-slate-800/80 text-sm font-semibold text-white outline-none cursor-pointer border border-slate-700 hover:border-slate-500 rounded-xl transition-colors py-2 px-4 text-center focus:ring-2 focus:ring-gold-500/40" style="color-scheme: dark;">
                     </div>
                 </div>
                 <!-- Status Pencarian -->
@@ -98,14 +98,7 @@
                                 <h3 class="text-base md:text-lg font-bold text-slate-900">Armada : {{ $j->armada->merk ?? 'Toyota Avanza' }}</h3>
                                 
                                 @if($loop->first && $jadwals->currentPage() === 1)
-                                    <!-- Content-Based Filtering Badge -->
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-extrabold text-gold-700 bg-gold-50 border border-gold-200/50 rounded-full select-none cursor-help relative group/tooltip shadow-[0_1px_4px_rgba(245,158,11,0.08)]">
-                                        <span>★</span> Rekomendasi CBF
-                                        
-                                        <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:block w-48 p-2 text-[10px] font-medium text-white bg-slate-950 rounded-lg text-center leading-normal shadow-md z-30 pointer-events-none">
-                                            Cocok dengan rute {{ $j->asal }} &rarr; {{ $j->tujuan }} dan jam keberangkatan pilihan.
-                                        </span>
-                                    </span>
+                                    
                                 @endif
                             </div>
 

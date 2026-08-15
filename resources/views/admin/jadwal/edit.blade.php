@@ -185,9 +185,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const currentJam = "{{ old('jam', $jadwal->jam) }}";
 
-    function updateForm() {
+    function updateForm(e) {
         const asal = asalSelect.value;
-        const tujuan = tujuanSelect.value;
+        let tujuan = tujuanSelect.value;
+
+        if (e && e.target === asalSelect) {
+            if (asal === 'Sijunjung' && tujuan === 'Sijunjung') {
+                tujuanSelect.value = 'Padang';
+                tujuan = 'Padang';
+            } else if (asal !== 'Sijunjung' && tujuan !== 'Sijunjung') {
+                tujuanSelect.value = 'Sijunjung';
+                tujuan = 'Sijunjung';
+            }
+        }
 
         // Update schedule hours based on origin
         const times = (asal === 'Sijunjung') ? timesFromSijunjung : timesToSijunjung;

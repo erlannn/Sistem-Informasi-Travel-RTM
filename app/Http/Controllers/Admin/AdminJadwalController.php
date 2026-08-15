@@ -44,7 +44,7 @@ class AdminJadwalController extends Controller
             });
         }
 
-        $jadwals = $query->get();
+        $jadwals = $query->paginate(10)->withQueryString();
         $armadas = Armada::all();
         $sopirs = Sopir::all();
 
@@ -104,7 +104,9 @@ class AdminJadwalController extends Controller
     public function edit(int|string $id)
     {
         $jadwal = Jadwal::findOrFail($id);
-        $armadas = Armada::all();
+        $armadas = Armada::query()->where('status', 'Aktif')
+            ->orWhere('id_armada', $jadwal->id_armada)
+            ->get();
         $sopirs = Sopir::query()->where('status', 'Aktif')
             ->orWhere('id_sopir', $jadwal->id_sopir)
             ->get();

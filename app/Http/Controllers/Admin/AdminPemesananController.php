@@ -18,7 +18,7 @@ class AdminPemesananController extends Controller
             $query->where('status_perjalanan', $status);
         }
 
-        $pemesanans = $query->get();
+        $pemesanans = $query->paginate(10)->withQueryString();
 
         return view('admin.pemesanan.index', compact('pemesanans'));
     }

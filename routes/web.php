@@ -30,7 +30,7 @@ Route::get('/', function (Illuminate\Http\Request $request) {
     $tujuan = $request->input('tujuan');
     $tanggal = $request->input('tanggal');
 
-    $query = App\Models\Jadwal::with(['armada', 'sopir']);
+    $query = App\Models\Jadwal::with(['armada', 'sopir'])->armadaAktif();
 
     if ($asal) {
         $query->where('asal', 'LIKE', "%{$asal}%");
@@ -38,11 +38,7 @@ Route::get('/', function (Illuminate\Http\Request $request) {
     if ($tujuan) {
         $query->where('tujuan', 'LIKE', "%{$tujuan}%");
     }
-    if ($tanggal) {
-        $query->whereDate('tanggal', $tanggal);
-    } else {
-        $query->where('tanggal', '>=', now()->toDateString());
-    }
+    $query->validForDate($tanggal);
 
     $jadwals = $query->orderBy('tanggal', 'asc')->orderBy('jam', 'asc')->take(6)->get();
 
@@ -86,6 +82,7 @@ Route::middleware('auth')->group(function () {
         
         // Rekap Setoran Kas
         Route::get('/setoran', [AdminSetoranController::class, 'index'])->name('setoran.index');
+        Route::get('/setoran/pdf', [AdminSetoranController::class, 'cetakPdf'])->name('setoran.pdf');
         Route::post('/setoran/{id_jadwal}/verifikasi', [AdminSetoranController::class, 'verifikasiSetoran'])->name('setoran.verifikasi');
     });
 

@@ -139,8 +139,8 @@
                             <i class="fa-solid fa-van-shuttle"></i>
                         </div>
                         <div>
-                            <span class="text-xs sm:text-sm font-black text-black uppercase tracking-wide">Cari & Pesan Tiket Travel Antarkota</span>
-                            <span class="hidden sm:inline-block text-xs text-black ml-2 font-normal">• Rute Resmi & Jadwal Real-time</span>
+                            <span class="text-xs sm:text-sm font-black text-black uppercase tracking-wide">Cari & Pesan Tiket Travel</span>
+                         
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-amber-900 bg-amber-100/90 border border-amber-200 px-3.5 py-1 rounded-full uppercase tracking-wider shadow-2xs">
@@ -254,49 +254,6 @@
                     </form>
                 </div>
 
-            </div>
-
-            <!-- Traveloka-Style 4 Feature Badges Under Search Box -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto mt-8">
-                <div class="bg-slate-900/70 backdrop-blur-xl p-4 rounded-2xl border border-white/15 flex items-center gap-3.5 shadow-xl hover:border-amber-400/40 transition">
-                    <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/30 text-amber-400 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-shield-halved text-lg"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-xs sm:text-[13px] font-black text-white uppercase tracking-tight">Jaminan Tiket Resmi</h4>
-                        <p class="text-[11px] sm:text-xs text-slate-300 font-normal">E-Tiket resmi instan & valid</p>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900/70 backdrop-blur-xl p-4 rounded-2xl border border-white/15 flex items-center gap-3.5 shadow-xl hover:border-amber-400/40 transition">
-                    <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/30 text-amber-400 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-couch text-lg"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-xs sm:text-[13px] font-black text-white uppercase tracking-tight">Pilih Kursi Sendiri</h4>
-                        <p class="text-[11px] sm:text-xs text-slate-300 font-normal">Bebas pilih nomor kursi kosong</p>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900/70 backdrop-blur-xl p-4 rounded-2xl border border-white/15 flex items-center gap-3.5 shadow-xl hover:border-amber-400/40 transition">
-                    <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/30 text-amber-400 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-clock-rotate-left text-lg"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-xs sm:text-[13px] font-black text-white uppercase tracking-tight">Pasti Berangkat</h4>
-                        <p class="text-[11px] sm:text-xs text-slate-300 font-normal">Jadwal tepat & armada prima</p>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900/70 backdrop-blur-xl p-4 rounded-2xl border border-white/15 flex items-center gap-3.5 shadow-xl hover:border-amber-400/40 transition">
-                    <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/30 text-amber-400 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-headset text-lg"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-xs sm:text-[13px] font-black text-white uppercase tracking-tight">Bantuan CS</h4>
-                        <p class="text-[11px] sm:text-xs text-slate-300 font-normal">Respon cepat via WhatsApp</p>
-                    </div>
-                </div>
             </div>
 
         </div>
@@ -486,7 +443,7 @@
                 </span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-black tracking-tight uppercase">Keunggulan Layanan Travel RTM</h2>
                 <p class="mt-3 text-sm text-black leading-relaxed font-normal">
-                    Kenyamanan dan kepuasan perjalanan Anda adalah prioritas utama kami. Kami menyediakan fasilitas premium terbaik untuk menjamin perjalanan yang berkesan.
+                    Kenyamanan dan kepuasan perjalanan Anda adalah prioritas utama kami. Kami menyediakan fasilitas terbaik untuk menjamin perjalanan yang berkesan.
                 </p>
                 <div class="w-12 h-1 bg-brand-500 rounded-full mx-auto mt-4"></div>
             </div>
@@ -499,7 +456,7 @@
                     </div>
                     <h3 class="text-sm font-extrabold text-black uppercase tracking-wider">Kenyamanan Eksekutif</h3>
                     <p class="mt-3 text-xs text-black leading-relaxed font-normal">
-                        Dilengkapi dengan kursi ergonomis premium yang dapat direbahkan (reclining seat), AC dingin yang merata, serta ruang kaki yang luas di setiap baris.
+                        Dilengkapi dengan kursi ergonomis, AC dingin yang merata, serta ruang kaki yang luas di setiap baris.
                     </p>
                 </div>
 
@@ -510,7 +467,7 @@
                     </div>
                     <h3 class="text-sm font-extrabold text-black uppercase tracking-wider">Keamanan Kelas Utama</h3>
                     <p class="mt-3 text-xs text-black leading-relaxed font-normal">
-                        Seluruh armada dipelihara berkala secara ketat, dilengkapi asuransi keselamatan, dan dikemudikan oleh sopir profesional berlisensi resmi.
+                        Seluruh armada dipelihara berkala,  dan dikemudikan oleh sopir profesional.
                     </p>
                 </div>
 
@@ -521,7 +478,7 @@
                     </div>
                     <h3 class="text-sm font-extrabold text-black uppercase tracking-wider">Garansi Tepat Waktu</h3>
                     <p class="mt-3 text-xs text-black leading-relaxed font-normal">
-                        Komitmen keberangkatan sesuai dengan jadwal waktu tiket Anda. Kami menghargai waktu Anda tanpa kompromi keterlambatan yang disengaja.
+                        Komitmen keberangkatan sesuai dengan jadwal. 
                     </p>
                 </div>
 
@@ -597,7 +554,7 @@
                     <!-- Card Footer Features -->
                     <div class="p-5 sm:p-6 pt-0">
                         <div class="border-t border-slate-100 pt-3.5 grid grid-cols-2 gap-2 text-xs text-black font-semibold">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chair text-amber-500"></i> 6 Kursi</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chair text-amber-500"></i> 7 Kursi</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-snowflake text-amber-500"></i> Double AC</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-plug text-amber-500"></i> Fast Charge</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-suitcase text-amber-500"></i> Bagasi Lega</span>
@@ -648,7 +605,7 @@
                     <!-- Card Footer Features -->
                     <div class="p-5 sm:p-6 pt-0">
                         <div class="border-t border-slate-100 pt-3.5 grid grid-cols-2 gap-2 text-xs text-black font-semibold">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chair text-amber-500"></i> 6 Kursi</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chair text-amber-500"></i> 7 Kursi</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-snowflake text-amber-500"></i> Full AC</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-plug text-amber-500"></i> USB Port</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-music text-amber-500"></i> Audio</span>
@@ -696,7 +653,7 @@
                     <!-- Card Footer Features -->
                     <div class="p-5 sm:p-6 pt-0">
                         <div class="border-t border-slate-100 pt-3.5 grid grid-cols-2 gap-2 text-xs text-black font-semibold">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chair text-amber-500"></i> 6 Kursi</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chair text-amber-500"></i> 7 Kursi</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-snowflake text-amber-500"></i> Full AC</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-plug text-amber-500"></i> Charger HP</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield text-amber-500"></i> Aman & Prima</span>
@@ -753,7 +710,7 @@
                     <!-- Card Footer Features -->
                     <div class="p-5 sm:p-6 pt-0">
                         <div class="border-t border-slate-100 pt-3.5 grid grid-cols-2 gap-2 text-xs text-black font-semibold">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chair text-amber-500"></i> 6 Kursi</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chair text-amber-500"></i> 7 Kursi</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-snowflake text-amber-500"></i> Full AC</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-bolt text-amber-500"></i> USB Charger</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-location-dot text-amber-500"></i> Door-to-Door</span>
@@ -798,7 +755,7 @@
                         <i id="accordion-icon-2" class="fa-solid fa-chevron-down text-black text-xs transition-transform duration-300"></i>
                     </button>
                     <div id="accordion-content-2" class="hidden px-6 sm:px-7 pb-6 text-xs sm:text-sm text-black leading-relaxed font-normal border-t border-slate-200 pt-4">
-                        Ya, seluruh 8 unit armada kami (Kijang Inova Reborn, Toyota Avanza, Daihatsu Xenia, dan Toyota Calya) selalu terjaga kebersihan dan performanya secara rutin, serta dilengkapi fasilitas Full AC sejuk di seluruh kabin, port USB charger untuk pengisian daya smartphone di setiap baris, serta kursi nyaman.
+                        Ya, seluruh 8 unit armada kami (Kijang Inova Reborn, Toyota Avanza, Daihatsu Xenia, dan Toyota Calya) selalu terjaga kebersihan dan performanya secara rutin, serta dilengkapi fasilitas Full AC sejuk di seluruh kabin, serta kursi nyaman.
                     </div>
                 </div>
 
@@ -820,7 +777,7 @@
                         <i id="accordion-icon-4" class="fa-solid fa-chevron-down text-black text-xs transition-transform duration-300"></i>
                     </button>
                     <div id="accordion-content-4" class="hidden px-6 sm:px-7 pb-6 text-xs sm:text-sm text-black leading-relaxed font-normal border-t border-slate-200 pt-4">
-                        Perubahan jadwal (reschedule) atau pembatalan tiket dapat diproses secara manual dengan menghubungi customer service WhatsApp kami minimal 6 jam sebelum jam keberangkatan awal yang tertera pada tiket Anda.
+                        Perubahan jadwal (reschedule) atau pembatalan tiket dapat diproses secara langsung pada status pemesanan tiket atau secara manual dengan menghubungi customer service WhatsApp kami minimal 6 jam sebelum jam keberangkatan awal yang tertera pada tiket Anda.
                     </div>
                 </div>
             </div>
@@ -892,12 +849,9 @@
                         </div>
                     </a>
                     <p class="text-xs text-slate-400 leading-relaxed font-normal">
-                        Layanan transportasi eksekutif antarkota di Sumatera Barat dengan komitmen ketepatan waktu, kenyamanan kabin ber-AC, dan kemudahan pemesanan e-tiket online terpercaya.
+                        Layanan transportasi  antarkota di Sumatera Barat dengan komitmen ketepatan waktu, kenyamanan kabin ber-AC, dan kemudahan pemesanan e-tiket online terpercaya.
                     </p>
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                        Sistem Pemesanan Online Aktif
-                    </div>
+                 
                 </div>
 
                 <!-- Col 2: Quick Navigation with Click Feedback -->
@@ -969,9 +923,9 @@
                         <a href="{{ route('register') }}" class="block w-full text-center py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 active:bg-amber-500 active:scale-95 text-slate-950 font-extrabold transition-all">
                             Daftar Penumpang
                         </a>
-                        <a href="https://wa.me/628123456789" target="_blank" class="block w-full text-center py-2 px-3 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/50 active:bg-emerald-500/80 active:text-white active:scale-95 text-emerald-300 font-bold transition-all border border-emerald-500/40">
-                            <i class="fa-brands fa-whatsapp mr-1"></i> WhatsApp CS
-                        </a>
+                    <a href="https://wa.me/628123456789" target="_blank" class="block w-full text-center py-2 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1caa52] text-white font-bold transition-all shadow-md active:scale-95">
+    <i class="fa-brands fa-whatsapp mr-1"></i> WhatsApp CS
+</a>
                     </div>
                 </div>
 

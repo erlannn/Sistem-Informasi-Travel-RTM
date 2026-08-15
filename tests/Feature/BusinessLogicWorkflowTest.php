@@ -69,7 +69,7 @@ beforeEach(function () {
         'id_sopir' => $this->sopir->id_sopir,
         'asal' => 'Sijunjung',
         'tujuan' => 'Padang',
-        'tanggal' => now()->toDateString(),
+        'tanggal' => now()->addDays(1)->toDateString(),
         'jam' => '08:00:00',
         'harga' => 100000.00,
     ]);
