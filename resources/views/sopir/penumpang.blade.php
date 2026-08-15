@@ -1,7 +1,7 @@
 @extends('layouts.sopir')
 
-@section('title', 'Manifes Penumpang - CV RTM Travel')
-@section('page_title', 'Manifes Penumpang Rute')
+@section('title', 'Penumpang - CV RTM Travel')
+@section('page_title', 'Penumpang Rute')
 
 @section('content')
 <div class="space-y-5">
@@ -14,7 +14,7 @@
                 </div>
                 <div>
                     <span class="text-[10px] text-slate-400 font-extrabold tracking-wider uppercase block">JADWAL #{{ $jadwal->id_jadwal }} &bull; {{ \Carbon\Carbon::parse($jadwal->tanggal)->translatedFormat('d M Y') }} ({{ \Carbon\Carbon::parse($jadwal->jam)->format('H:i') }} WIB)</span>
-                    <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">Manifes Penumpang</h1>
+                    <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">Penumpang</h1>
                     <p class="text-xs font-bold text-slate-600 mt-0.5 flex items-center gap-1.5">
                         <span>{{ $jadwal->asal }}</span>
                         <i class="fa-solid fa-arrow-right text-[10px] text-amber-500"></i>

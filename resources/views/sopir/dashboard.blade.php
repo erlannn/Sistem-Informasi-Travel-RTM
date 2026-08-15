@@ -155,7 +155,7 @@
                             </a>
                             <a href="{{ route('sopir.jadwal.penumpang', $jadwal->id_jadwal) }}" class="text-slate-800 bg-white hover:bg-slate-100 active:scale-[0.99] font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm transition-all border border-slate-300 flex items-center justify-center gap-2 shrink-0">
                                 <i class="fa-solid fa-users text-slate-500 text-xs"></i>
-                                <span>Manifes Penumpang</span>
+                                <span>Penumpang</span>
                             </a>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 @extends('layouts.sopir')
 
-@section('title', 'Semua Manifes Penumpang - CV RTM Travel')
-@section('page_title', 'Manifes Penumpang Global')
+@section('title', 'Semua Penumpang - CV RTM Travel')
+@section('page_title', 'Penumpang Global')
 
 @section('content')
 <div class="space-y-5">

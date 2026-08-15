@@ -43,8 +43,8 @@ class JadwalSeeder extends Seeder
         $armadaIndex = 0;
         $sopirIndex = 0;
 
-        // Seed schedules for 7 days starting today
-        for ($d = 0; $d < 7; $d++) {
+        // Seed schedules for 10 days starting 3 days ago
+        for ($d = -3; $d < 7; $d++) {
             $tanggal = Carbon::today()->addDays($d)->toDateString();
 
             foreach ($routes as $r) {
