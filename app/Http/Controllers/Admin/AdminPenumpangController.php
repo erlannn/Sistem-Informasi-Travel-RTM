@@ -23,7 +23,7 @@ class AdminPenumpangController extends Controller
             });
         }
 
-        $penumpangs = $query->get();
+        $penumpangs = $query->paginate(10)->withQueryString();
 
         return view('admin.penumpang.index', compact('penumpangs'));
     }

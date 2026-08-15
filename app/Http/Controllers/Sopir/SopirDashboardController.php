@@ -16,7 +16,14 @@ class SopirDashboardController extends Controller
     private function getSopir()
     {
         $user = Auth::user();
-        return Sopir::query()->where('nama', $user->name)->first();
+        if (!$user) {
+            return null;
+        }
+
+        return Sopir::query()
+            ->where('nama', $user->name)
+            ->orWhere('nama', 'LIKE', trim($user->name))
+            ->first();
     }
 
     public function index()
@@ -26,6 +33,8 @@ class SopirDashboardController extends Controller
             return view('sopir.dashboard', [
                 'sopir' => null, 
                 'assignedJadwals' => collect(), 
+                'jadwalHariIni' => collect(),
+                'keberangkatanTerdekat' => collect(),
                 'nextJadwal' => null, 
                 'completedBookingsCount' => 0, 
                 'totalGaji' => 0,
@@ -51,13 +60,19 @@ class SopirDashboardController extends Controller
             ->whereIn('status_perjalanan', ['Pending', 'Naik'])
             ->sum('jumlah_penumpang');
 
-        // Next upcoming schedule
-        $nextJadwal = Jadwal::with(['armada'])
+        // Departure schedules TODAY assigned to driver that have active passengers (non-batal)
+        $today = Carbon::today()->toDateString();
+        $jadwalHariIni = Jadwal::with(['armada', 'pemesanans.penumpang'])
             ->where('id_sopir', '=', $sopir->id_sopir)
-            ->where('tanggal', '>=', now()->toDateString())
-            ->orderBy('tanggal', 'asc')
+            ->whereDate('tanggal', '=', $today)
+            ->whereHas('pemesanans', function ($q) {
+                $q->where('status_perjalanan', '!=', 'Batal');
+            })
             ->orderBy('jam', 'asc')
-            ->first();
+            ->get();
+
+        $keberangkatanTerdekat = $jadwalHariIni;
+        $nextJadwal = $jadwalHariIni->first();
 
         // Calculate completed bookings and total driver earnings for current month
         $currentMonthStart = Carbon::now()->startOfMonth()->toDateString();
@@ -83,6 +98,8 @@ class SopirDashboardController extends Controller
         return view('sopir.dashboard', compact(
             'sopir', 
             'assignedJadwals', 
+            'jadwalHariIni',
+            'keberangkatanTerdekat',
             'nextJadwal', 
             'completedBookingsCount', 
             'totalGaji',
@@ -121,7 +138,8 @@ class SopirDashboardController extends Controller
 
         $jadwals = $query->orderBy('tanggal', 'desc')
             ->orderBy('jam', 'desc')
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('sopir.jadwal', compact('sopir', 'jadwals', 'search', 'searchDate'));
     }
@@ -143,59 +161,105 @@ class SopirDashboardController extends Controller
         return view('sopir.jadwal_detail', compact('sopir', 'jadwal', 'jumlahPenumpang'));
     }
 
-    // Aksi 1: Penumpang naik mobil (Boarding)
+    // Aksi 1: Penumpang naik mobil (Boarding) - Konfirmasi sekaligus untuk multi-kursi
     public function penumpangNaik(int|string $id_pemesanan)
     {
-        $pemesanan = Pemesanan::findOrFail($id_pemesanan);
-        $pemesanan->update([
-            'status_perjalanan' => 'Naik',
-        ]);
+        $pemesanan = Pemesanan::with(['penumpang'])->findOrFail($id_pemesanan);
 
-        return back()->with('success', 'Status penumpang diperbarui: Naik ke armada.');
+        // Ambil seluruh pesanan aktif (Pending) milik penumpang yang sama pada jadwal yang sama
+        $allPemesanan = Pemesanan::where('id_penumpang', $pemesanan->id_penumpang)
+            ->where('id_jadwal', $pemesanan->id_jadwal)
+            ->where('status_perjalanan', 'Pending')
+            ->get();
+
+        if ($allPemesanan->isEmpty()) {
+            $allPemesanan = collect([$pemesanan]);
+        }
+
+        $count = 0;
+        foreach ($allPemesanan as $p) {
+            $p->update([
+                'status_perjalanan' => 'Naik',
+            ]);
+            $count++;
+        }
+
+        $namaPenumpang = $pemesanan->penumpang->nama ?? 'Penumpang';
+        return back()->with('success', "Status $namaPenumpang ($count kursi) diperbarui: Naik ke armada.");
     }
 
-    // Aksi 2: Sampai tujuan dan terima pembayaran cash
+    // Aksi 2: Sampai tujuan dan terima pembayaran cash - Konfirmasi sekaligus untuk multi-kursi
     public function terimaBayarCash(int|string $id_pemesanan)
     {
-        $pemesanan = Pemesanan::findOrFail($id_pemesanan);
-        
-        $pemesanan->update([
-            'status_perjalanan' => 'Selesai',
-            'status_pembayaran' => 'Lunas',
-            'waktu_bayar' => now(),
-        ]);
+        $pemesanan = Pemesanan::with(['penumpang'])->findOrFail($id_pemesanan);
 
-        if ($pemesanan->id_kursi) {
-            /** @var Kursi|null $kursi */
-            $kursi = Kursi::find($pemesanan->id_kursi, ['*']);
-            if ($kursi) {
-                $kursi->status = 'Kosong';
-                $kursi->save();
-            }
+        // Ambil seluruh pesanan aktif (Pending / Naik) milik penumpang yang sama pada jadwal yang sama
+        $allPemesanan = Pemesanan::where('id_penumpang', $pemesanan->id_penumpang)
+            ->where('id_jadwal', $pemesanan->id_jadwal)
+            ->whereIn('status_perjalanan', ['Pending', 'Naik'])
+            ->get();
+
+        if ($allPemesanan->isEmpty()) {
+            $allPemesanan = collect([$pemesanan]);
         }
 
-        return back()->with('success', 'Pembayaran cash diterima dan perjalanan selesai.');
+        $count = 0;
+        foreach ($allPemesanan as $p) {
+            $p->update([
+                'status_perjalanan' => 'Selesai',
+                'status_pembayaran' => 'Lunas',
+                'waktu_bayar' => now(),
+            ]);
+
+            if ($p->id_kursi) {
+                /** @var Kursi|null $kursi */
+                $kursi = Kursi::find($p->id_kursi, ['*']);
+                if ($kursi) {
+                    $kursi->status = 'Kosong';
+                    $kursi->save();
+                }
+            }
+            $count++;
+        }
+
+        $namaPenumpang = $pemesanan->penumpang->nama ?? 'Penumpang';
+        return back()->with('success', "Pembayaran cash diterima dari $namaPenumpang ($count kursi) dan perjalanan selesai.");
     }
 
-    // Aksi 3: Penumpang Batal / No-Show
+    // Aksi 3: Penumpang Batal / No-Show - Konfirmasi sekaligus untuk multi-kursi
     public function batalkanPesanan(int|string $id_pemesanan)
     {
-        $pemesanan = Pemesanan::findOrFail($id_pemesanan);
-        
-        if ($pemesanan->id_kursi) {
-            /** @var Kursi|null $kursi */
-            $kursi = Kursi::find($pemesanan->id_kursi, ['*']);
-            if ($kursi) {
-                $kursi->status = 'Kosong';
-                $kursi->save();
-            }
+        $pemesanan = Pemesanan::with(['penumpang'])->findOrFail($id_pemesanan);
+
+        // Ambil seluruh pesanan aktif (Pending / Naik) milik penumpang yang sama pada jadwal yang sama
+        $allPemesanan = Pemesanan::where('id_penumpang', $pemesanan->id_penumpang)
+            ->where('id_jadwal', $pemesanan->id_jadwal)
+            ->whereIn('status_perjalanan', ['Pending', 'Naik'])
+            ->get();
+
+        if ($allPemesanan->isEmpty()) {
+            $allPemesanan = collect([$pemesanan]);
         }
 
-        $pemesanan->update([
-            'status_perjalanan' => 'Batal',
-        ]);
+        $count = 0;
+        foreach ($allPemesanan as $p) {
+            if ($p->id_kursi) {
+                /** @var Kursi|null $kursi */
+                $kursi = Kursi::find($p->id_kursi, ['*']);
+                if ($kursi) {
+                    $kursi->status = 'Kosong';
+                    $kursi->save();
+                }
+            }
 
-        return back()->with('success', 'Pesanan berhasil dibatalkan dan kursi dilepaskan.');
+            $p->update([
+                'status_perjalanan' => 'Batal',
+            ]);
+            $count++;
+        }
+
+        $namaPenumpang = $pemesanan->penumpang->nama ?? 'Penumpang';
+        return back()->with('success', "Pesanan $namaPenumpang ($count kursi) berhasil dibatalkan dan kursi dilepaskan.");
     }
 
     public function selesaikanPerjalanan(Request $request, int|string $id)
@@ -252,9 +316,14 @@ class SopirDashboardController extends Controller
             ->firstOrFail();
 
         $search = $request->input('search');
+        $status = $request->input('status');
 
         $query = Pemesanan::with(['penumpang', 'kursi'])
             ->where('id_jadwal', '=', $jadwal->id_jadwal);
+
+        if ($status) {
+            $query->where('status_perjalanan', '=', $status);
+        }
 
         if ($search) {
             $query->whereHas('penumpang', function($q) use ($search) {
@@ -263,9 +332,14 @@ class SopirDashboardController extends Controller
             });
         }
 
-        $pemesanans = $query->get();
+        $pemesanans = $query->orderBy('id_pemesanan', 'asc')->paginate(10)->withQueryString();
 
-        return view('sopir.penumpang', compact('sopir', 'jadwal', 'pemesanans', 'search'));
+        // Group by penumpang & jadwal for multi-seat representation
+        $groupedPemesanans = $pemesanans->getCollection()->groupBy(function($item) {
+            return $item->id_penumpang . '_' . $item->id_jadwal;
+        });
+
+        return view('sopir.penumpang', compact('sopir', 'jadwal', 'pemesanans', 'groupedPemesanans', 'search', 'status'));
     }
 
     public function penumpangGlobal(Request $request)
@@ -276,11 +350,46 @@ class SopirDashboardController extends Controller
         }
 
         $search = $request->input('search');
+        $jam = $request->input('jam');
+        $searchDate = $request->input('search_date');
+        $idJadwal = $request->input('id_jadwal');
+        $status = $request->input('status');
 
-        $query = Pemesanan::with(['penumpang', 'kursi', 'jadwal'])
-            ->whereHas('jadwal', function($q) use ($sopir) {
+        // Available dropdown filter data for driver
+        $assignedJadwals = Jadwal::query()->where('id_sopir', '=', $sopir->id_sopir)
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('jam', 'desc')
+            ->get();
+
+        $jamList = Jadwal::query()->where('id_sopir', '=', $sopir->id_sopir)
+            ->whereNotNull('jam')
+            ->distinct()
+            ->pluck('jam')
+            ->map(function($j) {
+                return Carbon::parse($j)->format('H:i');
+            })
+            ->unique()
+            ->sort()
+            ->values()
+            ->toArray();
+
+        $query = Pemesanan::with(['penumpang', 'kursi', 'jadwal.armada'])
+            ->whereHas('jadwal', function($q) use ($sopir, $jam, $searchDate, $idJadwal) {
                 $q->where('id_sopir', '=', $sopir->id_sopir);
+                if ($jam) {
+                    $q->whereTime('jam', '=', $jam);
+                }
+                if ($searchDate) {
+                    $q->whereDate('tanggal', '=', $searchDate);
+                }
+                if ($idJadwal) {
+                    $q->where('id_jadwal', '=', $idJadwal);
+                }
             });
+
+        if ($status) {
+            $query->where('status_perjalanan', '=', $status);
+        }
 
         if ($search) {
             $query->whereHas('penumpang', function($q) use ($search) {
@@ -289,9 +398,25 @@ class SopirDashboardController extends Controller
             });
         }
 
-        $pemesanans = $query->orderBy('tanggal_pesan', 'desc')->get();
+        $pemesanans = $query->orderBy('tanggal_pesan', 'desc')->orderBy('id_pemesanan', 'desc')->paginate(10)->withQueryString();
 
-        return view('sopir.penumpang_global', compact('sopir', 'pemesanans', 'search'));
+        // Group by penumpang & jadwal for multi-seat representation
+        $groupedPemesanans = $pemesanans->getCollection()->groupBy(function($item) {
+            return $item->id_penumpang . '_' . $item->id_jadwal;
+        });
+
+        return view('sopir.penumpang_global', compact(
+            'sopir', 
+            'pemesanans', 
+            'groupedPemesanans', 
+            'search', 
+            'jam', 
+            'searchDate', 
+            'idJadwal', 
+            'status', 
+            'assignedJadwals', 
+            'jamList'
+        ));
     }
 
     public function gaji(Request $request)

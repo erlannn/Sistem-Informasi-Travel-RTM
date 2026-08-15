@@ -35,7 +35,7 @@
                 <!-- Left: Logo & Title (Brand Identity in Dark Circle) -->
                 <div class="flex items-center">
                     <a href="{{ url('/') }}" class="group focus:outline-none flex items-center gap-3">
-                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-950 hover:bg-slate-900 border border-slate-800 shadow-md flex items-center justify-center p-1.5 transition-all duration-200">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 justify-center p-1.5 transition-all duration-200">
                             <!-- Logo PNG Image -->
                             <img src="{{ asset('images/logo.png') }}" alt="Logo RTM Family" class="w-full h-auto object-contain select-none pointer-events-none">
                         </div>
@@ -46,21 +46,21 @@
                     </a>
                 </div>
 
-                <!-- Center: Desktop Navigation Menu (Text Only) -->
-                <nav class="hidden md:flex items-center space-x-1.5">
-                    <a href="{{ route('penumpang.beranda') }}" class="px-4 py-2 text-xs lg:text-sm rounded-xl transition-all {{ request()->routeIs('penumpang.beranda') || request()->routeIs('penumpang.dashboard') ? 'text-amber-950 bg-amber-400/25 border border-amber-400 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50/70 font-extrabold' }}">
+                <!-- Center: Desktop Navigation Menu (Clean Text Only) -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="{{ route('penumpang.beranda') }}" class="text-xs lg:text-sm transition-colors duration-200 {{ request()->routeIs('penumpang.beranda') || request()->routeIs('penumpang.dashboard') ? 'text-amber-500 font-extrabold' : 'text-slate-500 hover:text-amber-500 font-semibold' }}">
                         Beranda
                     </a>
                     
-                    <a href="{{ route('penumpang.jadwal') }}" class="px-4 py-2 text-xs lg:text-sm rounded-xl transition-all {{ request()->routeIs('penumpang.jadwal') || request()->routeIs('penumpang.pilih_kursi') || request()->routeIs('penumpang.konfirmasi') ? 'text-amber-950 bg-amber-400/25 border border-amber-400 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50/70 font-extrabold' }}">
+                    <a href="{{ route('penumpang.jadwal') }}" class="text-xs lg:text-sm transition-colors duration-200 {{ request()->routeIs('penumpang.jadwal') || request()->routeIs('penumpang.pilih_kursi') || request()->routeIs('penumpang.konfirmasi') ? 'text-amber-500 font-extrabold' : 'text-slate-500 hover:text-amber-500 font-semibold' }}">
                         Cari Tiket
                     </a>
 
-                    <a href="{{ route('penumpang.status') }}" class="px-4 py-2 text-xs lg:text-sm rounded-xl transition-all {{ request()->routeIs('penumpang.status') || request()->routeIs('penumpang.status.detail') ? 'text-amber-950 bg-amber-400/25 border border-amber-400 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50/70 font-extrabold' }}">
+                    <a href="{{ route('penumpang.status') }}" class="text-xs lg:text-sm transition-colors duration-200 {{ request()->routeIs('penumpang.status') || request()->routeIs('penumpang.status.detail') ? 'text-amber-500 font-extrabold' : 'text-slate-500 hover:text-amber-500 font-semibold' }}">
                         Status Pemesanan
                     </a>
 
-                    <a href="{{ route('penumpang.profil') }}" class="px-4 py-2 text-xs lg:text-sm rounded-xl transition-all {{ request()->routeIs('penumpang.profil') ? 'text-amber-950 bg-amber-400/25 border border-amber-400 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50/70 font-extrabold' }}">
+                    <a href="{{ route('penumpang.profil') }}" class="text-xs lg:text-sm transition-colors duration-200 {{ request()->routeIs('penumpang.profil') ? 'text-amber-500 font-extrabold' : 'text-slate-500 hover:text-amber-500 font-semibold' }}">
                         Profil Saya
                     </a>
                 </nav>
@@ -117,27 +117,27 @@
             </div>
         </div>
 
-        <!-- Mobile Navigation Menu Dropdown with Glassmorphism backdrop (White Theme) -->
+        <!-- Mobile Navigation Menu Dropdown (Clean Text Style) -->
         <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-lg transition-all duration-300 ease-in-out">
-            <div class="px-3 pt-3 pb-5 space-y-2">
-                <a href="{{ route('penumpang.beranda') }}" class="block px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('penumpang.beranda') || request()->routeIs('penumpang.dashboard') ? 'text-amber-950 bg-amber-400/25 border-l-4 border-amber-500 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50 font-bold' }}">
+            <div class="px-4 pt-3 pb-5 space-y-2">
+                <a href="{{ route('penumpang.beranda') }}" class="block py-2 text-sm transition-colors {{ request()->routeIs('penumpang.beranda') || request()->routeIs('penumpang.dashboard') ? 'text-amber-500 font-extrabold' : 'text-slate-500 hover:text-amber-500 font-semibold' }}">
                     Beranda
                 </a>
                 
-                <a href="{{ route('penumpang.jadwal') }}" class="block px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('penumpang.jadwal') || request()->routeIs('penumpang.pilih_kursi') || request()->routeIs('penumpang.konfirmasi') ? 'text-amber-950 bg-amber-400/25 border-l-4 border-amber-500 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50 font-bold' }}">
+                <a href="{{ route('penumpang.jadwal') }}" class="block py-2 text-sm transition-colors {{ request()->routeIs('penumpang.jadwal') || request()->routeIs('penumpang.pilih_kursi') || request()->routeIs('penumpang.konfirmasi') ? 'text-amber-500 font-extrabold' : 'text-slate-500 hover:text-amber-500 font-semibold' }}">
                     Cari Tiket
                 </a>
                 
-                <a href="{{ route('penumpang.status') }}" class="block px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('penumpang.status') || request()->routeIs('penumpang.status.detail') ? 'text-amber-950 bg-amber-400/25 border-l-4 border-amber-500 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50 font-bold' }}">
+                <a href="{{ route('penumpang.status') }}" class="block py-2 text-sm transition-colors {{ request()->routeIs('penumpang.status') || request()->routeIs('penumpang.status.detail') ? 'text-amber-500 font-extrabold' : 'text-slate-500 hover:text-amber-500 font-semibold' }}">
                     Status Pemesanan
                 </a>
                 
-                <a href="{{ route('penumpang.profil') }}" class="block px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('penumpang.profil') ? 'text-amber-950 bg-amber-400/25 border-l-4 border-amber-500 font-black shadow-xs' : 'text-black hover:text-amber-600 hover:bg-amber-50 font-bold' }}">
+                <a href="{{ route('penumpang.profil') }}" class="block py-2 text-sm transition-colors {{ request()->routeIs('penumpang.profil') ? 'text-amber-500 font-extrabold' : 'text-slate-500 hover:text-amber-500 font-semibold' }}">
                     Profil Saya
                 </a>
                 
                 <!-- Mobile Divider & Session Action -->
-                <div class="pt-4 mt-3 border-t border-slate-200 flex items-center justify-between px-3">
+                <div class="pt-4 mt-3 border-t border-slate-200 flex items-center justify-between">
                     @auth
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 rounded-full bg-slate-950 text-amber-400 border border-amber-400/50 flex items-center justify-center font-black text-xs">
@@ -172,7 +172,7 @@
                 <!-- Branding Info -->
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center space-x-3">
-                        <div class="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-950 shadow-md">
+                        <div class="flex items-center justify-center w-9 h-9 ">
                             <img src="{{ asset('images/logo.png') }}" alt="Logo RTM Family" class="w-7 h-auto object-contain">
                         </div>
                         <span class="text-base font-black tracking-wide text-black uppercase">

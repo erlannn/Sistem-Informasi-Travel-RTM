@@ -39,46 +39,43 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex antialiased" x-data="{ mobileSidebarOpen: false, desktopSidebarOpen: localStorage.getItem('sopir_sidebar_open') !== 'false', toggleDesktopSidebar() { this.desktopSidebarOpen = !this.desktopSidebarOpen; localStorage.setItem('sopir_sidebar_open', this.desktopSidebarOpen); } }">
 
-  <!-- Sidebar Component (Deep Slate #0F172A with Brand Accent) -->
+  <!-- Sidebar Component (Deep Slate #0F172A) -->
   <aside x-show="desktopSidebarOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="-translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="-translate-x-full opacity-0" class="w-64 bg-slate-900 text-slate-300 hidden md:flex flex-col border-r border-slate-800 shrink-0 min-h-screen sticky top-0 h-screen z-40">
-    <!-- Brand Info Header with Logo PNG & Toggle Button -->
-    <div class="h-20 border-b border-slate-800 flex items-center justify-between px-5">
+    
+    <!-- Brand Info Header dengan Logo Bersih (Tanpa BG Box) -->
+    <div class="h-20 border-b border-slate-800 flex items-center px-6">
       <a href="{{ route('sopir.dashboard') }}" class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center p-2 shadow-md shrink-0">
-          <img src="{{ asset('images/logo.png') }}" alt="Logo CV. Travel RTM" class="w-full h-auto object-contain select-none pointer-events-none">
-        </div>
+        <!-- Logo tanpa Background & dengan Ukuran Presisi -->
+        <img src="{{ asset('images/logo.png') }}" alt="Logo CV. Travel RTM" class="w-10 h-10 object-contain shrink-0 select-none pointer-events-none">
         <div>
           <span class="font-extrabold text-white text-sm tracking-tight block">CV. Travel RTM</span>
-          <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-wider">Driver Portal</span>
+          <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-wider block">Driver Portal</span>
         </div>
       </a>
-      <button @click="toggleDesktopSidebar()" class="hidden md:flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0" title="Tutup Sidebar">
-        <i class="fa-solid fa-chevron-left text-xs"></i>
-      </button>
     </div>
 
     <!-- Sidebar Navigation Menus -->
     <nav class="flex-grow py-6 px-4 space-y-1.5 overflow-y-auto">
       <a href="{{ route('sopir.dashboard') }}"
-        class="flex items-center px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.dashboard') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
+        class="flex items-center px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.dashboard') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-extrabold shadow-xs' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
         <i class="fa-solid fa-gauge-high mr-3 text-sm text-center w-5"></i>
         <span>Dashboard</span>
       </a>
 
       <a href="{{ route('sopir.jadwal') }}"
-        class="flex items-center px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.jadwal') || request()->routeIs('sopir.jadwal.detail') || request()->routeIs('sopir.jadwal.penumpang') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
+        class="flex items-center px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.jadwal') || request()->routeIs('sopir.jadwal.detail') || request()->routeIs('sopir.jadwal.penumpang') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-extrabold shadow-xs' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
         <i class="fa-solid fa-calendar-check mr-3 text-sm text-center w-5"></i>
         <span>Jadwal Perjalanan</span>
       </a>
 
       <a href="{{ route('sopir.penumpang') }}"
-        class="flex items-center px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.penumpang') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
+        class="flex items-center px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.penumpang') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-extrabold shadow-xs' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
         <i class="fa-solid fa-users mr-3 text-sm text-center w-5"></i>
         <span>Data Penumpang</span>
       </a>
 
       <a href="{{ route('sopir.gaji') }}"
-        class="flex items-center px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.gaji') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-black shadow-sm' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
+        class="flex items-center px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.gaji') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-extrabold shadow-xs' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
         <i class="fa-solid fa-wallet mr-3 text-sm text-center w-5"></i>
         <span>Gaji & Pendapatan</span>
       </a>
@@ -99,58 +96,60 @@
     class="fixed inset-y-0 left-0 w-64 bg-slate-950 text-slate-100 z-50 flex flex-col md:hidden border-r border-slate-800">
     <div class="h-20 border-b border-slate-800 flex items-center justify-between px-6">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center p-1.5">
-          <img src="{{ asset('images/logo.png') }}" alt="Logo Portal" class="w-full h-auto object-contain">
+        <!-- Logo tanpa BG Box (Mobile) -->
+        <img src="{{ asset('images/logo.png') }}" alt="Logo Portal" class="w-9 h-9 object-contain shrink-0">
+        <div>
+          <span class="font-extrabold text-white text-sm tracking-tight block">CV. Travel RTM</span>
+          <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-wider block">Driver Portal</span>
         </div>
-        <span class="font-extrabold text-white text-sm">Driver Portal</span>
       </div>
-      <button @click="mobileSidebarOpen = false" class="text-slate-300 hover:text-white p-2">
+      <button @click="mobileSidebarOpen = false" class="text-slate-300 hover:text-white p-2 cursor-pointer">
         <i class="fa-solid fa-xmark text-xl"></i>
       </button>
     </div>
     <nav class="flex-grow py-6 px-4 space-y-1.5 overflow-y-auto">
-      <a href="{{ route('sopir.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ request()->routeIs('sopir.dashboard') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+      <a href="{{ route('sopir.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.dashboard') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-extrabold shadow-xs' : 'text-slate-300 font-bold' }}">
         <i class="fa-solid fa-gauge-high text-sm text-center w-5"></i>
         <span>Dashboard</span>
       </a>
-      <a href="{{ route('sopir.jadwal') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ request()->routeIs('sopir.jadwal') || request()->routeIs('sopir.jadwal.detail') || request()->routeIs('sopir.jadwal.penumpang') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+      <a href="{{ route('sopir.jadwal') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.jadwal') || request()->routeIs('sopir.jadwal.detail') || request()->routeIs('sopir.jadwal.penumpang') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-extrabold shadow-xs' : 'text-slate-300 font-bold' }}">
         <i class="fa-solid fa-calendar-check text-sm text-center w-5"></i>
-        <span>Jadwal</span>
+        <span>Jadwal Perjalanan</span>
       </a>
-      <a href="{{ route('sopir.penumpang') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ request()->routeIs('sopir.penumpang') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+      <a href="{{ route('sopir.penumpang') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.penumpang') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-extrabold shadow-xs' : 'text-slate-300 font-bold' }}">
         <i class="fa-solid fa-users text-sm text-center w-5"></i>
         <span>Data Penumpang</span>
       </a>
-      <a href="{{ route('sopir.gaji') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold {{ request()->routeIs('sopir.gaji') ? 'bg-brand-500/15 text-brand-400 border-l-4 border-brand-500 font-bold' : 'text-slate-400' }}">
+      <a href="{{ route('sopir.gaji') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.gaji') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-extrabold shadow-xs' : 'text-slate-300 font-bold' }}">
         <i class="fa-solid fa-wallet text-sm text-center w-5"></i>
-        <span>Gaji</span>
+        <span>Gaji & Pendapatan</span>
       </a>
     </nav>
   </div>
 
   <!-- Main Content & Topbar Container -->
   <div class="flex flex-col flex-grow min-w-0">
-    <header class="h-20 bg-white/95 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-6 md:px-8 sticky top-0 z-30 shadow-xs relative no-print">
-      <!-- Accent Gradient Line -->
+    <header class="h-20 bg-white/95 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-6 md:px-8 sticky top-0 z-30 shadow-xs relative no-print">
+      <!-- Accent Gradient Line (Brand RTM Amber Accent) -->
       <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 opacity-90"></div>
 
       <!-- Mobile Sidebar Toggle -->
       <div class="flex items-center gap-3 md:hidden">
-        <button @click="mobileSidebarOpen = true" class="w-10 h-10 rounded-xl bg-slate-950 text-white flex items-center justify-center hover:bg-slate-900 transition-colors text-xs font-bold cursor-pointer shadow-xs">
+        <button @click="mobileSidebarOpen = true" class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center hover:bg-slate-950 transition-colors text-xs font-bold cursor-pointer shadow-xs">
           <i class="fa-solid fa-bars text-sm"></i>
         </button>
-        <span class="font-black text-black text-sm uppercase tracking-wider">CV. Travel RTM</span>
+        <span class="font-extrabold text-slate-900 text-sm uppercase tracking-wider">CV. Travel RTM</span>
       </div>
 
-      <!-- Desktop Page Title & Toggle -->
+      <!-- Desktop Page Title & Sidebar Toggle Button -->
       <div class="hidden md:flex items-center gap-4">
         <button @click="toggleDesktopSidebar()" 
-          class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition-colors flex items-center justify-center cursor-pointer shadow-xs" 
+          class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition-all flex items-center justify-center cursor-pointer shadow-xs active:scale-95" 
           title="Buka/Tutup Sidebar">
           <i class="fa-solid fa-bars text-sm"></i>
         </button>
         <div>
-          <h1 class="text-lg font-extrabold text-slate-800 tracking-tight">
+          <h1 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
             @yield('page_title', 'Driver Control Center')
           </h1>
           <p class="text-xs text-slate-500 font-medium">Portal Pengemudi CV. Travel RTM</p>
@@ -161,28 +160,28 @@
       <div class="flex items-center gap-4">
         @auth
           <div class="text-right hidden sm:block">
-            <span class="block text-xs font-black text-black">{{ Auth::user()->name }}</span>
-            <span class="inline-block px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 font-black text-[10px] uppercase tracking-wider">Sopir Travel</span>
+            <span class="block text-xs font-extrabold text-slate-900">{{ Auth::user()->name }}</span>
+            <span class="inline-block px-2 py-0.5 rounded-md bg-amber-100 text-amber-950 border border-amber-300/80 font-black text-[10px] uppercase tracking-wider">Sopir Travel</span>
           </div>
           <div class="relative" x-data="{ userMenuOpen: false }">
-            <button @click="userMenuOpen = !userMenuOpen" class="w-10 h-10 rounded-full bg-slate-950 border-2 border-amber-400/60 text-amber-400 font-black flex items-center justify-center shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer">
+            <button @click="userMenuOpen = !userMenuOpen" class="w-10 h-10 rounded-full bg-slate-900 border-2 border-amber-400 text-amber-400 font-extrabold flex items-center justify-center shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer">
               {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
             </button>
             <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition:enter="transition ease-out duration-100"
               x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100"
               x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100"
               x-transition:leave-end="transform opacity-0 scale-95"
-              class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50">
+              class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-200/80 py-2 z-50">
               <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="w-full text-left px-4 py-2.5 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 font-extrabold flex items-center gap-2 cursor-pointer transition-colors">
+                <button type="submit" class="w-full text-left px-4 py-2.5 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 font-bold flex items-center gap-2 cursor-pointer transition-colors">
                   <i class="fa-solid fa-right-from-bracket"></i> Keluar
                 </button>
               </form>
             </div>
           </div>
         @else
-          <a href="{{ route('login') }}" class="text-xs font-bold text-black hover:text-amber-600">Masuk</a>
+          <a href="{{ route('login') }}" class="text-xs font-bold text-slate-800 hover:text-amber-600 transition-colors">Masuk</a>
         @endauth
       </div>
     </header>
@@ -221,7 +220,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 px-6 md:px-8 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-2 no-print">
+    <footer class="bg-white border-t border-slate-200/80 py-4 px-6 md:px-8 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-2 no-print">
       <p>&copy; {{ date('Y') }} <strong>CV. Travel RTM</strong>. Hak Cipta Dilindungi.</p>
       <span class="text-[11px] font-semibold text-slate-500">Driver Portal Panel</span>
     </footer>

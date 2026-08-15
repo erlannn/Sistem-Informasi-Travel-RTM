@@ -4,91 +4,124 @@
 @section('page_title', 'Data Penumpang Terdaftar')
 
 @section('content')
-<div class="space-y-8">
+<div class="space-y-6">
 
-    <!-- Header Section -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+    <!-- Header & Action Toolbar Section -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
         <div>
-            <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
-                Data Penumpang
+            <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight">
+                Data Penumpang Terdaftar
             </h1>
+            <p class="text-xs text-slate-500 font-medium mt-0.5">Manajemen akun pengguna, informasi kontak, dan riwayat pesanan tiket</p>
         </div>
 
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <!-- Search Bar -->
             <form action="{{ route('admin.penumpang.index') }}" method="GET" class="flex items-center gap-2 w-full sm:w-auto">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, email, no hp..."
-                    class="px-4 py-3 text-sm text-black font-semibold bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition w-full sm:w-64 outline-none">
-                <button type="submit" class="px-5 py-3 bg-slate-950 hover:bg-slate-900 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-xs transition cursor-pointer">
-                    Cari
+                <div class="relative w-full sm:w-64">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, email, no hp..."
+                        class="w-full pl-9 pr-4 py-2.5 text-xs md:text-sm text-slate-800 font-semibold bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all outline-none">
+                </div>
+                <button type="submit" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-950 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-1.5 shrink-0">
+                    <span>Cari</span>
                 </button>
                 @if(request()->filled('search'))
-                    <a href="{{ route('admin.penumpang.index') }}" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-black font-bold text-xs sm:text-sm rounded-xl transition cursor-pointer">
+                    <a href="{{ route('admin.penumpang.index') }}" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer shrink-0">
                         Reset
                     </a>
                 @endif
             </form>
 
+            <!-- Tambah Penumpang Button -->
             <a href="{{ route('admin.penumpang.create') }}"
-                class="px-5 py-3 bg-amber-400 hover:bg-amber-300 active:bg-amber-500 active:scale-95 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-sm transition flex items-center justify-center cursor-pointer shrink-0">
-                + Tambah Penumpang
+                class="px-4 py-2.5 bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-extrabold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 w-full sm:w-auto">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>Tambah Penumpang</span>
             </a>
         </div>
     </div>
 
-    <!-- Table Card -->
-    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+    <!-- Table Data Card -->
+    <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-black">
-                <thead class="bg-slate-100 text-black uppercase text-xs font-black border-b border-slate-200">
-                    <tr>
-                        <th class="p-3.5 rounded-l-xl">ID</th>
-                        <th class="p-3.5">Nama Penumpang</th>
-                        <th class="p-3.5">Email</th>
-                        <th class="p-3.5">No. Telepon / WA</th>
-                        <th class="p-3.5">Alamat</th>
-                        <th class="p-3.5 text-center">Total Pesanan</th>
-                        <th class="p-3.5 rounded-r-xl text-center">Aksi</th>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-100/80 text-slate-700 uppercase text-[11px] font-extrabold tracking-wider border-b border-slate-200">
+                        <th class="py-3.5 px-4 rounded-l-xl">No.</th>
+                        <th class="py-3.5 px-4">Nama Penumpang</th>
+                        <th class="py-3.5 px-4">Email</th>
+                        <th class="py-3.5 px-4">No. Telepon / WA</th>
+                        <th class="py-3.5 px-4">Alamat</th>
+                        <th class="py-3.5 px-4 text-center">Total Pesanan</th>
+                        <th class="py-3.5 px-4 rounded-r-xl text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-slate-100 text-xs md:text-sm">
                     @forelse($penumpangs as $p)
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="py-4 px-4 sm:px-5 font-black text-black">#{{ $p->id_penumpang }}</td>
-                            <td class="py-4 px-4 sm:px-5 font-black text-black">
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <!-- No. -->
+                            <td class="py-4 px-4 font-extrabold text-slate-900">
+                                {{ $penumpangs->firstItem() + $loop->index }}
+                            </td>
+
+                            <!-- Nama Penumpang -->
+                            <td class="py-4 px-4 font-bold text-slate-900">
                                 {{ $p->nama }}
                             </td>
-                            <td class="py-4 px-4 sm:px-5 font-semibold text-black">
+
+                            <!-- Email -->
+                            <td class="py-4 px-4 font-semibold text-slate-700">
                                 {{ $p->email }}
                             </td>
-                            <td class="py-4 px-4 sm:px-5 font-bold text-black">
+
+                            <!-- No HP / WA -->
+                            <td class="py-4 px-4 font-semibold text-slate-800">
                                 {{ $p->no_hp ?? '-' }}
                             </td>
-                            <td class="py-4 px-4 sm:px-5 font-medium text-black max-w-xs truncate">
+
+                            <!-- Alamat -->
+                            <td class="py-4 px-4 font-semibold text-slate-600 max-w-xs truncate">
                                 {{ $p->alamat ?? '-' }}
                             </td>
-                            <td class="py-4 px-4 sm:px-5 text-center font-black text-black">
-                                <span class="px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-950 text-xs font-black">
+
+                            <!-- Total Pesanan -->
+                            <td class="py-4 px-4 text-center">
+                                <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-900 border border-amber-200">
                                     {{ $p->pemesanans_count }} Tiket
                                 </span>
                             </td>
-                            <td class="py-4 px-4 sm:px-5 text-center">
-                                <div class="flex items-center justify-center gap-2">
+
+                            <!-- Action Buttons -->
+                            <td class="py-4 px-4 text-center">
+                                <div class="flex items-center justify-center gap-1.5">
+                                    <!-- Detail Button -->
                                     <a href="{{ route('admin.penumpang.show', $p->id_penumpang) }}"
-                                        class="px-3 py-1.5 rounded-lg text-xs font-black text-black bg-slate-100 hover:bg-slate-200 border border-slate-300 active:scale-95 transition cursor-pointer">
-                                        Detail
+                                        class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
+                                        title="Lihat Detail Penumpang">
+                                        <i class="fa-solid fa-eye text-[11px]"></i>
+                                        <span>Detail</span>
                                     </a>
 
+                                    <!-- Edit Button -->
                                     <a href="{{ route('admin.penumpang.edit', $p->id_penumpang) }}"
-                                        class="px-3 py-1.5 rounded-lg text-xs font-black text-amber-950 bg-amber-100 hover:bg-amber-200 border border-amber-300 active:scale-95 transition cursor-pointer">
-                                        Edit
+                                        class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
+                                        title="Edit Informasi Penumpang">
+                                        <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                        <span>Edit</span>
                                     </a>
 
+                                    <!-- Delete Button -->
                                     <form action="{{ route('admin.penumpang.destroy', $p->id_penumpang) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data penumpang {{ addslashes($p->nama) }}? Akun terkait juga akan dihapus.');" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-black text-rose-900 bg-rose-100 hover:bg-rose-200 border border-rose-300 active:scale-95 transition cursor-pointer">
-                                            Hapus
+                                        <button type="submit" 
+                                            class="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-700 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
+                                            title="Hapus Penumpang">
+                                            <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                            <span>Hapus</span>
                                         </button>
                                     </form>
                                 </div>
@@ -96,14 +129,24 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-12 text-center text-black font-semibold text-sm">
-                                Tidak ada data penumpang yang ditemukan.
+                            <td colspan="7" class="py-12 text-center text-slate-500 font-medium text-xs sm:text-sm">
+                                <div class="flex flex-col items-center justify-center gap-2">
+                                    <i class="fa-solid fa-users-slash text-3xl text-slate-300"></i>
+                                    <p class="font-bold text-slate-700">Tidak ada data penumpang yang ditemukan.</p>
+                                    <p class="text-xs text-slate-400">Gunakan kolom pencarian di atas atau tambahkan data baru.</p>
+                                </div>
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
+        @if($penumpangs->hasPages())
+            <div class="mt-6 pt-4 border-t border-slate-100">
+                {{ $penumpangs->links() }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection

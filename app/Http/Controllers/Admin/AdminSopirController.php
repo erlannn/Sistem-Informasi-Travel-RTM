@@ -21,7 +21,7 @@ class AdminSopirController extends Controller
             });
         }
 
-        $sopirs = $query->get();
+        $sopirs = $query->paginate(10)->withQueryString();
 
         return view('admin.sopir.index', compact('sopirs'));
     }

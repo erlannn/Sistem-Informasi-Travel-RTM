@@ -82,9 +82,10 @@ class ContentBasedFilteringService
         $avgPrice = !empty($prices) ? (array_sum($prices) / count($prices)) : 0;
         $avgHour = !empty($hours) ? (array_sum($hours) / count($hours)) : 12.0;
 
-        // Fetch candidate future schedules (tanggal >= today)
+        // Fetch candidate future schedules (departure date & time must be in the future, armada must be active)
         $candidateJadwals = Jadwal::with(['armada', 'sopir'])
-            ->where('tanggal', '>=', now()->toDateString())
+            ->armadaAktif()
+            ->mendatang()
             ->get();
 
         $scoredJadwals = collect();

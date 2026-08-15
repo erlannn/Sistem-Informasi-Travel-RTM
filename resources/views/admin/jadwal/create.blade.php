@@ -148,6 +148,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const tujuanSelect = document.getElementById('select-tujuan');
     const jamSelect = document.getElementById('select-jam');
 
+    const routeTitle = document.getElementById('route-title');
+    const routePrice = document.getElementById('route-price');
+    const routeDriver = document.getElementById('route-driver');
+    const routeCompany = document.getElementById('route-company');
+
+    const timesFromSijunjung = [
+        { val: '05:00:00', label: 'Jam 05:00 Pagi' },
+        { val: '08:00:00', label: 'Jam 08:00 Pagi' },
+        { val: '10:00:00', label: 'Jam 10:00 Pagi' },
+        { val: '13:00:00', label: 'Jam 13:00 (1 Siang)' },
+        { val: '17:00:00', label: 'Jam 17:00 (5 Sore)' }
+    ];
+
+    const timesToSijunjung = [
+        { val: '09:00:00', label: 'Jam 09:00 Pagi' },
+        { val: '11:00:00', label: 'Jam 11:00 Siang' },
+        { val: '13:00:00', label: 'Jam 13:00 (1 Siang)' },
+        { val: '15:00:00', label: 'Jam 15:00 (3 Sore)' },
+        { val: '17:00:00', label: 'Jam 17:00 (5 Sore)' },
         { val: '19:00:00', label: 'Jam 19:00 (7 Malam)' }
     ];
 
@@ -164,9 +183,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const oldJam = "{{ old('jam', '08:00:00') }}";
 
-    function updateForm() {
+    function updateForm(e) {
         const asal = asalSelect.value;
-        const tujuan = tujuanSelect.value;
+        let tujuan = tujuanSelect.value;
+
+        if (e && e.target === asalSelect) {
+            if (asal === 'Sijunjung' && tujuan === 'Sijunjung') {
+                tujuanSelect.value = 'Padang';
+                tujuan = 'Padang';
+            } else if (asal !== 'Sijunjung' && tujuan !== 'Sijunjung') {
+                tujuanSelect.value = 'Sijunjung';
+                tujuan = 'Sijunjung';
+            }
+        }
 
         // Update schedule hours based on origin
         const times = (asal === 'Sijunjung') ? timesFromSijunjung : timesToSijunjung;

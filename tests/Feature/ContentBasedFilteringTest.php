@@ -8,13 +8,13 @@ use App\Models\Penumpang;
 use App\Models\Sopir;
 use App\Models\User;
 use App\Services\ContentBasedFilteringService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use function Pest\Laravel\actingAs;
 
-uses(RefreshDatabase::class);
+uses(DatabaseTransactions::class);
 
 /**
  * @property Sopir $sopir
@@ -89,7 +89,7 @@ test('new passenger user with no booking history receives empty CBF recommendati
 
     $responseBeranda = actingAs($newUser)->get(route('penumpang.beranda'));
     $responseBeranda->assertStatus(200);
-    $responseBeranda->assertSee('Belum ada rekomendasi jadwal untuk akun Anda');
+    $responseBeranda->assertSee('Lakukan pemesanan pertama Anda');
 });
 
 test('passenger with booking history receives recommendations ranked by CBF similarity', function () {

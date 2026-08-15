@@ -128,24 +128,26 @@
                                 $kBack = $allKursi->slice(4);
                             @endphp
 
-                            <!-- Baris Depan: Sopir & 1 Kursi Disamping Sopir -->
-                            <div class="grid grid-cols-2 gap-3 items-center pb-3 border-b border-slate-200/80">
-                                <div class="py-3 text-xs font-bold text-slate-500 bg-slate-200/70 border border-slate-300 rounded-xl flex items-center justify-center select-none shadow-xs">
-                                    Sopir
-                                </div>
-                                @if($kFront)
-                                    @if($kFront->status === 'Terisi')
-                                        <div class="py-3 text-sm font-bold text-white bg-slate-900 border-2 border-slate-800 rounded-xl shadow-xs flex items-center justify-center select-none cursor-not-allowed opacity-80" title="Kursi {{ $kFront->nomor_kursi }} sudah terisi">
-                                            {{ $kFront->nomor_kursi }}
-                                        </div>
-                                    @else
-                                        <button type="button" data-seat-id="{{ $kFront->id_kursi }}" data-seat="{{ $kFront->nomor_kursi }}" class="seat-btn py-3 text-sm font-bold text-slate-600 bg-white border-2 border-slate-200 rounded-xl shadow-xs transition-all hover:border-slate-300 focus:outline-none cursor-pointer flex items-center justify-center">
-                                            {{ $kFront->nomor_kursi }}
-                                        </button>
-                                    @endif
-                                @endif
-                            </div>
+                      <!-- Baris Depan: 1 Kursi Disamping Sopir (Kiri) & Sopir (Kanan) -->
+<div class="grid grid-cols-2 gap-3 items-center pb-3 border-b border-slate-200/80">
+    <!-- Sebelah Kiri: Kursi Depan (No. 1) -->
+    @if($kFront)
+        @if($kFront->status === 'Terisi')
+            <div class="py-3 text-sm font-bold text-white bg-slate-900 border-2 border-slate-800 rounded-xl shadow-xs flex items-center justify-center select-none cursor-not-allowed opacity-80" title="Kursi {{ $kFront->nomor_kursi }} sudah terisi">
+                {{ $kFront->nomor_kursi }}
+            </div>
+        @else
+            <button type="button" data-seat-id="{{ $kFront->id_kursi }}" data-seat="{{ $kFront->nomor_kursi }}" class="seat-btn py-3 text-sm font-bold text-slate-600 bg-white border-2 border-slate-200 rounded-xl shadow-xs transition-all hover:border-slate-300 focus:outline-none cursor-pointer flex items-center justify-center">
+                {{ $kFront->nomor_kursi }}
+            </button>
+        @endif
+    @endif
 
+    <!-- Sebelah Kanan: Sopir -->
+    <div class="py-3 text-xs font-bold text-slate-500 bg-slate-200/70 border border-slate-300 rounded-xl flex items-center justify-center select-none shadow-xs">
+        Sopir
+    </div>
+</div>
                             <!-- Baris Tengah: 3 Kursi -->
                             @if($kMiddle->isNotEmpty())
                                 <div class="space-y-1.5 pb-3 border-b border-slate-200/80">
