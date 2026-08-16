@@ -45,71 +45,71 @@
     </div>
 
     <!-- Table Data Card -->
-    <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs">
+    <div class="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-xs">
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse text-xs">
                 <thead>
-                    <tr class="bg-slate-100/80 text-slate-700 uppercase text-[11px] font-extrabold tracking-wider border-b border-slate-200">
-                        <th class="py-3.5 px-4 rounded-l-xl">No.</th>
-                        <th class="py-3.5 px-4">Nama Penumpang</th>
-                        <th class="py-3.5 px-4">Email</th>
-                        <th class="py-3.5 px-4">No. Telepon / WA</th>
-                        <th class="py-3.5 px-4">Alamat</th>
-                        <th class="py-3.5 px-4 text-center">Total Pesanan</th>
-                        <th class="py-3.5 px-4 rounded-r-xl text-center">Aksi</th>
+                    <tr class="bg-slate-100/80 text-slate-700 uppercase text-[10px] sm:text-[11px] font-extrabold tracking-wider border-b border-slate-200">
+                        <th class="py-3 px-2 sm:px-3 rounded-l-xl text-center w-10">No.</th>
+                        <th class="py-3 px-2 sm:px-3">Nama Penumpang</th>
+                        <th class="py-3 px-2 sm:px-3">Email</th>
+                        <th class="py-3 px-2 sm:px-3">No. Telepon / WA</th>
+                        <th class="py-3 px-2 sm:px-3">Alamat</th>
+                        <th class="py-3 px-2 sm:px-3 text-center">Total Pesanan</th>
+                        <th class="py-3 px-2 sm:px-3 rounded-r-xl text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 text-xs md:text-sm">
+                <tbody class="divide-y divide-slate-100 text-[11px] sm:text-xs">
                     @forelse($penumpangs as $p)
                         <tr class="hover:bg-slate-50/80 transition-colors">
                             <!-- No. -->
-                            <td class="py-4 px-4 font-extrabold text-slate-900">
+                            <td class="py-3 px-2 sm:px-3 font-extrabold text-slate-900 text-center">
                                 {{ $penumpangs->firstItem() + $loop->index }}
                             </td>
 
                             <!-- Nama Penumpang -->
-                            <td class="py-4 px-4 font-bold text-slate-900">
+                            <td class="py-3 px-2 sm:px-3 font-bold text-slate-900">
                                 {{ $p->nama }}
                             </td>
 
                             <!-- Email -->
-                            <td class="py-4 px-4 font-semibold text-slate-700">
+                            <td class="py-3 px-2 sm:px-3 font-semibold text-slate-700 max-w-[160px] truncate" title="{{ $p->email }}">
                                 {{ $p->email }}
                             </td>
 
                             <!-- No HP / WA -->
-                            <td class="py-4 px-4 font-semibold text-slate-800">
+                            <td class="py-3 px-2 sm:px-3 font-semibold text-slate-800 whitespace-nowrap">
                                 {{ $p->no_hp ?? '-' }}
                             </td>
 
                             <!-- Alamat -->
-                            <td class="py-4 px-4 font-semibold text-slate-600 max-w-xs truncate">
+                            <td class="py-3 px-2 sm:px-3 font-semibold text-slate-600 max-w-[150px] truncate" title="{{ $p->alamat }}">
                                 {{ $p->alamat ?? '-' }}
                             </td>
 
                             <!-- Total Pesanan -->
-                            <td class="py-4 px-4 text-center">
-                                <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-900 border border-amber-200">
+                            <td class="py-3 px-2 sm:px-3 text-center whitespace-nowrap">
+                                <span class="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
                                     {{ $p->pemesanans_count }} Tiket
                                 </span>
                             </td>
 
                             <!-- Action Buttons -->
-                            <td class="py-4 px-4 text-center">
-                                <div class="flex items-center justify-center gap-1.5">
+                            <td class="py-3 px-2 sm:px-3 text-center whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-1">
                                     <!-- Detail Button -->
                                     <a href="{{ route('admin.penumpang.show', $p->id_penumpang) }}"
-                                        class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
+                                        class="px-2 py-1 rounded-lg text-[11px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 active:scale-95 transition-all cursor-pointer flex items-center gap-1"
                                         title="Lihat Detail Penumpang">
-                                        <i class="fa-solid fa-eye text-[11px]"></i>
+                                        <i class="fa-solid fa-eye text-[10px]"></i>
                                         <span>Detail</span>
                                     </a>
 
                                     <!-- Edit Button -->
                                     <a href="{{ route('admin.penumpang.edit', $p->id_penumpang) }}"
-                                        class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
+                                        class="px-2 py-1 rounded-lg text-[11px] font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 active:scale-95 transition-all cursor-pointer flex items-center gap-1"
                                         title="Edit Informasi Penumpang">
-                                        <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                        <i class="fa-solid fa-pen-to-square text-[10px]"></i>
                                         <span>Edit</span>
                                     </a>
 
@@ -118,9 +118,9 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" 
-                                            class="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-700 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
+                                            class="px-2 py-1 rounded-lg text-[11px] font-bold text-white bg-red-600 hover:bg-red-700 active:scale-95 transition-all cursor-pointer flex items-center gap-1"
                                             title="Hapus Penumpang">
-                                            <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                            <i class="fa-solid fa-trash-can text-[10px]"></i>
                                             <span>Hapus</span>
                                         </button>
                                     </form>
