@@ -42,7 +42,7 @@ class Jadwal extends Model
 
     public function kursis(): HasMany
     {
-        return $this->hasMany(Kursi::class, 'id_jadwal', 'id_jadwal')->orderByRaw('CAST(nomor_kursi AS UNSIGNED) ASC');
+        return $this->hasMany(Kursi::class, 'id_jadwal', 'id_jadwal')->orderBy('id_kursi', 'asc');
     }
 
     public function pemesanans(): HasMany
