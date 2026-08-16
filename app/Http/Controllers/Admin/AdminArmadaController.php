@@ -16,8 +16,8 @@ class AdminArmadaController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('merk', 'like', "%{$search}%")
-                  ->orWhere('warna', 'like', "%{$search}%")
-                  ->orWhere('status', 'like', "%{$search}%");
+                    ->orWhere('warna', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%");
             });
         }
 

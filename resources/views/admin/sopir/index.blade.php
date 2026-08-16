@@ -121,20 +121,6 @@
                                         <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                                         <span>Edit</span>
                                     </a>
-
-                                    <!-- Non-Aktifkan Button -->
-                                    @if(($s->status ?? 'Aktif') === 'Aktif')
-                                        <form action="{{ route('admin.sopir.destroy', $s->id_sopir) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menon-aktifkan sopir ini?');" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                class="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-700 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                                                title="Non-Aktifkan Sopir">
-                                                <i class="fa-solid fa-user-slash text-[11px]"></i>
-                                                <span>Non-Aktifkan</span>
-                                            </button>
-                                        </form>
-                                    @endif
                                 </div>
                             </td>
                         </tr>

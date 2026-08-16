@@ -79,7 +79,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('/jadwal', AdminJadwalController::class);
         Route::resource('/pemesanan', AdminPemesananController::class)->only(['index', 'show', 'destroy']);
         Route::patch('/pemesanan/{id}/status', [AdminPemesananController::class, 'updateStatus'])->name('pemesanan.update_status');
-        
+
         // Rekap Setoran Kas
         Route::get('/setoran', [AdminSetoranController::class, 'index'])->name('setoran.index');
         Route::get('/setoran/pdf', [AdminSetoranController::class, 'cetakPdf'])->name('setoran.pdf');
@@ -111,7 +111,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/jadwal/{id}/penumpang', [SopirDashboardController::class, 'penumpang'])->name('jadwal.penumpang');
         Route::get('/penumpang', [SopirDashboardController::class, 'penumpangGlobal'])->name('penumpang');
         Route::get('/gaji', [SopirDashboardController::class, 'gaji'])->name('gaji');
-        
+
         // Action routes per passenger / booking
         Route::post('/pemesanan/{id}/naik', [SopirDashboardController::class, 'penumpangNaik'])->name('pemesanan.naik');
         Route::post('/pemesanan/{id}/terima-cash', [SopirDashboardController::class, 'terimaBayarCash'])->name('pemesanan.terima_cash');
