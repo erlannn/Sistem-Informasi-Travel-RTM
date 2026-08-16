@@ -20,27 +20,12 @@
             padding: 20px;
         }
 
-        .header {
+        table.header-table {
+            width: 100%;
             border-bottom: 2px solid #0f172a;
             padding-bottom: 12px;
             margin-bottom: 15px;
-            display: table;
-            width: 100%;
-        }
-
-        .brand-col {
-            display: table-cell;
-            vertical-align: middle;
-            width: 60%;
-        }
-
-        .info-col {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: right;
-            width: 40%;
-            font-size: 10px;
-            color: #475569;
+            border-collapse: collapse;
         }
 
         .brand-title {
@@ -62,25 +47,23 @@
             margin-top: 2px;
         }
 
-        .summary-box {
-            display: table;
+        table.summary-table {
             width: 100%;
             margin-bottom: 15px;
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 10px 14px;
+            border-collapse: collapse;
         }
 
-        .summary-cell {
-            display: table-cell;
+        table.summary-table td {
             width: 25%;
             vertical-align: middle;
             border-right: 1px solid #cbd5e1;
-            padding: 0 8px;
+            padding: 10px 12px;
         }
 
-        .summary-cell:last-child {
+        table.summary-table td:last-child {
             border-right: none;
         }
 
@@ -169,24 +152,11 @@
             border: 1px solid #1e293b;
         }
 
-        .signature-section {
-            display: table;
+        table.signature-table {
             width: 100%;
             margin-top: 25px;
             page-break-inside: avoid;
-        }
-
-        .signature-col {
-            display: table-cell;
-            width: 50%;
-            vertical-align: top;
-        }
-
-        .signature-col-right {
-            display: table-cell;
-            width: 50%;
-            vertical-align: top;
-            text-align: right;
+            border-collapse: collapse;
         }
 
         .signature-space {
@@ -197,36 +167,40 @@
 <body>
 
     <!-- Header / Kop Surat -->
-    <div class="header">
-        <div class="brand-col">
-            <div class="brand-title">CV. <span>TRAVEL RTM</span></div>
-            <div class="brand-subtitle">Laporan Pembagian Hasil Setoran Supir & Kas Admin</div>
-        </div>
-        <div class="info-col">
-            <div><strong>Periode Laporan:</strong> {{ $periodLabel }}</div>
-            <div><strong>Tanggal Cetak:</strong> {{ \Carbon\Carbon::now()->translatedFormat('d F Y H:i') }} WIB</div>
-        </div>
-    </div>
+    <table class="header-table">
+        <tr>
+            <td style="width: 60%; vertical-align: middle;">
+                <div class="brand-title">CV. <span>TRAVEL RTM</span></div>
+                <div class="brand-subtitle">Laporan Pembagian Hasil Setoran Supir & Kas Admin</div>
+            </td>
+            <td style="width: 40%; vertical-align: middle; text-align: right; font-size: 10px; color: #475569;">
+                <div><strong>Periode Laporan:</strong> {{ $periodLabel }}</div>
+                <div><strong>Tanggal Cetak:</strong> {{ \Carbon\Carbon::now()->translatedFormat('d F Y H:i') }} WIB</div>
+            </td>
+        </tr>
+    </table>
 
     <!-- Summary Box -->
-    <div class="summary-box">
-        <div class="summary-cell">
-            <span class="summary-label">Total Tiket Kotor</span>
-            <span class="summary-value text-amber">Rp {{ number_format($totalPendapatanKotorSemua, 0, ',', '.') }}</span>
-        </div>
-        <div class="summary-cell">
-            <span class="summary-label">Hak Supir (Bagi Hasil)</span>
-            <span class="summary-value text-indigo">Rp {{ number_format($totalHakSupirSemua, 0, ',', '.') }}</span>
-        </div>
-        <div class="summary-cell">
-            <span class="summary-label">Bagian Kas Admin</span>
-            <span class="summary-value text-emerald">Rp {{ number_format($totalSetoranWajibSemua, 0, ',', '.') }}</span>
-        </div>
-        <div class="summary-cell">
-            <span class="summary-label">Belum Disetor ke Kas</span>
-            <span class="summary-value text-rose">Rp {{ number_format($totalBelumSetorSemua, 0, ',', '.') }}</span>
-        </div>
-    </div>
+    <table class="summary-table">
+        <tr>
+            <td>
+                <span class="summary-label">Total Tiket Kotor</span>
+                <span class="summary-value text-amber">Rp {{ number_format($totalPendapatanKotorSemua, 0, ',', '.') }}</span>
+            </td>
+            <td>
+                <span class="summary-label">Hak Supir (Bagi Hasil)</span>
+                <span class="summary-value text-indigo">Rp {{ number_format($totalHakSupirSemua, 0, ',', '.') }}</span>
+            </td>
+            <td>
+                <span class="summary-label">Bagian Kas Admin</span>
+                <span class="summary-value text-emerald">Rp {{ number_format($totalSetoranWajibSemua, 0, ',', '.') }}</span>
+            </td>
+            <td style="border-right: none;">
+                <span class="summary-label">Belum Disetor ke Kas</span>
+                <span class="summary-value text-rose">Rp {{ number_format($totalBelumSetorSemua, 0, ',', '.') }}</span>
+            </td>
+        </tr>
+    </table>
 
     <!-- Table Data -->
     <table class="data-table">
@@ -303,20 +277,22 @@
     </table>
 
     <!-- Signature Section -->
-    <div class="signature-section">
-        <div class="signature-col">
-            <small style="color: #64748b;">Catatan:</small>
-            <p style="font-size: 10px; color: #64748b; margin-top: 4px;">
-                Laporan ini dicetak secara resmi dari Sistem Informasi Travel RTM sebagai acuan verifikasi keuangan kas admin dan gaji supir.
-            </p>
-        </div>
-        <div class="signature-col-right">
-            <div>Mengetahui,</div>
-            <div style="font-weight: bold; margin-top: 2px;">Admin Keuangan / Management</div>
-            <div class="signature-space"></div>
-            <div style="font-weight: bold; text-decoration: underline;">( Admin CV. Travel RTM )</div>
-        </div>
-    </div>
+    <table class="signature-table">
+        <tr>
+            <td style="width: 50%; vertical-align: top;">
+                <small style="color: #64748b;">Catatan:</small>
+                <p style="font-size: 10px; color: #64748b; margin-top: 4px;">
+                    Laporan ini dicetak secara resmi dari Sistem Informasi Travel RTM sebagai acuan verifikasi keuangan kas admin dan gaji supir.
+                </p>
+            </td>
+            <td style="width: 50%; vertical-align: top; text-align: right;">
+                <div>Mengetahui,</div>
+                <div style="font-weight: bold; margin-top: 2px;">Admin Keuangan / Management</div>
+                <div class="signature-space"></div>
+                <div style="font-weight: bold; text-decoration: underline;">( Admin CV. Travel RTM )</div>
+            </td>
+        </tr>
+    </table>
 
 </body>
 </html>
