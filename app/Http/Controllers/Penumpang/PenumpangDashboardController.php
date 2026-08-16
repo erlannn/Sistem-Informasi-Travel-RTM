@@ -121,7 +121,7 @@ class PenumpangDashboardController extends Controller
 
         $kursis = Kursi::query()
             ->where('id_jadwal', $jadwal->id_jadwal)
-            ->orderByRaw('CAST(nomor_kursi AS UNSIGNED) ASC')
+            ->orderBy('id_kursi', 'asc')
             ->get();
 
         return view('penumpang.pilih_kursi', compact('jadwal', 'kursis'));
