@@ -5,6 +5,21 @@
       "runtime": "vercel-php@0.7.4"
     }
   },
+  "env": {
+    "APP_NAME": "Travel-RTM",
+    "APP_ENV": "production",
+    "APP_KEY": "base64:iQfugxaAWMFUNtU0D15dtYpb5w8d6VyPbqXB1D/i4Og=",
+    "APP_DEBUG": "false",
+    "APP_URL": "https://travel-rtm.vercel.app",
+    "DB_CONNECTION": "mysql",
+    "DB_HOST": "wxmkyo.h.filess.io",
+    "DB_PORT": "61032",
+    "DB_DATABASE": "rtm_db_mineralson",
+    "DB_USERNAME": "rtm_db_mineralson",
+    "SESSION_DRIVER": "database",
+    "CACHE_STORE": "database",
+    "LOG_CHANNEL": "errorlog"
+  },
   "routes": [
     { "src": "/build/assets/(.*)", "dest": "/public/build/assets/$1" },
     { "src": "/images/(.*)", "dest": "/public/images/$1" },
