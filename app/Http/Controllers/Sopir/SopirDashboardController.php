@@ -167,9 +167,9 @@ class SopirDashboardController extends Controller
         $pemesanan = Pemesanan::with(['penumpang'])->findOrFail($id_pemesanan);
 
         // Ambil seluruh pesanan aktif (Pending) milik penumpang yang sama pada jadwal yang sama
-        $allPemesanan = Pemesanan::where('id_penumpang', $pemesanan->id_penumpang)
-            ->where('id_jadwal', $pemesanan->id_jadwal)
-            ->where('status_perjalanan', 'Pending')
+        $allPemesanan = Pemesanan::query()->where('id_penumpang', '=', $pemesanan->id_penumpang)
+            ->where('id_jadwal', '=', $pemesanan->id_jadwal)
+            ->where('status_perjalanan', '=', 'Pending')
             ->get();
 
         if ($allPemesanan->isEmpty()) {
@@ -177,6 +177,7 @@ class SopirDashboardController extends Controller
         }
 
         $count = 0;
+        /** @var Pemesanan $p */
         foreach ($allPemesanan as $p) {
             $p->update([
                 'status_perjalanan' => 'Naik',
@@ -194,9 +195,9 @@ class SopirDashboardController extends Controller
         $pemesanan = Pemesanan::with(['penumpang'])->findOrFail($id_pemesanan);
 
         // Ambil seluruh pesanan aktif (Pending / Naik) milik penumpang yang sama pada jadwal yang sama
-        $allPemesanan = Pemesanan::where('id_penumpang', $pemesanan->id_penumpang)
-            ->where('id_jadwal', $pemesanan->id_jadwal)
-            ->whereIn('status_perjalanan', ['Pending', 'Naik'])
+        $allPemesanan = Pemesanan::query()->where('id_penumpang', '=', $pemesanan->id_penumpang)
+            ->where('id_jadwal', '=', $pemesanan->id_jadwal)
+            ->whereIn('status_perjalanan', ['Pending', 'Naik'], 'and', false)
             ->get();
 
         if ($allPemesanan->isEmpty()) {
@@ -204,6 +205,7 @@ class SopirDashboardController extends Controller
         }
 
         $count = 0;
+        /** @var Pemesanan $p */
         foreach ($allPemesanan as $p) {
             $p->update([
                 'status_perjalanan' => 'Selesai',
@@ -232,9 +234,9 @@ class SopirDashboardController extends Controller
         $pemesanan = Pemesanan::with(['penumpang'])->findOrFail($id_pemesanan);
 
         // Ambil seluruh pesanan aktif (Pending / Naik) milik penumpang yang sama pada jadwal yang sama
-        $allPemesanan = Pemesanan::where('id_penumpang', $pemesanan->id_penumpang)
-            ->where('id_jadwal', $pemesanan->id_jadwal)
-            ->whereIn('status_perjalanan', ['Pending', 'Naik'])
+        $allPemesanan = Pemesanan::query()->where('id_penumpang', '=', $pemesanan->id_penumpang)
+            ->where('id_jadwal', '=', $pemesanan->id_jadwal)
+            ->whereIn('status_perjalanan', ['Pending', 'Naik'], 'and', false)
             ->get();
 
         if ($allPemesanan->isEmpty()) {
@@ -242,6 +244,7 @@ class SopirDashboardController extends Controller
         }
 
         $count = 0;
+        /** @var Pemesanan $p */
         foreach ($allPemesanan as $p) {
             if ($p->id_kursi) {
                 /** @var Kursi|null $kursi */
@@ -274,8 +277,8 @@ class SopirDashboardController extends Controller
             ->firstOrFail();
 
         // Get all active bookings for this schedule (status_perjalanan Pending / Naik)
-        $pemesanans = Pemesanan::query()->where('id_jadwal', $jadwal->id_jadwal)
-            ->whereIn('status_perjalanan', ['Pending', 'Naik'])
+        $pemesanans = Pemesanan::query()->where('id_jadwal', '=', $jadwal->id_jadwal)
+            ->whereIn('status_perjalanan', ['Pending', 'Naik'], 'and', false)
             ->get();
 
         if ($pemesanans->isEmpty()) {
@@ -362,7 +365,7 @@ class SopirDashboardController extends Controller
             ->get();
 
         $jamList = Jadwal::query()->where('id_sopir', '=', $sopir->id_sopir)
-            ->whereNotNull('jam')
+            ->whereNotNull('jam', 'and')
             ->distinct()
             ->pluck('jam')
             ->map(function($j) {

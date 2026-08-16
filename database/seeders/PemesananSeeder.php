@@ -7,12 +7,14 @@ use App\Models\Jadwal;
 use App\Models\Penumpang;
 use App\Models\Kursi;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class PemesananSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * Fast, lightweight batch insertion for online database environments.
      */
     public function run(): void
     {
@@ -25,37 +27,9 @@ class PemesananSeeder extends Seeder
 
         Pemesanan::query()->delete();
 
-        // 20 Passenger trip records
+        // 8 representative bookings covering all key statuses
         $tripsData = [
-            // Past Trips (Status: Selesai)
-            [
-                'offset_days' => -3,
-                'metode' => 'Cash',
-                'status_pembayaran' => 'Lunas',
-                'status_perjalanan' => 'Selesai',
-                'is_setor_admin' => true,
-            ],
-            [
-                'offset_days' => -3,
-                'metode' => 'Transfer',
-                'status_pembayaran' => 'Lunas',
-                'status_perjalanan' => 'Selesai',
-                'is_setor_admin' => true,
-            ],
-            [
-                'offset_days' => -2,
-                'metode' => 'Cash',
-                'status_pembayaran' => 'Lunas',
-                'status_perjalanan' => 'Selesai',
-                'is_setor_admin' => true,
-            ],
-            [
-                'offset_days' => -2,
-                'metode' => 'QRIS',
-                'status_pembayaran' => 'Lunas',
-                'status_perjalanan' => 'Selesai',
-                'is_setor_admin' => false,
-            ],
+            // Yesterday (-1) - Selesai & Lunas
             [
                 'offset_days' => -1,
                 'metode' => 'Cash',
@@ -70,14 +44,7 @@ class PemesananSeeder extends Seeder
                 'status_perjalanan' => 'Selesai',
                 'is_setor_admin' => false,
             ],
-            [
-                'offset_days' => -1,
-                'metode' => 'Cash',
-                'status_pembayaran' => 'Lunas',
-                'status_perjalanan' => 'Selesai',
-                'is_setor_admin' => true,
-            ],
-            // Today Trips (Mix of Selesai, Naik, Pending)
+            // Today (0) - Mix of Selesai, Naik, Pending
             [
                 'offset_days' => 0,
                 'metode' => 'Cash',
@@ -96,7 +63,7 @@ class PemesananSeeder extends Seeder
                 'offset_days' => 0,
                 'metode' => 'Transfer',
                 'status_pembayaran' => 'Lunas',
-                'status_perjalanan' => 'Naik',
+                'status_perjalanan' => 'Pending',
                 'is_setor_admin' => false,
             ],
             [
@@ -106,24 +73,10 @@ class PemesananSeeder extends Seeder
                 'status_perjalanan' => 'Pending',
                 'is_setor_admin' => false,
             ],
+            // Tomorrow (+1) - Pending & Batal
             [
-                'offset_days' => 0,
+                'offset_days' => 1,
                 'metode' => 'QRIS',
-                'status_pembayaran' => 'Lunas',
-                'status_perjalanan' => 'Pending',
-                'is_setor_admin' => false,
-            ],
-            // Tomorrow & Future Trips (Mix of Pending, Batal)
-            [
-                'offset_days' => 1,
-                'metode' => 'Cash',
-                'status_pembayaran' => 'Belum Bayar',
-                'status_perjalanan' => 'Pending',
-                'is_setor_admin' => false,
-            ],
-            [
-                'offset_days' => 1,
-                'metode' => 'Transfer',
                 'status_pembayaran' => 'Lunas',
                 'status_perjalanan' => 'Pending',
                 'is_setor_admin' => false,
@@ -135,117 +88,69 @@ class PemesananSeeder extends Seeder
                 'status_perjalanan' => 'Batal',
                 'is_setor_admin' => false,
             ],
-            [
-                'offset_days' => 2,
-                'metode' => 'QRIS',
-                'status_pembayaran' => 'Lunas',
-                'status_perjalanan' => 'Pending',
-                'is_setor_admin' => false,
-            ],
-            [
-                'offset_days' => 2,
-                'metode' => 'Cash',
-                'status_pembayaran' => 'Belum Bayar',
-                'status_perjalanan' => 'Pending',
-                'is_setor_admin' => false,
-            ],
-            [
-                'offset_days' => 3,
-                'metode' => 'Transfer',
-                'status_pembayaran' => 'Lunas',
-                'status_perjalanan' => 'Pending',
-                'is_setor_admin' => false,
-            ],
-            [
-                'offset_days' => 4,
-                'metode' => 'Cash',
-                'status_pembayaran' => 'Belum Bayar',
-                'status_perjalanan' => 'Pending',
-                'is_setor_admin' => false,
-            ],
-            [
-                'offset_days' => 5,
-                'metode' => 'Cash',
-                'status_pembayaran' => 'Belum Bayar',
-                'status_perjalanan' => 'Pending',
-                'is_setor_admin' => false,
-            ],
         ];
 
         $penumpangCount = $penumpangs->count();
+        $now = now();
+        $assignedSeatIds = [];
+        $terisiSeatIds = [];
+        $pemesananBatch = [];
 
-        foreach ($tripsData as $i => $data) {
-            $penumpang = $penumpangs[$i % $penumpangCount];
-            $targetDate = Carbon::today()->addDays($data['offset_days'])->toDateString();
+        DB::transaction(function () use ($tripsData, $penumpangs, $jadwals, $penumpangCount, $now, &$assignedSeatIds, &$terisiSeatIds, &$pemesananBatch) {
+            foreach ($tripsData as $i => $data) {
+                $penumpang = $penumpangs[$i % $penumpangCount];
+                $targetDate = Carbon::today()->addDays($data['offset_days'])->toDateString();
 
-            // Find a schedule matching target date
-            $jadwal = $jadwals->where('tanggal', $targetDate)->first();
+                // Pick schedule matching target date or fallback
+                $jadwal = $jadwals->firstWhere('tanggal', $targetDate) ?? $jadwals[$i % $jadwals->count()];
 
-            if (!$jadwal) {
-                $jadwal = $jadwals[$i % $jadwals->count()];
-            }
+                // Find unassigned seat from the schedule's pre-loaded seats
+                $kursi = $jadwal->kursis->first(function ($k) use ($assignedSeatIds) {
+                    return !in_array($k->id_kursi, $assignedSeatIds);
+                });
 
-            // Find an unassigned seat for this schedule
-            $assignedKursiIds = Pemesanan::where('id_jadwal', $jadwal->id_jadwal)
-                ->whereNotNull('id_kursi')
-                ->pluck('id_kursi')
-                ->toArray();
-
-            $kursi = Kursi::where('id_jadwal', $jadwal->id_jadwal)
-                ->whereNotIn('id_kursi', $assignedKursiIds)
-                ->first();
-
-            // Fallback to any schedule with a free seat
-            if (!$kursi) {
-                foreach ($jadwals as $altJadwal) {
-                    $assignedAlt = Pemesanan::where('id_jadwal', $altJadwal->id_jadwal)
-                        ->whereNotNull('id_kursi')
-                        ->pluck('id_kursi')
-                        ->toArray();
-
-                    $altKursi = Kursi::where('id_jadwal', $altJadwal->id_jadwal)
-                        ->whereNotIn('id_kursi', $assignedAlt)
-                        ->first();
-
-                    if ($altKursi) {
-                        $jadwal = $altJadwal;
-                        $kursi = $altKursi;
-                        break;
+                if ($kursi) {
+                    $assignedSeatIds[] = $kursi->id_kursi;
+                    if ($data['status_perjalanan'] !== 'Batal') {
+                        $terisiSeatIds[] = $kursi->id_kursi;
                     }
                 }
+
+                $waktuBayar = $data['status_pembayaran'] === 'Lunas'
+                    ? Carbon::parse($jadwal->tanggal)->subHours(rand(1, 12))
+                    : null;
+
+                $tanggalSetor = $data['is_setor_admin']
+                    ? Carbon::parse($jadwal->tanggal)->addHours(4)
+                    : null;
+
+                $pemesananBatch[] = [
+                    'id_penumpang' => $penumpang->id_penumpang,
+                    'id_jadwal' => $jadwal->id_jadwal,
+                    'id_kursi' => $kursi?->id_kursi,
+                    'tanggal_pesan' => Carbon::parse($jadwal->tanggal)->subDays(rand(0, 1))->toDateString(),
+                    'jumlah_penumpang' => 1,
+                    'total_bayar' => $jadwal->harga ?? 80000.00,
+                    'metode_pembayaran' => $data['metode'],
+                    'status_pembayaran' => $data['status_pembayaran'],
+                    'status_perjalanan' => $data['status_perjalanan'],
+                    'waktu_bayar' => $waktuBayar,
+                    'is_setor_admin' => $data['is_setor_admin'],
+                    'tanggal_setor' => $tanggalSetor,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
             }
 
-            $waktuBayar = $data['status_pembayaran'] === 'Lunas'
-                ? Carbon::parse($jadwal->tanggal)->subHours(rand(1, 12))
-                : null;
-
-            $tanggalSetor = $data['is_setor_admin']
-                ? Carbon::parse($jadwal->tanggal)->addHours(4)
-                : null;
-
-            Pemesanan::create([
-                'id_penumpang' => $penumpang->id_penumpang,
-                'id_jadwal' => $jadwal->id_jadwal,
-                'id_kursi' => $kursi?->id_kursi,
-                'tanggal_pesan' => Carbon::parse($jadwal->tanggal)->subDays(rand(0, 2))->toDateString(),
-                'jumlah_penumpang' => 1,
-                'total_bayar' => $jadwal->harga ?? 80000.00,
-                'metode_pembayaran' => $data['metode'],
-                'status_pembayaran' => $data['status_pembayaran'],
-                'status_perjalanan' => $data['status_perjalanan'],
-                'waktu_bayar' => $waktuBayar,
-                'is_setor_admin' => $data['is_setor_admin'],
-                'tanggal_setor' => $tanggalSetor,
-            ]);
-
-            // Update chair status based on trip status
-            if ($kursi) {
-                if ($data['status_perjalanan'] === 'Batal') {
-                    $kursi->update(['status' => 'Kosong']);
-                } else {
-                    $kursi->update(['status' => 'Terisi']);
-                }
+            // Bulk insert pemesanan records in 1 query
+            if (!empty($pemesananBatch)) {
+                Pemesanan::insert($pemesananBatch);
             }
-        }
+
+            // Bulk update occupied seats status in 1 query
+            if (!empty($terisiSeatIds)) {
+                Kursi::whereIn('id_kursi', $terisiSeatIds)->update(['status' => 'Terisi']);
+            }
+        });
     }
 }

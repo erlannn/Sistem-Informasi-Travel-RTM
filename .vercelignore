@@ -1,0 +1,10 @@
+/node_modules
+/storage/logs
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+/.git
+/tests
+/.phpunit.cache
+/database/database.sqlite
+/database/database.rar
