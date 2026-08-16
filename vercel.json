@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "npm install --include=dev --ignore-scripts=false && npm run build",
   "outputDirectory": "public",
   "functions": {
     "api/index.php": {
