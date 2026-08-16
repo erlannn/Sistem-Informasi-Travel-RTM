@@ -122,7 +122,10 @@
                             </div>
 
                             @php
-                                $allKursi = $kursis ?? collect();
+                                $allKursi = ($kursis ?? collect())->sortBy(function ($k) {
+                                    return (int) $k->nomor_kursi;
+                                })->values();
+
                                 $kFront = $allKursi->first();
                                 $kMiddle = $allKursi->slice(1, 3);
                                 $kBack = $allKursi->slice(4);
