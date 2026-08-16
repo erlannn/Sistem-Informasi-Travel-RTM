@@ -119,7 +119,10 @@ class PenumpangDashboardController extends Controller
             return redirect()->route('penumpang.jadwal')->with('error', 'Jadwal ini tidak dapat dipesan karena armada kendaraan sedang non-aktif / dalam perbaikan.');
         }
 
-        $kursis = Kursi::query()->where('id_jadwal', $jadwal->id_jadwal)->get();
+        $kursis = Kursi::query()
+            ->where('id_jadwal', $jadwal->id_jadwal)
+            ->orderByRaw('CAST(nomor_kursi AS UNSIGNED) ASC')
+            ->get();
 
         return view('penumpang.pilih_kursi', compact('jadwal', 'kursis'));
     }
