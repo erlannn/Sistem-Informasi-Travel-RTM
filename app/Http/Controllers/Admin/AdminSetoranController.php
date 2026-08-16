@@ -18,10 +18,10 @@ class AdminSetoranController extends Controller
     {
         $selectedPeriod = $request->input('period');
 
-        $query = Jadwal::with(['sopir', 'armada', 'pemesanans' => function($q) {
-            $q->where(function($sq) {
+        $query = Jadwal::with(['sopir', 'armada', 'pemesanans' => function ($q) {
+            $q->where(function ($sq) {
                 $sq->where('status_perjalanan', 'Selesai')
-                  ->orWhere('status_pembayaran', 'Lunas');
+                    ->orWhere('status_pembayaran', 'Lunas');
             });
         }]);
 
@@ -40,7 +40,7 @@ class AdminSetoranController extends Controller
         $totalBelumSetorSemua = 0;
 
         foreach ($allJadwalsForSummary as $jSummary) {
-            $lunas = $jSummary->pemesanans->filter(function($p) {
+            $lunas = $jSummary->pemesanans->filter(function ($p) {
                 return $p->status_perjalanan === 'Selesai' || $p->status_pembayaran === 'Lunas';
             });
             $penumpangCount = $lunas->sum('jumlah_penumpang');
@@ -71,7 +71,7 @@ class AdminSetoranController extends Controller
             ->withQueryString();
 
         $rekapJadwal = $jadwalsPaginated->through(function ($jadwal) {
-            $lunasPemesanans = $jadwal->pemesanans->filter(function($p) {
+            $lunasPemesanans = $jadwal->pemesanans->filter(function ($p) {
                 return $p->status_perjalanan === 'Selesai' || $p->status_pembayaran === 'Lunas';
             });
 
@@ -136,12 +136,15 @@ class AdminSetoranController extends Controller
      */
     public function cetakPdf(Request $request)
     {
+        ini_set('memory_limit', '256M');
+        set_time_limit(300);
+
         $selectedPeriod = $request->input('period');
 
-        $query = Jadwal::with(['sopir', 'armada', 'pemesanans' => function($q) {
-            $q->where(function($sq) {
+        $query = Jadwal::with(['sopir', 'armada', 'pemesanans' => function ($q) {
+            $q->where(function ($sq) {
                 $sq->where('status_perjalanan', 'Selesai')
-                  ->orWhere('status_pembayaran', 'Lunas');
+                    ->orWhere('status_pembayaran', 'Lunas');
             });
         }]);
 
@@ -157,7 +160,7 @@ class AdminSetoranController extends Controller
             ->get();
 
         $rekapJadwal = $jadwals->map(function ($jadwal) {
-            $lunasPemesanans = $jadwal->pemesanans->filter(function($p) {
+            $lunasPemesanans = $jadwal->pemesanans->filter(function ($p) {
                 return $p->status_perjalanan === 'Selesai' || $p->status_pembayaran === 'Lunas';
             });
 
@@ -208,8 +211,8 @@ class AdminSetoranController extends Controller
             'totalSudahSetorSemua',
             'totalBelumSetorSemua'
         ))
-        ->setPaper('a4', 'landscape')
-        ->download('Laporan-Setoran-RTM-' . ($selectedPeriod ?? 'Semua-Periode') . '.pdf');
+            ->setPaper('a4', 'landscape')
+            ->download('Laporan-Setoran-RTM-' . ($selectedPeriod ?? 'Semua-Periode') . '.pdf');
     }
 
     /**
@@ -218,9 +221,9 @@ class AdminSetoranController extends Controller
     public function verifikasiSetoran(int|string $id_jadwal)
     {
         $updatedCount = Pemesanan::query()->where('id_jadwal', $id_jadwal)
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->where('status_perjalanan', 'Selesai')
-                  ->orWhere('status_pembayaran', 'Lunas');
+                    ->orWhere('status_pembayaran', 'Lunas');
             })
             ->where('is_setor_admin', false)
             ->update([

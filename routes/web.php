@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('/sopir', AdminSopirController::class);
         Route::resource('/penumpang', AdminPenumpangController::class);
         Route::resource('/jadwal', AdminJadwalController::class);
+
         Route::resource('/pemesanan', AdminPemesananController::class)->only(['index', 'show', 'destroy']);
         Route::patch('/pemesanan/{id}/status', [AdminPemesananController::class, 'updateStatus'])->name('pemesanan.update_status');
 
