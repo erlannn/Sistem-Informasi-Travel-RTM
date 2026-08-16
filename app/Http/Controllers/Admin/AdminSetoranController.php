@@ -7,7 +7,7 @@ use App\Models\Jadwal;
 use App\Models\Pemesanan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Spatie\LaravelPdf\Facades\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminSetoranController extends Controller
 {
@@ -198,7 +198,7 @@ class AdminSetoranController extends Controller
         $totalSudahSetorSemua = $rekapJadwal->sum('total_sudah_setor');
         $totalBelumSetorSemua = $rekapJadwal->sum('total_belum_setor');
 
-        return Pdf::view('admin.setoran.pdf', compact(
+        return Pdf::loadView('admin.setoran.pdf', compact(
             'rekapJadwal',
             'selectedPeriod',
             'periodLabel',
@@ -208,9 +208,8 @@ class AdminSetoranController extends Controller
             'totalSudahSetorSemua',
             'totalBelumSetorSemua'
         ))
-        ->format('a4')
-        ->landscape()
-        ->name('Laporan-Setoran-RTM-' . ($selectedPeriod ?? 'Semua-Periode') . '.pdf');
+        ->setPaper('a4', 'landscape')
+        ->download('Laporan-Setoran-RTM-' . ($selectedPeriod ?? 'Semua-Periode') . '.pdf');
     }
 
     /**

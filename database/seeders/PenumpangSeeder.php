@@ -16,6 +16,7 @@ class PenumpangSeeder extends Seeder
     public function run(): void
     {
         $rolePenumpang = Role::firstOrCreate(['name' => 'Penumpang']);
+        $passwordHash = Hash::make('password123');
 
         $penumpangs = [
             ['nama' => 'Budi Santoso', 'email' => 'budi@gmail.com', 'no_hp' => '081234567890', 'alamat' => 'Jl. Merdeka No. 12, Bandung'],
@@ -40,7 +41,7 @@ class PenumpangSeeder extends Seeder
                 ['email' => $p['email']],
                 [
                     'name' => $p['nama'],
-                    'password' => Hash::make('password123'),
+                    'password' => $passwordHash,
                 ]
             );
             if (!$user->hasRole('Penumpang')) {
@@ -51,7 +52,7 @@ class PenumpangSeeder extends Seeder
                 ['email' => $p['email']],
                 [
                     'nama' => $p['nama'],
-                    'password' => Hash::make('password123'),
+                    'password' => $passwordHash,
                     'no_hp' => $p['no_hp'],
                     'alamat' => $p['alamat'],
                 ]

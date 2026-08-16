@@ -56,10 +56,10 @@ Route::get('/', function (Illuminate\Http\Request $request) {
     }
 
     return view('welcome', compact('jadwals', 'asal', 'tujuan', 'tanggal', 'lokasiAsal', 'lokasiTujuan'));
-});
+})->middleware('browser.cache');
 
 // Guest Auth Routes
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest', 'browser.cache'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Admin Routes (Role: Admin)
-    Route::middleware('role:Admin')->prefix('admin')->as('admin.')->group(function () {
+    Route::middleware(['role:Admin', 'browser.cache'])->prefix('admin')->as('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::resource('/armada', AdminArmadaController::class);
         Route::resource('/sopir', AdminSopirController::class);
@@ -87,7 +87,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Penumpang Routes (Role: Penumpang)
-    Route::middleware('role:Penumpang')->prefix('penumpang')->as('penumpang.')->group(function () {
+    Route::middleware(['role:Penumpang', 'browser.cache'])->prefix('penumpang')->as('penumpang.')->group(function () {
         Route::get('/dashboard', [PenumpangDashboardController::class, 'index'])->name('dashboard');
         Route::get('/beranda', [PenumpangDashboardController::class, 'beranda'])->name('beranda');
         Route::get('/jadwal', [PenumpangDashboardController::class, 'jadwal'])->name('jadwal');
@@ -103,7 +103,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Sopir Routes (Role: Sopir)
-    Route::middleware('role:Sopir')->prefix('sopir')->as('sopir.')->group(function () {
+    Route::middleware(['role:Sopir', 'browser.cache'])->prefix('sopir')->as('sopir.')->group(function () {
         Route::get('/dashboard', [SopirDashboardController::class, 'index'])->name('dashboard');
         Route::get('/jadwal', [SopirDashboardController::class, 'jadwal'])->name('jadwal');
         Route::get('/jadwal/{id}', [SopirDashboardController::class, 'jadwalDetail'])->name('jadwal.detail');

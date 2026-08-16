@@ -16,12 +16,13 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         $roleAdmin = Role::firstOrCreate(['name' => 'Admin']);
+        $passwordHash = Hash::make('password123');
 
         $userAdmin = User::firstOrCreate(
             ['email' => 'admin@rtmtravel.com'],
             [
                 'name' => 'Administrator CV RTM',
-                'password' => Hash::make('password123'),
+                'password' => $passwordHash,
             ]
         );
         if (!$userAdmin->hasRole('Admin')) {
@@ -32,7 +33,7 @@ class AdminSeeder extends Seeder
             ['email' => 'admin@rtmtravel.com'],
             [
                 'nama' => 'Administrator CV RTM',
-                'password' => Hash::make('password123'),
+                'password' => $passwordHash,
             ]
         );
     }

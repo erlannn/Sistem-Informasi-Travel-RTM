@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Spatie\LaravelPdf\Facades\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Services\ContentBasedFilteringService;
 
@@ -147,8 +147,8 @@ class PenumpangDashboardController extends Controller
         }
         $idKursiArray = array_filter(array_map('trim', $idKursiArray));
 
-        $kursis = Kursi::query()->where('id_jadwal', $id_jadwal)
-            ->whereIn('id_kursi', $idKursiArray)
+        $kursis = Kursi::query()->where('id_jadwal', '=', $id_jadwal)
+            ->whereIn('id_kursi', $idKursiArray, 'and', false)
             ->get();
 
         if ($kursis->isEmpty()) {
@@ -273,13 +273,13 @@ class PenumpangDashboardController extends Controller
             return back()->with('error', 'Tiket tidak dapat dibatalkan karena perjalanan sudah selesai.');
         }
 
-        $relatedPemesanans = Pemesanan::query()->where('id_penumpang', $pemesanan->id_penumpang)
-            ->where('id_jadwal', $pemesanan->id_jadwal)
-            ->where('tanggal_pesan', $pemesanan->tanggal_pesan)
+        $relatedPemesanans = Pemesanan::query()->where('id_penumpang', '=', $pemesanan->id_penumpang)
+            ->where('id_jadwal', '=', $pemesanan->id_jadwal)
+            ->where('tanggal_pesan', '=', $pemesanan->tanggal_pesan)
             ->whereBetween('created_at', [
                 \Carbon\Carbon::parse($pemesanan->created_at)->subSeconds(15),
                 \Carbon\Carbon::parse($pemesanan->created_at)->addSeconds(15)
-            ])
+            ], 'and', false)
             ->get();
 
         if ($relatedPemesanans->isEmpty()) {
@@ -312,9 +312,9 @@ class PenumpangDashboardController extends Controller
         $pemesanan = Pemesanan::with(['jadwal.armada', 'jadwal.sopir', 'kursi', 'penumpang'])
             ->findOrFail($id_pemesanan);
 
-        return Pdf::view('penumpang.pdf_status', compact('pemesanan'))
-            ->format('a4')
-            ->name('Bukti-Pembayaran-RTM' . sprintf('%04d', $pemesanan->id_pemesanan) . '.pdf');
+        return Pdf::loadView('penumpang.pdf_status', compact('pemesanan'))
+            ->setPaper('a4', 'portrait')
+            ->download('Bukti-Pembayaran-RTM' . sprintf('%04d', $pemesanan->id_pemesanan) . '.pdf');
     }
 
     /**
