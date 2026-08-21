@@ -77,9 +77,6 @@
                         <span class="font-extrabold text-slate-900 block leading-tight">
                             <i class="fa-solid fa-van-shuttle mr-1.5 text-slate-400"></i>{{ $j->armada->merk ?? 'Mobil' }}
                         </span>
-                        <span class="font-extrabold text-slate-900 block">
-                            <i class="fa-solid fa-id-card-clip mr-1.5 text-slate-400"></i>{{ $j->armada->plat_nomor ?? '-' }}
-                        </span>
                     </div>
                 </div>
 

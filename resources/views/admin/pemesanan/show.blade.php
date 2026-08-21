@@ -136,7 +136,7 @@
                         @endif
                     </div>
                     <div>
-                        <span class="text-slate-400 font-bold block text-[10px] mb-0.5">Sopir / Pengemudi Ditugaskan</span>
+                        <span class="text-slate-400 font-bold block text-[10px] mb-0.5">Sopir</span>
                         <span class="font-extrabold text-slate-900">{{ $pemesanan->jadwal->sopir->nama ?? '-' }}</span>
                         @if(isset($pemesanan->jadwal->sopir->no_hp))
                             <span class="text-slate-500 font-medium">(HP: {{ $pemesanan->jadwal->sopir->no_hp }})</span>

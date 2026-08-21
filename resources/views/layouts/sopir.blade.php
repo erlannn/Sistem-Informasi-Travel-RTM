@@ -77,7 +77,7 @@
       <a href="{{ route('sopir.gaji') }}"
         class="flex items-center px-4 py-3 rounded-xl text-xs transition-all {{ request()->routeIs('sopir.gaji') ? 'bg-amber-400/20 text-amber-400 border-l-4 border-amber-400 font-extrabold shadow-xs' : 'text-slate-200 hover:bg-slate-800/90 hover:text-amber-400 font-bold' }}">
         <i class="fa-solid fa-wallet mr-3 text-sm text-center w-5"></i>
-        <span>Gaji & Pendapatan</span>
+        <span>Gaji Supir</span>
       </a>
     </nav>
   </aside>
