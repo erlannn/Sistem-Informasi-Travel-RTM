@@ -64,18 +64,15 @@ class AdminJadwalController extends Controller
             'id_armada' => 'required|exists:armadas,id_armada',
             'id_sopir' => 'required|exists:sopirs,id_sopir',
             'asal' => 'required|in:Sijunjung,Solok,Padang,BIM',
-            'tujuan' => 'required|in:Sijunjung,Solok,Padang,BIM',
+            'tujuan' => 'required|in:Sijunjung,Solok,Padang,BIM|different:asal',
             'tanggal' => 'required|date',
             'jam' => 'required|string',
+            'harga' => 'required|numeric|min:0',
+            'bagi_hasil_sopir' => 'required|numeric|min:0|lte:harga',
+        ], [
+            'tujuan.different' => 'Kota tujuan tidak boleh sama dengan kota asal.',
+            'bagi_hasil_sopir.lte' => 'Gaji / bagi hasil sopir tidak boleh melebihi harga tiket.',
         ]);
-
-        $pricing = $this->getRoutePricing($validated['asal'], $validated['tujuan']);
-        if (!$pricing) {
-            return back()->withInput()->withErrors(['tujuan' => 'Rute perjalanan tidak valid. Hanya tersedia 6 rute antara Sijunjung, Solok, Padang, dan BIM.']);
-        }
-
-        $validated['harga'] = $pricing['harga'];
-        $validated['bagi_hasil_sopir'] = $pricing['bagi_hasil_sopir'];
 
         /** @var Jadwal $jadwal */
         $jadwal = Jadwal::create($validated);
@@ -122,18 +119,15 @@ class AdminJadwalController extends Controller
             'id_armada' => 'required|exists:armadas,id_armada',
             'id_sopir' => 'required|exists:sopirs,id_sopir',
             'asal' => 'required|in:Sijunjung,Solok,Padang,BIM',
-            'tujuan' => 'required|in:Sijunjung,Solok,Padang,BIM',
+            'tujuan' => 'required|in:Sijunjung,Solok,Padang,BIM|different:asal',
             'tanggal' => 'required|date',
             'jam' => 'required|string',
+            'harga' => 'required|numeric|min:0',
+            'bagi_hasil_sopir' => 'required|numeric|min:0|lte:harga',
+        ], [
+            'tujuan.different' => 'Kota tujuan tidak boleh sama dengan kota asal.',
+            'bagi_hasil_sopir.lte' => 'Gaji / bagi hasil sopir tidak boleh melebihi harga tiket.',
         ]);
-
-        $pricing = $this->getRoutePricing($validated['asal'], $validated['tujuan']);
-        if (!$pricing) {
-            return back()->withInput()->withErrors(['tujuan' => 'Rute perjalanan tidak valid. Hanya tersedia 6 rute antara Sijunjung, Solok, Padang, dan BIM.']);
-        }
-
-        $validated['harga'] = $pricing['harga'];
-        $validated['bagi_hasil_sopir'] = $pricing['bagi_hasil_sopir'];
 
         $jadwal->fill($validated)->save();
 

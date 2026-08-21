@@ -98,8 +98,9 @@
       <a href="{{ route('admin.setoran.index') }}"
         class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] transition-all duration-200 group relative {{ Request::routeIs('admin.setoran.*') ? 'bg-amber-400/10 text-amber-400 font-bold border-r-4 border-amber-400 shadow-xs' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium' }}">
         <i class="fa-solid fa-file-invoice-dollar text-base text-center w-5 transition-transform group-hover:scale-110 {{ Request::routeIs('admin.setoran.*') ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-200' }}"></i>
-        <span>Laporan</span>
+        <span>Laporan Keuangan</span>
       </a>
+
     </nav>
   </aside>
 

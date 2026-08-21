@@ -1,7 +1,7 @@
 @extends('layouts.sopir')
 
-@section('title', 'Informasi Gaji & Bagi Hasil - CV RTM Travel')
-@section('page_title', 'Informasi Gaji & Setoran')
+@section('title', 'Informasi Gaji - CV RTM Travel')
+@section('page_title', 'Informasi Gaji')
 
 @section('content')
 <div class="space-y-6">
@@ -11,7 +11,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
                 <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-1.5">
-                    Gaji & Pembagian Hasil
+                    Informasi Gaji
                 </h1>
                 <p class="text-xs text-slate-500 font-medium mt-0.5">Rincian perolehan gaji Anda dan jumlah setoran wajib ke kasir kantor per bulan</p>
             </div>
@@ -60,13 +60,13 @@
                     <i class="fa-solid fa-wallet text-lg"></i>
                 </div>
                 <div>
-                    <span class="text-[11px] text-emerald-900 font-extrabold uppercase tracking-wider block">Gaji / Hak Anda (Sopir)</span>
+                    <span class="text-[11px] text-emerald-900 font-extrabold uppercase tracking-wider block">Gaji Sopir</span>
                     <span class="text-xl lg:text-2xl font-black text-emerald-600 leading-tight block mt-0.5">Rp {{ number_format($totalGaji, 0, ',', '.') }}</span>
                 </div>
             </div>
             <p class="text-[11px] text-emerald-800 font-bold mt-3 border-t border-emerald-100/80 pt-2.5 flex items-center gap-1">
                 <i class="fa-solid fa-circle-check text-emerald-600"></i>
-                <span>Uang bersih hak Anda dari total {{ $totalPenumpang }} penumpang selesai.</span>
+                <span>Uang bersih gaji sopir dari total {{ $totalPenumpang }} penumpang selesai.</span>
             </p>
         </div>
 
@@ -77,7 +77,7 @@
                     <i class="fa-solid fa-building-columns text-lg"></i>
                 </div>
                 <div>
-                    <span class="text-[11px] text-slate-500 font-extrabold uppercase tracking-wider block">Wajib Disetor ke Admin Kantor</span>
+                    <span class="text-[11px] text-slate-500 font-extrabold uppercase tracking-wider block">Setoran ke Admin</span>
                     <span class="text-xl lg:text-2xl font-black text-indigo-600 leading-tight block mt-0.5">Rp {{ number_format($totalSetoranPerusahaan, 0, ',', '.') }}</span>
                 </div>
             </div>
@@ -173,11 +173,11 @@
                         <span class="text-slate-900 font-bold">Rp {{ number_format($totalTunaiDiterima, 0, ',', '.') }}</span>
                     </div>
                     <div class="flex justify-between items-center py-1.5 border-b border-slate-200/60">
-                        <span class="text-slate-600">Diambil untuk Gaji Anda (Sopir):</span>
-                        <span class="text-emerald-600 font-bold">- Rp {{ number_format($totalGaji, 0, ',', '.') }}</span>
+                        <span class="text-slate-600"> Gaji Sopir:</span>
+                        <span class="text-emerald-600 font-bold"> Rp {{ number_format($totalGaji, 0, ',', '.') }}</span>
                     </div>
                     <div class="flex justify-between items-center pt-2 text-sm md:text-base font-black">
-                        <span class="text-slate-900">Uang yang Diserahkan ke Admin Kantor:</span>
+                        <span class="text-slate-900">Setoran ke Admin:</span>
                         <span class="text-indigo-600 font-black">Rp {{ number_format($totalSetoranPerusahaan, 0, ',', '.') }}</span>
                     </div>
                 </div>

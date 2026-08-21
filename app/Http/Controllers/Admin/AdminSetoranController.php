@@ -12,12 +12,59 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class AdminSetoranController extends Controller
 {
     /**
+     * Helper to apply date/period filtering query and generate period label
+     */
+    private function applyFilter($query, Request $request): array
+    {
+        $filterType = $request->input('filter_type');
+        $selectedPeriod = $request->input('period');
+        $selectedDate = $request->input('tanggal', Carbon::today()->toDateString());
+
+        // Backward compatibility if only period was passed
+        if (!$filterType && $selectedPeriod) {
+            $filterType = 'bulanan';
+        } elseif (!$filterType) {
+            $filterType = 'semua';
+        }
+
+        $periodLabel = 'Semua Periode';
+
+        if ($filterType === 'harian') {
+            $date = Carbon::parse($selectedDate);
+            $query->whereDate('tanggal', $date->toDateString());
+            $periodLabel = 'Harian (' . $date->translatedFormat('d F Y') . ')';
+        } elseif ($filterType === 'mingguan') {
+            $date = Carbon::parse($selectedDate);
+            $startOfWeek = $date->copy()->startOfWeek()->toDateString();
+            $endOfWeek = $date->copy()->endOfWeek()->toDateString();
+            $query->whereBetween('tanggal', [$startOfWeek, $endOfWeek]);
+            $periodLabel = 'Mingguan (' . Carbon::parse($startOfWeek)->translatedFormat('d M') . ' - ' . Carbon::parse($endOfWeek)->translatedFormat('d M Y') . ')';
+        } elseif ($filterType === 'bulanan') {
+            $p = $selectedPeriod ?: Carbon::today()->format('Y-m');
+            try {
+                $date = Carbon::createFromFormat('Y-m', $p);
+            } catch (\Exception $e) {
+                $date = Carbon::today();
+                $p = $date->format('Y-m');
+            }
+            $query->whereBetween('tanggal', [$date->copy()->startOfMonth()->toDateString(), $date->copy()->endOfMonth()->toDateString()]);
+            $periodLabel = 'Bulanan (' . $date->translatedFormat('F Y') . ')';
+            $selectedPeriod = $p;
+        }
+
+        return [
+            'filterType' => $filterType,
+            'selectedDate' => $selectedDate,
+            'selectedPeriod' => $selectedPeriod,
+            'periodLabel' => $periodLabel,
+        ];
+    }
+
+    /**
      * Tampilkan rekap Laporan Pembagian Hasil (Supir vs Admin/Perusahaan)
      */
     public function index(Request $request)
     {
-        $selectedPeriod = $request->input('period');
-
         $query = Jadwal::with(['sopir', 'armada', 'pemesanans' => function ($q) {
             $q->where(function ($sq) {
                 $sq->where('status_perjalanan', 'Selesai')
@@ -25,10 +72,11 @@ class AdminSetoranController extends Controller
             });
         }]);
 
-        if ($selectedPeriod) {
-            $date = Carbon::createFromFormat('Y-m', $selectedPeriod);
-            $query->whereBetween('tanggal', [$date->copy()->startOfMonth()->toDateString(), $date->copy()->endOfMonth()->toDateString()]);
-        }
+        $filterData = $this->applyFilter($query, $request);
+        $filterType = $filterData['filterType'];
+        $selectedDate = $filterData['selectedDate'];
+        $selectedPeriod = $filterData['selectedPeriod'];
+        $periodLabel = $filterData['periodLabel'];
 
         // Calculate overall summary metrics for the active filter
         $allJadwalsForSummary = (clone $query)->get();
@@ -107,7 +155,7 @@ class AdminSetoranController extends Controller
             ];
         });
 
-        // Generate list of available periods
+        // Generate list of available periods for monthly option
         $periods = [];
         $allDates = Jadwal::select('tanggal')->orderBy('tanggal', 'desc')->pluck('tanggal')->toArray();
         foreach ($allDates as $dDate) {
@@ -121,7 +169,10 @@ class AdminSetoranController extends Controller
 
         return view('admin.setoran.index', compact(
             'rekapJadwal',
+            'filterType',
+            'selectedDate',
             'selectedPeriod',
+            'periodLabel',
             'periods',
             'totalPendapatanKotorSemua',
             'totalHakSupirSemua',
@@ -139,8 +190,6 @@ class AdminSetoranController extends Controller
         ini_set('memory_limit', '256M');
         set_time_limit(300);
 
-        $selectedPeriod = $request->input('period');
-
         $query = Jadwal::with(['sopir', 'armada', 'pemesanans' => function ($q) {
             $q->where(function ($sq) {
                 $sq->where('status_perjalanan', 'Selesai')
@@ -148,12 +197,11 @@ class AdminSetoranController extends Controller
             });
         }]);
 
-        $periodLabel = 'Semua Periode';
-        if ($selectedPeriod) {
-            $date = Carbon::createFromFormat('Y-m', $selectedPeriod);
-            $query->whereBetween('tanggal', [$date->copy()->startOfMonth()->toDateString(), $date->copy()->endOfMonth()->toDateString()]);
-            $periodLabel = $date->translatedFormat('F Y');
-        }
+        $filterData = $this->applyFilter($query, $request);
+        $filterType = $filterData['filterType'];
+        $selectedDate = $filterData['selectedDate'];
+        $selectedPeriod = $filterData['selectedPeriod'];
+        $periodLabel = $filterData['periodLabel'];
 
         $jadwals = $query->orderBy('tanggal', 'desc')
             ->orderBy('jam', 'desc')
@@ -187,7 +235,7 @@ class AdminSetoranController extends Controller
                 'jadwal' => $jadwal,
                 'total_penumpang_lunas' => $totalPenumpangLunas,
                 'total_pendapatan_kotor' => $totalPendapatanKotor,
-                'total_hak_supir' => $totalHakSupir,
+                'total_hak_sopir' => $totalHakSupir,
                 'total_setoran_wajib' => $totalSetoranWajib,
                 'total_sudah_setor' => $totalSudahSetor,
                 'total_belum_setor' => $totalBelumSetor,
@@ -203,6 +251,8 @@ class AdminSetoranController extends Controller
 
         return Pdf::loadView('admin.setoran.pdf', compact(
             'rekapJadwal',
+            'filterType',
+            'selectedDate',
             'selectedPeriod',
             'periodLabel',
             'totalPendapatanKotorSemua',
@@ -212,7 +262,7 @@ class AdminSetoranController extends Controller
             'totalBelumSetorSemua'
         ))
             ->setPaper('a4', 'landscape')
-            ->download('Laporan-Setoran-RTM-' . ($selectedPeriod ?? 'Semua-Periode') . '.pdf');
+            ->download('Laporan-Setoran-RTM-' . str_replace([' ', '(', ')', '/'], '-', $periodLabel) . '.pdf');
     }
 
     /**

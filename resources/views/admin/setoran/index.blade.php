@@ -16,20 +16,60 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
-            <form action="{{ route('admin.setoran.index') }}" method="GET" class="flex items-center gap-2">
-                <select name="period" onchange="this.form.submit()" class="px-3.5 py-2 text-xs font-bold bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all cursor-pointer outline-none">
-                    <option value="">Semua Periode</option>
-                    @foreach($periods as $val => $label)
-                        <option value="{{ $val }}" {{ $selectedPeriod == $val ? 'selected' : '' }}>{{ $label }}</option>
-                    @endforeach
-                </select>
+            <form action="{{ route('admin.setoran.index') }}" method="GET" id="filter-form" class="flex flex-wrap items-center gap-2">
+                <div class="relative">
+                    <select name="filter_type" id="filter_type" onchange="toggleFilterInputs()" class="px-3.5 py-2 text-xs font-extrabold bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all cursor-pointer outline-none">
+                        <option value="semua" {{ ($filterType ?? 'semua') == 'semua' ? 'selected' : '' }}>Semua Periode</option>
+                        <option value="harian" {{ ($filterType ?? '') == 'harian' ? 'selected' : '' }}>Per Hari (Harian)</option>
+                        <option value="mingguan" {{ ($filterType ?? '') == 'mingguan' ? 'selected' : '' }}>Per Minggu (Mingguan)</option>
+                        <option value="bulanan" {{ ($filterType ?? '') == 'bulanan' ? 'selected' : '' }}>Per Bulan (Bulanan)</option>
+                    </select>
+                </div>
+
+                <!-- Input Tanggal untuk Harian & Mingguan -->
+                <div id="input-date-container" class="{{ in_array($filterType ?? '', ['harian', 'mingguan']) ? '' : 'hidden' }}">
+                    <input type="date" name="tanggal" value="{{ $selectedDate ?? date('Y-m-d') }}" onchange="this.form.submit()" class="px-3 py-2 text-xs font-bold bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer outline-none">
+                </div>
+
+                <!-- Select Bulan untuk Bulanan -->
+                <div id="input-month-container" class="{{ ($filterType ?? '') == 'bulanan' ? '' : 'hidden' }}">
+                    <select name="period" onchange="this.form.submit()" class="px-3.5 py-2 text-xs font-bold bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer outline-none">
+                        @foreach($periods as $val => $label)
+                            <option value="{{ $val }}" {{ ($selectedPeriod ?? '') == $val ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                @if(($filterType ?? 'semua') !== 'semua' && !in_array($filterType ?? '', ['harian', 'mingguan', 'bulanan']))
+                    <button type="submit" class="px-3 py-2 text-xs font-bold bg-amber-400 text-slate-950 rounded-xl hover:bg-amber-500 transition">Filter</button>
+                @endif
             </form>
-            <a href="{{ route('admin.setoran.pdf', ['period' => $selectedPeriod]) }}" target="_blank" class="px-4 py-2 bg-slate-900 hover:bg-slate-950 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95">
+
+            <a href="{{ route('admin.setoran.pdf', request()->query()) }}" target="_blank" class="px-4 py-2 bg-slate-900 hover:bg-slate-950 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95">
                 <i class="fa-solid fa-file-pdf text-xs text-rose-400"></i>
                 <span>Cetak Laporan PDF</span>
             </a>
         </div>
     </div>
+
+    <script>
+    function toggleFilterInputs() {
+        const type = document.getElementById('filter_type').value;
+        const dateContainer = document.getElementById('input-date-container');
+        const monthContainer = document.getElementById('input-month-container');
+
+        dateContainer.classList.add('hidden');
+        monthContainer.classList.add('hidden');
+
+        if (type === 'harian' || type === 'mingguan') {
+            dateContainer.classList.remove('hidden');
+        } else if (type === 'bulanan') {
+            monthContainer.classList.remove('hidden');
+        }
+
+        document.getElementById('filter-form').submit();
+    }
+    </script>
 
     <!-- Summary Metrics Cards (3 Main Split Cards dengan Ikon & Warna Presisi) -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
