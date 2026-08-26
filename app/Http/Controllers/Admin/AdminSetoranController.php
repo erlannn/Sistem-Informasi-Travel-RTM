@@ -147,6 +147,7 @@ class AdminSetoranController extends Controller
                 'total_penumpang_lunas' => $totalPenumpangLunas,
                 'total_pendapatan_kotor' => $totalPendapatanKotor,
                 'total_hak_supir' => $totalHakSupir,
+                'total_hak_sopir' => $totalHakSupir,
                 'total_setoran_wajib' => $totalSetoranWajib,
                 'total_sudah_setor' => $totalSudahSetor,
                 'total_belum_setor' => $totalBelumSetor,
@@ -187,7 +188,7 @@ class AdminSetoranController extends Controller
      */
     public function cetakPdf(Request $request)
     {
-        ini_set('memory_limit', '256M');
+        ini_set('memory_limit', '-1');
         set_time_limit(300);
 
         $query = Jadwal::with(['sopir', 'armada', 'pemesanans' => function ($q) {
@@ -235,11 +236,13 @@ class AdminSetoranController extends Controller
                 'jadwal' => $jadwal,
                 'total_penumpang_lunas' => $totalPenumpangLunas,
                 'total_pendapatan_kotor' => $totalPendapatanKotor,
+                'total_hak_supir' => $totalHakSupir,
                 'total_hak_sopir' => $totalHakSupir,
                 'total_setoran_wajib' => $totalSetoranWajib,
                 'total_sudah_setor' => $totalSudahSetor,
                 'total_belum_setor' => $totalBelumSetor,
                 'is_fully_setor' => $isFullySetor,
+                'jumlah_pemesanan_lunas' => $lunasPemesanans->count(),
             ];
         });
 

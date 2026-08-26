@@ -173,7 +173,7 @@
 
                             <!-- Bagian Supir -->
                             <td class="py-4 px-4 text-right font-extrabold text-indigo-600">
-                                Rp {{ number_format($r['total_hak_supir'], 0, ',', '.') }}
+                                Rp {{ number_format($r['total_hak_supir'] ?? $r['total_hak_sopir'] ?? 0, 0, ',', '.') }}
                             </td>
 
                             <!-- Bagian Admin -->
