@@ -77,7 +77,10 @@ test('admin setoran index page renders with paginated data', function () {
 test('admin setoran pdf report route renders clean spatie pdf output', function () {
     $admin = getAdminUserForSetoranTest();
 
-    $response = actingAs($admin)->get(route('admin.setoran.pdf'));
+    $response = actingAs($admin)->get(route('admin.setoran.pdf', [
+        'filter_type' => 'harian',
+        'tanggal' => now()->format('Y-m-d'),
+    ]));
 
     $response->assertStatus(200);
 });

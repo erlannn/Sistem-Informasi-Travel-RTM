@@ -234,21 +234,21 @@
                         <small style="color: #64748b;">{{ $j->armada->merk ?? '-' }} @if(isset($j->armada->plat_nomor))({{ $j->armada->plat_nomor }})@endif</small>
                     </td>
                     <td class="text-center font-bold">
-                        {{ $r['total_penumpang_lunas'] }} Orang
+                        {{ $r['total_penumpang_lunas'] ?? 0 }} Orang
                     </td>
                     <td class="text-right font-bold">
-                        Rp {{ number_format($r['total_pendapatan_kotor'], 0, ',', '.') }}
+                        Rp {{ number_format($r['total_pendapatan_kotor'] ?? 0, 0, ',', '.') }}
                     </td>
                     <td class="text-right font-bold text-indigo">
-                        Rp {{ number_format($r['total_hak_supir'], 0, ',', '.') }}
+                        Rp {{ number_format($r['total_hak_supir'] ?? $r['total_hak_sopir'] ?? 0, 0, ',', '.') }}
                     </td>
                     <td class="text-right font-bold text-emerald">
-                        Rp {{ number_format($r['total_setoran_wajib'], 0, ',', '.') }}
+                        Rp {{ number_format($r['total_setoran_wajib'] ?? 0, 0, ',', '.') }}
                     </td>
                     <td class="text-center">
-                        @if($r['is_fully_setor'])
+                        @if(!empty($r['is_fully_setor']))
                             <span class="badge badge-success">Disetor</span>
-                        @elseif($r['total_setoran_wajib'] == 0)
+                        @elseif(($r['total_setoran_wajib'] ?? 0) == 0)
                             <span class="badge badge-secondary">Nihil</span>
                         @else
                             <span class="badge badge-warning">Belum</span>
