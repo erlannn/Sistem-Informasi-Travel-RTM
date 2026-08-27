@@ -192,9 +192,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const routeCompany = document.getElementById('route-company');
 
     const timesDefault = [
-        { val: '05:00:00', label: 'Jam 05:00 Pagi' },
+        { val: '05:00:00', label: 'Jam 05:00 Pagi / Subuh' },
         { val: '08:00:00', label: 'Jam 08:00 Pagi' },
+        { val: '09:00:00', label: 'Jam 09:00 Pagi' },
         { val: '10:00:00', label: 'Jam 10:00 Pagi' },
+        { val: '11:00:00', label: 'Jam 11:00 Pagi' },
         { val: '13:00:00', label: 'Jam 13:00 (1 Siang)' },
         { val: '15:00:00', label: 'Jam 15:00 (3 Sore)' },
         { val: '17:00:00', label: 'Jam 17:00 (5 Sore)' },
