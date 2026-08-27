@@ -160,12 +160,8 @@
                                                     <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                     {{ \Carbon\Carbon::parse($j->jam)->format('H.i') }} WIB ({{ $j->tanggal }})
                                                 </span>
-                                                <span class="text-slate-300">•</span>
-                                                <span class="text-slate-800 font-bold text-[11px]">
-                                                    {{ $j->armada->merk ?? 'Super Executive' }}
-                                                </span>
+                                                <span class="text-slate-500">•</span>
                                                 @if(isset($j->match_percentage))
-                                                    <span class="text-slate-300">•</span>
                                                     <!-- Match Percentage (Tanpa Emote) -->
                                                     <span class="text-amber-900 bg-amber-100 border border-amber-200/80 font-extrabold px-2 py-0.5 rounded-md text-[10px]">
                                                         {{ $j->match_percentage }}% Cocok

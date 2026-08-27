@@ -29,22 +29,79 @@ class JadwalSeeder extends Seeder
         // Clean up previous schedules to prevent duplication
         Jadwal::query()->delete();
 
-        // Standard routes with default market pricing
+        // Standard routes with default market pricing and route-specific departure times
         $routes = [
-            ['asal' => 'Sijunjung', 'tujuan' => 'Padang', 'harga' => 80000.00, 'bagi_hasil_sopir' => 30000.00],
-            ['asal' => 'Padang', 'tujuan' => 'Sijunjung', 'harga' => 80000.00, 'bagi_hasil_sopir' => 30000.00],
-            ['asal' => 'Sijunjung', 'tujuan' => 'Solok', 'harga' => 50000.00, 'bagi_hasil_sopir' => 20000.00],
-            ['asal' => 'Solok', 'tujuan' => 'Sijunjung', 'harga' => 50000.00, 'bagi_hasil_sopir' => 20000.00],
-            ['asal' => 'Sijunjung', 'tujuan' => 'BIM', 'harga' => 150000.00, 'bagi_hasil_sopir' => 50000.00],
-            ['asal' => 'BIM', 'tujuan' => 'Sijunjung', 'harga' => 150000.00, 'bagi_hasil_sopir' => 50000.00],
-            ['asal' => 'Padang', 'tujuan' => 'Solok', 'harga' => 60000.00, 'bagi_hasil_sopir' => 25000.00],
-            ['asal' => 'Solok', 'tujuan' => 'Padang', 'harga' => 60000.00, 'bagi_hasil_sopir' => 25000.00],
-            ['asal' => 'BIM', 'tujuan' => 'Solok', 'harga' => 70000.00, 'bagi_hasil_sopir' => 30000.00],
-            ['asal' => 'Solok', 'tujuan' => 'BIM', 'harga' => 70000.00, 'bagi_hasil_sopir' => 30000.00],
+            [
+                'asal' => 'Sijunjung',
+                'tujuan' => 'Padang',
+                'harga' => 80000.00,
+                'bagi_hasil_sopir' => 30000.00,
+                'times' => ['05:00:00', '08:00:00', '10:00:00', '13:00:00', '17:00:00'],
+            ],
+            [
+                'asal' => 'Sijunjung',
+                'tujuan' => 'BIM',
+                'harga' => 150000.00,
+                'bagi_hasil_sopir' => 50000.00,
+                'times' => ['05:00:00', '08:00:00', '10:00:00', '13:00:00', '17:00:00'],
+            ],
+            [
+                'asal' => 'Padang',
+                'tujuan' => 'Sijunjung',
+                'harga' => 80000.00,
+                'bagi_hasil_sopir' => 30000.00,
+                'times' => ['09:00:00', '11:00:00', '13:00:00', '15:00:00', '17:00:00', '19:00:00'],
+            ],
+            [
+                'asal' => 'BIM',
+                'tujuan' => 'Sijunjung',
+                'harga' => 150000.00,
+                'bagi_hasil_sopir' => 50000.00,
+                'times' => ['09:00:00', '11:00:00', '13:00:00', '15:00:00', '17:00:00', '19:00:00'],
+            ],
+            [
+                'asal' => 'Sijunjung',
+                'tujuan' => 'Solok',
+                'harga' => 50000.00,
+                'bagi_hasil_sopir' => 20000.00,
+                'times' => ['08:00:00', '14:00:00'],
+            ],
+            [
+                'asal' => 'Solok',
+                'tujuan' => 'Sijunjung',
+                'harga' => 50000.00,
+                'bagi_hasil_sopir' => 20000.00,
+                'times' => ['08:00:00', '14:00:00'],
+            ],
+            [
+                'asal' => 'Padang',
+                'tujuan' => 'Solok',
+                'harga' => 60000.00,
+                'bagi_hasil_sopir' => 25000.00,
+                'times' => ['08:00:00', '14:00:00'],
+            ],
+            [
+                'asal' => 'Solok',
+                'tujuan' => 'Padang',
+                'harga' => 60000.00,
+                'bagi_hasil_sopir' => 25000.00,
+                'times' => ['08:00:00', '14:00:00'],
+            ],
+            [
+                'asal' => 'BIM',
+                'tujuan' => 'Solok',
+                'harga' => 70000.00,
+                'bagi_hasil_sopir' => 30000.00,
+                'times' => ['08:00:00', '14:00:00'],
+            ],
+            [
+                'asal' => 'Solok',
+                'tujuan' => 'BIM',
+                'harga' => 70000.00,
+                'bagi_hasil_sopir' => 30000.00,
+                'times' => ['08:00:00', '14:00:00'],
+            ],
         ];
-
-        // Departure times per day
-        $departureTimes = ['08:00:00', '14:00:00'];
 
         $armadaCount = $armadas->count();
         $sopirCount = $sopirs->count();
@@ -52,7 +109,7 @@ class JadwalSeeder extends Seeder
         $armadaIndex = 0;
         $sopirIndex = 0;
 
-        DB::transaction(function () use ($routes, $departureTimes, $armadas, $sopirs, $armadaCount, $sopirCount, $now, &$armadaIndex, &$sopirIndex) {
+        DB::transaction(function () use ($routes, $armadas, $sopirs, $armadaCount, $sopirCount, $now, &$armadaIndex, &$sopirIndex) {
             $allKursis = [];
 
             // Seed schedules for the next 30 days (0 = today up to 30 days ahead)
@@ -60,7 +117,8 @@ class JadwalSeeder extends Seeder
                 $tanggal = Carbon::today()->addDays($d)->toDateString();
 
                 foreach ($routes as $route) {
-                    foreach ($departureTimes as $jam) {
+                    $times = $route['times'] ?? ['08:00:00', '14:00:00'];
+                    foreach ($times as $jam) {
                         $armada = $armadas[$armadaIndex % $armadaCount];
                         $sopir = $sopirs[$sopirIndex % $sopirCount];
 
