@@ -132,11 +132,8 @@
 
                     <!-- Recommended Schedule Cards list -->
                     <div class="space-y-3.5">
-                        @php
-                            $filteredJadwals = collect($jadwals ?? [])->filter(fn($j) => ($j->match_percentage ?? 0) >= 80);
-                        @endphp
-                        @if(!empty($hasHistory) && $filteredJadwals->count() > 0)
-                            @foreach($filteredJadwals as $j)
+                        @if(!empty($hasHistory) && collect($jadwals ?? [])->count() > 0)
+                            @foreach($jadwals as $j)
                                 <div class="group relative bg-slate-50/80 hover:bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 transition-all duration-200 hover:shadow-md hover:border-amber-400 flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     
                                     <div class="flex items-start gap-3">

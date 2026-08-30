@@ -21,9 +21,9 @@ class DatabaseSeeder extends Seeder
             PenumpangSeeder::class,
             SopirSeeder::class,
             ArmadaSeeder::class,
-            JadwalSeeder::class,
+            JadwalTambahanSeeder::class,
             KursiSeeder::class,
-            PemesananSeeder::class,
+            // PemesananSeeder::class,
         ]);
     }
 }

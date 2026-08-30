@@ -107,7 +107,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
                                 </svg>
                             </span>
-                            <input type="tel" id="no_hp" name="no_hp" value="{{ old('no_hp') }}" required placeholder="0812xxxxxxxx" 
+                            <input type="number" id="no_hp" name="no_hp" value="{{ old('no_hp') }}" required placeholder="0812xxxxxxxx" 
                                 class="block w-full pl-10.5 pr-4 py-2.5 text-sm font-bold text-black bg-slate-50 border @error('no_hp') border-status-danger ring-2 ring-status-danger/10 @else border-slate-200 @enderror rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all placeholder:text-slate-400 outline-none">
                         </div>
                         @error('no_hp')
