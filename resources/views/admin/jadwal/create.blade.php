@@ -107,7 +107,7 @@
                     <label class="block text-xs sm:text-sm font-black uppercase tracking-wider text-black mb-2">
                         Tanggal Keberangkatan <span class="text-red-500">*</span>
                     </label>
-                    <input type="date" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" required
+                    <input type="date" id="input-tanggal" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" min="{{ date('Y-m-d') }}" required
                         class="w-full px-4 py-3.5 text-sm font-semibold text-black bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition outline-none cursor-pointer">
                     @error('tanggal')
                         <p class="text-xs text-red-500 font-bold mt-1.5">{{ $message }}</p>
@@ -181,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const asalSelect = document.getElementById('select-asal');
     const tujuanSelect = document.getElementById('select-tujuan');
     const jamSelect = document.getElementById('select-jam');
+    const tanggalInput = document.getElementById('input-tanggal');
 
     const hargaInput = document.getElementById('input-harga');
     const gajiSopirInput = document.getElementById('input-gaji-sopir');
@@ -224,17 +225,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const oldJam = "{{ old('jam', '08:00:00') }}";
 
+    /**
+     * Get today's date string in YYYY-MM-DD format (client-side).
+     */
+    function getTodayString() {
+        const now = new Date();
+        return now.getFullYear() + '-' +
+            String(now.getMonth() + 1).padStart(2, '0') + '-' +
+            String(now.getDate()).padStart(2, '0');
+    }
+
+    /**
+     * Get the current time as HH:MM:SS string.
+     */
+    function getCurrentTimeString() {
+        const now = new Date();
+        return String(now.getHours()).padStart(2, '0') + ':' +
+            String(now.getMinutes()).padStart(2, '0') + ':' +
+            String(now.getSeconds()).padStart(2, '0');
+    }
+
+    /**
+     * Populate hour options. If selected date is today, filter out past hours.
+     */
     function populateHours() {
+        const selectedDate = tanggalInput.value;
+        const isToday = selectedDate === getTodayString();
+        const currentTime = getCurrentTimeString();
+        const previousVal = jamSelect.value;
+
         jamSelect.innerHTML = '';
+        let hasSelected = false;
+
         timesDefault.forEach(t => {
+            // Skip past hours if the selected date is today
+            if (isToday && t.val <= currentTime) {
+                return;
+            }
+
             const opt = document.createElement('option');
             opt.value = t.val;
             opt.textContent = t.label;
-            if (t.val === oldJam || t.val.substring(0,5) === oldJam.substring(0,5)) {
+
+            // Try to preserve previously selected value or old() value
+            if (!hasSelected && (t.val === previousVal || t.val === oldJam || t.val.substring(0,5) === oldJam.substring(0,5))) {
                 opt.selected = true;
+                hasSelected = true;
             }
             jamSelect.appendChild(opt);
         });
+
+        // If no hours available (all past for today), show a disabled message
+        if (jamSelect.options.length === 0) {
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = '⚠️ Semua jam sudah lewat untuk hari ini';
+            opt.disabled = true;
+            opt.selected = true;
+            jamSelect.appendChild(opt);
+        }
     }
 
     function calculateSummary() {
@@ -286,6 +335,16 @@ document.addEventListener('DOMContentLoaded', function() {
     tujuanSelect.addEventListener('change', onRouteChanged);
     hargaInput.addEventListener('input', calculateSummary);
     gajiSopirInput.addEventListener('input', calculateSummary);
+
+    // Re-filter hours when the date changes
+    tanggalInput.addEventListener('change', function() {
+        // Prevent selecting past dates (extra client-side guard)
+        const today = getTodayString();
+        if (this.value < today) {
+            this.value = today;
+        }
+        populateHours();
+    });
 
     populateHours();
     calculateSummary();

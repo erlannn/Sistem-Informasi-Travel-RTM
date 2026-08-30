@@ -105,8 +105,8 @@ class ContentBasedFilteringService
             $totalScore = (0.60 * $simRoute) + (0.40 * $simHour);
             $matchPercentage = min(100, max(0, (int) round($totalScore * 100)));
 
-            // Rule: Filter recommendations to only include match percentage >= 80%
-            if ($matchPercentage >= 80) {
+            // Rule: Filter recommendations to only include match percentage >= 50%
+            if ($matchPercentage >= 50) {
                 $candidate->cbf_score = round($totalScore, 4);
                 $candidate->match_percentage = $matchPercentage;
                 $scoredJadwals->push($candidate);

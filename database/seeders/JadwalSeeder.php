@@ -154,7 +154,7 @@ class JadwalSeeder extends Seeder
 
             // Chunk bulk insert for seats (500 per batch) for optimal speed and memory efficiency
             foreach (array_chunk($allKursis, 500) as $chunk) {
-                Kursi::insert($chunk);
+                Kursi::query()->insert($chunk);
             }
         });
     }

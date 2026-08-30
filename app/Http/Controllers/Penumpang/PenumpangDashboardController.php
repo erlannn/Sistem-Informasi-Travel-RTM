@@ -29,22 +29,7 @@ class PenumpangDashboardController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $penumpang = Penumpang::query()->where('email', $user->email)->first();
-
-        $hasHistory = $penumpang ? Pemesanan::query()->where('id_penumpang', $penumpang->id_penumpang)
-            ->where('status_perjalanan', '!=', 'Batal')
-            ->exists() : false;
-
-        $recommendedJadwals = $this->cbfService->getRecommendations($penumpang, 6);
-        $availableJadwals = $recommendedJadwals;
-
-        $myPemesanans = $penumpang ? Pemesanan::with(['jadwal.armada', 'kursi'])
-            ->where('id_penumpang', $penumpang->id_penumpang)
-            ->latest('id_pemesanan')
-            ->get() : collect([]);
-
-        return view('penumpang.dashboard', compact('penumpang', 'recommendedJadwals', 'availableJadwals', 'hasHistory', 'myPemesanans'));
+        return $this->beranda();
     }
 
     /**

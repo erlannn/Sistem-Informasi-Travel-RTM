@@ -65,12 +65,25 @@ class AdminJadwalController extends Controller
             'id_sopir' => 'required|exists:sopirs,id_sopir',
             'asal' => 'required|in:Sijunjung,Solok,Padang,BIM',
             'tujuan' => 'required|in:Sijunjung,Solok,Padang,BIM|different:asal',
-            'tanggal' => 'required|date',
-            'jam' => 'required|string',
+            'tanggal' => 'required|date|after_or_equal:today',
+            'jam' => [
+                'required',
+                'string',
+                function (string $attribute, mixed $value, \Closure $fail) use ($request) {
+                    // If the selected date is today, the time must be in the future
+                    if ($request->tanggal === now()->toDateString()) {
+                        $currentTime = now()->format('H:i:s');
+                        if ($value <= $currentTime) {
+                            $fail('Jam keberangkatan tidak boleh kurang dari atau sama dengan jam saat ini untuk tanggal hari ini.');
+                        }
+                    }
+                },
+            ],
             'harga' => 'required|numeric|min:0',
             'bagi_hasil_sopir' => 'required|numeric|min:0|lte:harga',
         ], [
             'tujuan.different' => 'Kota tujuan tidak boleh sama dengan kota asal.',
+            'tanggal.after_or_equal' => 'Tanggal keberangkatan tidak boleh di hari yang sudah lewat.',
             'bagi_hasil_sopir.lte' => 'Gaji / bagi hasil sopir tidak boleh melebihi harga tiket.',
         ]);
 
@@ -120,12 +133,24 @@ class AdminJadwalController extends Controller
             'id_sopir' => 'required|exists:sopirs,id_sopir',
             'asal' => 'required|in:Sijunjung,Solok,Padang,BIM',
             'tujuan' => 'required|in:Sijunjung,Solok,Padang,BIM|different:asal',
-            'tanggal' => 'required|date',
-            'jam' => 'required|string',
+            'tanggal' => 'required|date|after_or_equal:today',
+            'jam' => [
+                'required',
+                'string',
+                function (string $attribute, mixed $value, \Closure $fail) use ($request) {
+                    if ($request->tanggal === now()->toDateString()) {
+                        $currentTime = now()->format('H:i:s');
+                        if ($value <= $currentTime) {
+                            $fail('Jam keberangkatan tidak boleh kurang dari atau sama dengan jam saat ini untuk tanggal hari ini.');
+                        }
+                    }
+                },
+            ],
             'harga' => 'required|numeric|min:0',
             'bagi_hasil_sopir' => 'required|numeric|min:0|lte:harga',
         ], [
             'tujuan.different' => 'Kota tujuan tidak boleh sama dengan kota asal.',
+            'tanggal.after_or_equal' => 'Tanggal keberangkatan tidak boleh di hari yang sudah lewat.',
             'bagi_hasil_sopir.lte' => 'Gaji / bagi hasil sopir tidak boleh melebihi harga tiket.',
         ]);
 

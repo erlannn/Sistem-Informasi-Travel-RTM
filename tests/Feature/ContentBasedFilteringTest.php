@@ -16,40 +16,54 @@ use function Pest\Laravel\actingAs;
 
 uses(DatabaseTransactions::class);
 
-/**
- * @property Sopir $sopir
- * @property Armada $armadaHiace
- * @property Armada $armadaElf
- */
+function getTestSopir(): Sopir
+{
+    Role::firstOrCreate(['name' => 'Penumpang']);
+    Role::firstOrCreate(['name' => 'Sopir']);
+
+    return Sopir::firstOrCreate(
+        ['nama' => 'Pak Budi Sopir'],
+        [
+            'no_hp' => '081234567811',
+            'alamat' => 'Solok',
+            'bagi_hasil_sopir' => 50000.00,
+        ]
+    );
+}
+
+function getTestArmadaHiace(): Armada
+{
+    return Armada::firstOrCreate(
+        ['merk' => 'Toyota Hiace Premio'],
+        [
+            'warna' => 'White',
+            'kursi' => 10,
+            'status' => 'Aktif',
+        ]
+    );
+}
+
+function getTestArmadaElf(): Armada
+{
+    return Armada::firstOrCreate(
+        ['merk' => 'Isuzu Elf Long'],
+        [
+            'warna' => 'Silver',
+            'kursi' => 12,
+            'status' => 'Aktif',
+        ]
+    );
+}
 
 beforeEach(function () {
     Role::firstOrCreate(['name' => 'Penumpang']);
     Role::firstOrCreate(['name' => 'Sopir']);
-
-    // Setup Driver & Armada
-    $this->sopir = Sopir::create([
-        'nama' => 'Pak Budi Sopir',
-        'no_hp' => '081234567811',
-        'alamat' => 'Solok',
-        'bagi_hasil_sopir' => 50000.00,
-    ]);
-
-    $this->armadaHiace = Armada::create([
-        'merk' => 'Toyota Hiace Premio',
-        'warna' => 'White',
-        'kursi' => 10,
-        'status' => 'Aktif',
-    ]);
-
-    $this->armadaElf = Armada::create([
-        'merk' => 'Isuzu Elf Long',
-        'warna' => 'Silver',
-        'kursi' => 12,
-        'status' => 'Aktif',
-    ]);
 });
 
 test('new passenger user with no booking history receives empty CBF recommendations', function () {
+    $sopir = getTestSopir();
+    $armadaHiace = getTestArmadaHiace();
+
     /** @var TestCase $this */
     $newUser = User::create([
         'name' => 'Penumpang Baru',
@@ -68,8 +82,8 @@ test('new passenger user with no booking history receives empty CBF recommendati
 
     // Create candidate future schedule
     Jadwal::create([
-        'id_armada' => $this->armadaHiace->id_armada,
-        'id_sopir' => $this->sopir->id_sopir,
+        'id_armada' => $armadaHiace->id_armada,
+        'id_sopir' => $sopir->id_sopir,
         'asal' => 'Padang',
         'tujuan' => 'Sijunjung',
         'tanggal' => now()->addDays(2)->toDateString(),
@@ -93,6 +107,10 @@ test('new passenger user with no booking history receives empty CBF recommendati
 });
 
 test('passenger with booking history receives recommendations ranked by CBF similarity', function () {
+    $sopir = getTestSopir();
+    $armadaHiace = getTestArmadaHiace();
+    $armadaElf = getTestArmadaElf();
+
     $user = User::create([
         'name' => 'Budi Penumpang Setia',
         'email' => 'budi.setia@rtm.com',
@@ -110,8 +128,8 @@ test('passenger with booking history receives recommendations ranked by CBF simi
 
     // History Schedule: Padang -> Sijunjung, Hiace Premio, Jam 08:00, Rp 120.000
     $pastJadwal = Jadwal::create([
-        'id_armada' => $this->armadaHiace->id_armada,
-        'id_sopir' => $this->sopir->id_sopir,
+        'id_armada' => $armadaHiace->id_armada,
+        'id_sopir' => $sopir->id_sopir,
         'asal' => 'Padang',
         'tujuan' => 'Sijunjung',
         'tanggal' => now()->subDays(5)->toDateString(),
@@ -139,8 +157,8 @@ test('passenger with booking history receives recommendations ranked by CBF simi
 
     // Future Candidate 1: Exact route Padang -> Sijunjung (High match)
     $candidateHigh = Jadwal::create([
-        'id_armada' => $this->armadaHiace->id_armada,
-        'id_sopir' => $this->sopir->id_sopir,
+        'id_armada' => $armadaHiace->id_armada,
+        'id_sopir' => $sopir->id_sopir,
         'asal' => 'Padang',
         'tujuan' => 'Sijunjung',
         'tanggal' => now()->addDays(1)->toDateString(),
@@ -150,8 +168,8 @@ test('passenger with booking history receives recommendations ranked by CBF simi
 
     // Future Candidate 2: Different route Solok -> BIM (Lower match)
     $candidateLow = Jadwal::create([
-        'id_armada' => $this->armadaElf->id_armada,
-        'id_sopir' => $this->sopir->id_sopir,
+        'id_armada' => $armadaElf->id_armada,
+        'id_sopir' => $sopir->id_sopir,
         'asal' => 'Solok',
         'tujuan' => 'BIM',
         'tanggal' => now()->addDays(1)->toDateString(),
@@ -169,6 +187,106 @@ test('passenger with booking history receives recommendations ranked by CBF simi
     // Verify web response
     $response = actingAs($user)->get(route('penumpang.dashboard'));
     $response->assertStatus(200);
-    $response->assertSee('Berdasarkan Histori Pemesanan');
+    $response->assertSee('Rekomendasi Jadwal');
     $response->assertSee('Cocok');
 });
+
+test('passenger with 3 bookings on same route and 8 on different routes receives CBF recommendations', function () {
+    $sopir = getTestSopir();
+    $armadaHiace = getTestArmadaHiace();
+    $armadaElf = getTestArmadaElf();
+
+    $user = User::create([
+        'name' => 'Vira Penumpang Aktif',
+        'email' => 'vira.aktif@rtm.com',
+        'password' => Hash::make('password123'),
+    ]);
+    $user->assignRole('Penumpang');
+
+    $penumpang = Penumpang::create([
+        'nama' => 'Vira Penumpang Aktif',
+        'email' => 'vira.aktif@rtm.com',
+        'password' => Hash::make('password123'),
+        'no_hp' => '081299998888',
+        'alamat' => 'Padang',
+    ]);
+
+    // 3 Past bookings: Padang -> Sijunjung at 08:00
+    for ($i = 0; $i < 3; $i++) {
+        $j = Jadwal::create([
+            'id_armada' => $armadaHiace->id_armada,
+            'id_sopir' => $sopir->id_sopir,
+            'asal' => 'Padang',
+            'tujuan' => 'Sijunjung',
+            'tanggal' => now()->subDays(10 + $i)->toDateString(),
+            'jam' => '08:00:00',
+            'harga' => 120000.00,
+        ]);
+        $k = Kursi::create(['id_jadwal' => $j->id_jadwal, 'nomor_kursi' => '1A', 'status' => 'Terisi']);
+        Pemesanan::create([
+            'id_penumpang' => $penumpang->id_penumpang,
+            'id_jadwal' => $j->id_jadwal,
+            'id_kursi' => $k->id_kursi,
+            'tanggal_pesan' => now()->subDays(10 + $i)->toDateString(),
+            'jumlah_penumpang' => 1,
+            'total_bayar' => 120000.00,
+            'metode_pembayaran' => 'Cash',
+            'status_pembayaran' => 'Lunas',
+            'status_perjalanan' => 'Selesai',
+        ]);
+    }
+
+    // 8 Past bookings: Other routes (e.g. Solok -> BIM at 10:00)
+    for ($i = 0; $i < 8; $i++) {
+        $j = Jadwal::create([
+            'id_armada' => $armadaElf->id_armada,
+            'id_sopir' => $sopir->id_sopir,
+            'asal' => 'Solok',
+            'tujuan' => 'BIM',
+            'tanggal' => now()->subDays(20 + $i)->toDateString(),
+            'jam' => '10:00:00',
+            'harga' => 150000.00,
+        ]);
+        $k = Kursi::create(['id_jadwal' => $j->id_jadwal, 'nomor_kursi' => '1B', 'status' => 'Terisi']);
+        Pemesanan::create([
+            'id_penumpang' => $penumpang->id_penumpang,
+            'id_jadwal' => $j->id_jadwal,
+            'id_kursi' => $k->id_kursi,
+            'tanggal_pesan' => now()->subDays(20 + $i)->toDateString(),
+            'jumlah_penumpang' => 1,
+            'total_bayar' => 150000.00,
+            'metode_pembayaran' => 'Cash',
+            'status_pembayaran' => 'Lunas',
+            'status_perjalanan' => 'Selesai',
+        ]);
+    }
+
+    // Future candidate: Padang -> Sijunjung at 08:00
+    $candidate = Jadwal::create([
+        'id_armada' => $armadaHiace->id_armada,
+        'id_sopir' => $sopir->id_sopir,
+        'asal' => 'Padang',
+        'tujuan' => 'Sijunjung',
+        'tanggal' => now()->addDays(2)->toDateString(),
+        'jam' => '08:00:00',
+        'harga' => 120000.00,
+    ]);
+
+    $cbfService = new ContentBasedFilteringService();
+    $recommendations = $cbfService->getRecommendations($penumpang);
+
+    expect($recommendations)->not->toBeEmpty();
+    expect($recommendations->pluck('id_jadwal'))->toContain($candidate->id_jadwal);
+
+    $matched = $recommendations->firstWhere('id_jadwal', $candidate->id_jadwal);
+    expect($matched->match_percentage)->toBeGreaterThanOrEqual(40);
+
+    // Verify Beranda page displays the recommendation
+    $response = actingAs($user)->get(route('penumpang.beranda'));
+    $response->assertStatus(200);
+    $response->assertSee('Rekomendasi Jadwal');
+    $response->assertSee('Padang');
+    $response->assertSee('Sijunjung');
+    $response->assertSee('% Cocok');
+});
+
