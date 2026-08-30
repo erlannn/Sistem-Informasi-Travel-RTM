@@ -53,7 +53,7 @@
                 <label class="block text-xs sm:text-sm font-black uppercase tracking-wider text-black mb-2">
                     No. Handphone / WhatsApp <span class="text-red-500">*</span>
                 </label>
-                <input type="text" name="no_hp" value="{{ old('no_hp', $penumpang->no_hp) }}" required placeholder="081234567890"
+                <input type="number" name="no_hp" value="{{ old('no_hp', $penumpang->no_hp) }}" required placeholder="081234567890"
                     class="w-full px-4 py-3.5 text-sm font-semibold text-black bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition outline-none">
                 @error('no_hp')
                     <p class="text-xs text-red-500 font-bold mt-1.5">{{ $message }}</p>
